@@ -1,0 +1,281 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template to automate OpenVPN AS deployment. (OpenVPN AS on AWS info can be found here https://aws.amazon.com/marketplace/pp/B00MI40CAE)
+Parameters: 
+  pKeyPairName: 
+    Description: Name of an existing EC2 KeyPair (find or create here https://console.aws.amazon.com/ec2/v2/home#KeyPairs )
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must be a valid EC2 KeyPair
+  pMobileUse: 
+    Description: Will you need mobile OpenVPN?
+    Default: "No"
+    Type: String
+    AllowedValues: 
+    - "Yes"
+    - "No"
+    ConstraintDescription: You must specify Yes or No.
+  pOpenVPNASAccessIP: 
+    Description: Internet accessible IP address allowed to LOGIN and/or CONNECT to the OpenVPN AS appliance. If you don't know it you can find it at www.ipchicken.com
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+  pOpenVPNASInstanceType: 
+    Description: Choose an instance type. To keep free-tier pricing, use t2.micro.
+    Type: String
+    Default: t2.large
+    AllowedValues: 
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge   
+  pOpenVPNASAdminUser: 
+    Description: Choose a non-default admin name for your OpenVPN AS instance.
+    Type: String
+    AllowedPattern: "([A-Za-z0-9-]{1,20})"
+    ConstraintDescription: Name must only contain alphanumeric characters and up to 20 characters long.
+  pOpenVPNASAdminPW: 
+    Description: "Enter a strong password (8 ~ 20 alphanumeric, special characters @ * # allowed) for your OpenVPN AS admin user."
+    NoEcho: true
+    Type: String
+    AllowedPattern: ([a-zA-Z0-9@*#]{8,20})
+    ConstraintDescription: "Password must be at least 8 characters but no longer than 20. You can use all alphanumeric characters and the special symbols @ * #"
+  pPreclinicalDMZSubnetA: 
+    Description: Preclinical DMZ for OpenVPN server.
+    Type: AWS::EC2::Subnet::Id
+  pPreclinicalVpcId: 
+    Description: Preclinical VPC ID, something like vpc-ef5d0e8b
+    Type: AWS::EC2::VPC::Id
+  pBastionAccessSecurityGroup: 
+    Description: Security group to allow bastion SSH access.
+    Type: AWS::EC2::SecurityGroup::Id
+  pDnsHostedZoneID:
+    Description: Internal DNS hosted zone ID.
+    Type: AWS::Route53::HostedZone::Id
+  pDnsHostedZoneApexDomain:
+    Description: Internal DNS Apex Domain
+    Type: String
+Conditions: 
+  CreateMobileSG: !Equals [Ref: pMobileUse, "Yes"]
+Mappings: 
+  AWSAMIRegionMap: 
+    AMI:
+      OVPN25HVM: OpenVPN-Access-Server-2.5.0-20180501
+    us-east-1: 
+      OVPN25HVM: ami-548e4429
+    us-west-2: 
+      OVPN25HVM: ami-7370ed0b
+    eu-west-1: 
+      OVPN25HVM: ami-c24d18bb
+Resources: 
+  rInternalDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref pDnsHostedZoneID
+      Comment: Internal DNS A Record for OpenVPN Server.
+      Name: !Sub openvpn.${pDnsHostedZoneApexDomain}
+      Type: A 
+      TTL: 60
+      ResourceRecords:
+        - !GetAtt rOpenVPNASInstance.PrivateIp
+  rOpenVPNASAllowWebPorts:
+    DependsOn: 
+    - rOpenVPNASAdminSG  
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref pPreclinicalVpcId
+      GroupDescription: "Allows web access to resources in Preclinical VPC being proxied through OpenVPN"
+      SecurityGroupIngress: 
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        SourceSecurityGroupId: !GetAtt rOpenVPNASAdminSG.GroupId 
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        SourceSecurityGroupId: !GetAtt rOpenVPNASAdminSG.GroupId
+      Tags: 
+      - Key: Name
+        Value: sg-web-access-ports-from-vpn
+  rOpenVPNASAdminSG: 
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref pPreclinicalVpcId
+      GroupDescription: "OpenVPN AS Administrator Access."
+      SecurityGroupIngress: []
+      Tags: 
+      - Key: Name
+        Value: OpenVPN-AS-Appliance-Security-Group
+  rOpenVPNASUserAccessSG: 
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      VpcId: !Ref pPreclinicalVpcId
+      GroupDescription: OpenVPN AS User Access.
+      SecurityGroupIngress: 
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: !Ref pOpenVPNASAccessIP
+      - IpProtocol: tcp
+        FromPort: 1194
+        ToPort: 1194
+        CidrIp: !Ref pOpenVPNASAccessIP
+      Tags: 
+        - Key: Name
+          Value: User-Access-OpenVPN-AS-Appliance
+  rOpenVPNASAdminSGIngress: 
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      GroupId: !Ref rOpenVPNASAdminSG
+      IpProtocol: tcp
+      FromPort: 943
+      ToPort: 943
+      SourceSecurityGroupId: !Ref rOpenVPNASAdminSG
+  rOpenVPNASMobileSG: 
+    Type: AWS::EC2::SecurityGroup
+    Condition: CreateMobileSG
+    Properties: 
+      VpcId: !Ref pPreclinicalVpcId
+      GroupDescription: OpenVPN AS Mobile access. Only use if necessary since open to the world. (i.e. 0.0.0.0/0)
+      SecurityGroupIngress: 
+      - IpProtocol: udp
+        FromPort: 1194
+        ToPort: 1194
+        CidrIp: 0.0.0.0/0
+      Tags: 
+      - Key: Name
+        Value: Mobile-Access-OpenVPN-AS-Appliance
+  rOpenVPNASEIP: 
+    Type: AWS::EC2::EIP
+    Properties: 
+      Domain: vpc
+  rVpcIPAssoc: 
+    Type: AWS::EC2::EIPAssociation
+    Properties: 
+      InstanceId: !Ref rOpenVPNASInstance
+      AllocationId: !GetAtt rOpenVPNASEIP.AllocationId
+  rOpenVPNASInstance: 
+    DependsOn: 
+    - rOpenVPNASProfile
+    - rOpenVPNASAdminSG
+    Type: AWS::EC2::Instance
+    Properties: 
+      DisableApiTermination: true
+      InstanceType: !Ref pOpenVPNASInstanceType
+      IamInstanceProfile: !Ref rOpenVPNASProfile
+      KeyName: !Ref pKeyPairName
+      SourceDestCheck: false
+      ImageId: !FindInMap [ AWSAMIRegionMap, !Ref "AWS::Region", OVPN25HVM ]  
+      NetworkInterfaces: 
+      - AssociatePublicIpAddress: true
+        DeviceIndex: 0
+        GroupSet: 
+          - !Ref rOpenVPNASAdminSG
+          - !Ref rOpenVPNASAllowWebPorts
+          - !Ref rOpenVPNASUserAccessSG
+          - !If [ CreateMobileSG, !Ref rOpenVPNASMobileSG, !Ref rOpenVPNASAdminSG ]
+        SubnetId: !Ref pPreclinicalDMZSubnetA
+      Tags: 
+      - Key: Name
+        Value: "OpenVPN Access Server"
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y --force-yes
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get -q -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade
+          apt-get -q -y install python-pip awscli python-setuptools --force-yes
+          reroute_gw=1
+          reroute_dns=1
+          /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min --value 1.2 ConfigPut
+          /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min_strict --value true ConfigPut
+          /usr/local/openvpn_as/scripts/sacli --key vpn.server.tls_version_min --value 1.2 ConfigPut
+          /usr/local/openvpn_as/scripts/sacli --key host.name --value ${rOpenVPNASEIP} ConfigPut
+          /usr/local/openvpn_as/scripts/sacli start
+          /usr/local/openvpn_as/scripts/sacli --user router --key prop_autologin --value true UserPropPut
+          /usr/local/openvpn_as/scripts/sacli --user router GetAutologin >/home/openvpnas/routerconfig.ovpn
+          aws s3 cp /home/openvpnas/routerconfig.ovpn s3://${rOpenVPNASBucket}/routerconfig.ovpn                
+          rm /home/openvpnas/routerconfig.ovpn -f
+
+          mkdir aws-cfn-bootstrap-latest
+          curl https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz | tar xz -C aws-cfn-bootstrap-latest --strip-components 1
+          easy_install aws-cfn-bootstrap-latest
+          /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rOpenVPNASInstance --region ${AWS::Region}
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT20M          
+
+  InstanceRecoveryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Trigger a recovery when instance status check fails for 15
+        consecutive minutes.
+      Namespace: AWS/EC2
+      MetricName: StatusCheckFailed_System
+      Statistic: Minimum
+      Period: 60
+      EvaluationPeriods: 15
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 0
+      AlarmActions: 
+        - !Sub arn:aws:automate:${AWS::Region}:ec2:recover
+      Dimensions:
+        - Name: InstanceId
+          Value: !Ref rOpenVPNASInstance
+
+  rOpenVPNASRole: 
+    Type: AWS::IAM::Role
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Statement: 
+        - Effect: Allow
+          Principal:
+            Service: 
+            - ec2.amazonaws.com
+          Action: 
+          - sts:AssumeRole
+      Path: /
+  rOpenVPNASProfile: 
+    DependsOn: 
+    - rOpenVPNASRole
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Path: /
+      Roles: 
+      - !Ref rOpenVPNASRole
+  rAppServerRolePolicies: 
+    DependsOn: 
+    - rOpenVPNASRole
+    - rOpenVPNASBucket
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyName: OpenVPNASS3Access
+      PolicyDocument: 
+        Statement: 
+        - Effect: Allow
+          Action: s3:*
+          Resource: !Sub arn:aws:s3:::${rOpenVPNASBucket}/*
+      Roles: 
+      - !Ref rOpenVPNASRole
+  rOpenVPNASBucket: 
+    Type: AWS::S3::Bucket
+
+Outputs: 
+  ASIPAddress: 
+    Description: "Your OpenVPN AS Public IP address."
+    Value: !GetAtt rOpenVPNASInstance.PublicIp
+  InternalDNSforOpenVPN: 
+    Description: "Once connected to the VPN, you can visit this URL to administer OpenVPN."
+    Value: !Join [ "", [ "https://openvpn." , !Ref pDnsHostedZoneApexDomain, ":943/admin" ]]
+  BucketName: 
+    Description: "Download the administrator's routerconfig.ovpn file from this bucket. When you open that file with your OpenVPN client, you will be connected to the cloud."
+    Value: !Join [ "", [ "https://s3.console.aws.amazon.com/s3/buckets/" , !Ref rOpenVPNASBucket  ]]
+  rOpenVPNASAllowWebPortsSGParam: 
+    Description: Security group that allows users connected to the vpn to access web ports  
+    Value: !Ref rOpenVPNASAllowWebPorts
+
+
+

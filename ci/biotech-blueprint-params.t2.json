@@ -1,0 +1,75 @@
+[
+    {
+        "ParameterKey": "pAvailabilityZones",
+        "ParameterValue": "$[taskcat_genaz_2]"
+    },
+    {
+        "ParameterKey": "pPreclinicalVPCCidrAandBBlock",
+        "ParameterValue": "10.131"
+    },
+    {
+        "ParameterKey": "pManagementVPCCidrAandBBlock",
+        "ParameterValue": "10.132"
+    },
+    {
+        "ParameterKey": "pInternalDnsSecondLevelDomain",
+        "ParameterValue": "corp"
+    },
+    {
+        "ParameterKey": "pInternalDnsTLDDomain",
+        "ParameterValue": "com"
+    },
+    {
+        "ParameterKey": "pSupportConfig",
+        "ParameterValue": "No"
+    },
+    {
+        "ParameterKey": "pNotifyEmail",
+        "ParameterValue": "distlist@example.org"
+    },
+    {
+        "ParameterKey": "pEC2KeyPair",
+        "ParameterValue": "$[alfred_getkeypair]"
+    },
+    {   
+        "ParameterKey": "pEC2KeyPairBastion",
+        "ParameterValue": "$[alfred_getkeypair]"
+    },
+    {
+        "ParameterKey": "pBastionAccessCIDR",
+        "ParameterValue": "10.0.0.0/16"
+    },
+    {
+        "ParameterKey": "pOpenVPNASAccessCidr",
+        "ParameterValue": "10.0.0.0/16"
+    },
+    {
+        "ParameterKey": "pDBMultiAZ",
+        "ParameterValue": "false"
+    },
+    {
+        "ParameterKey": "pLaunchBenchlingPlatform",
+        "ParameterValue": "No"
+    },
+    {
+        "ParameterKey": "pLaunchChemAxonRegistry",
+        "ParameterValue": "No"
+    },
+    {
+        "ParameterKey": "pBenchlingInternalHostedZoneSecondLevelDomainName",
+        "ParameterValue": "biotechtx-private"
+    },
+    {
+        "ParameterKey": "pChemAxonRegistryDBUsername",
+        "ParameterValue": "cacrDBUser"
+    },
+    {
+        "ParameterKey": "pChemAxonRegistryDBPassword",
+        "ParameterValue": "Test1234!"
+    }, 
+    {   
+        "ParameterKey": "pOpenVPNASAdminPassword",
+        "ParameterValue": "Test1234@"
+    }
+]
+
