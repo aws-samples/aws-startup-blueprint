@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Biotech Blueprint is an AWS Quick Start that helps Biotech companies deploy core AWS Infrastructure as well as CloudFormation templates for common ISV solutions.
+Description: Biotech Blueprint is an AWS Quick Start that helps Biotech companies deploy core AWS Infrastructure as well as CloudFormation templates for common ISV solutions. (qs-1of009lua)
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
