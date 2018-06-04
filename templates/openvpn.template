@@ -190,6 +190,8 @@ Resources:
           apt-get -q -y install python-pip awscli python-setuptools --force-yes
           reroute_gw=1
           reroute_dns=1
+          admin_user=${pOpenVPNASAdminUser}
+          admin_pw=${pOpenVPNASAdminPW}
           /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min --value 1.2 ConfigPut
           /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min_strict --value true ConfigPut
           /usr/local/openvpn_as/scripts/sacli --key vpn.server.tls_version_min --value 1.2 ConfigPut
