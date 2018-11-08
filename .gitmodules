@@ -13,7 +13,7 @@
 [submodule "submodules/quickstart-chemaxon-registry"]
 	path = submodules/quickstart-chemaxon-registry
 	url = git@github.com:aws-quickstart/quickstart-chemaxon-registry.git
-	branch = develop 
+	branch = master 
 [submodule "submodules/quickstart-benchling-platform"]
 	path = submodules/quickstart-benchling-platform
 	url = git@github.com:aws-quickstart/quickstart-benchling-platform.git
