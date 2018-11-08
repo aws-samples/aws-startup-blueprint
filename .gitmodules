@@ -6,10 +6,6 @@
 	path = submodules/quickstart-compliance-common
 	url = git@github.com:aws-quickstart/quickstart-compliance-common.git
 	branch = master
-[submodule "submodules/quickstart-linux-bastion"]
-	path = submodules/quickstart-linux-bastion
-	url = git@github.com:aws-quickstart/quickstart-linux-bastion.git
-	branch = master
 [submodule "submodules/quickstart-chemaxon-registry"]
 	path = submodules/quickstart-chemaxon-registry
 	url = git@github.com:aws-quickstart/quickstart-chemaxon-registry.git
