@@ -18,10 +18,3 @@
 	path = submodules/quickstart-benchling-platform
 	url = git@github.com:aws-quickstart/quickstart-benchling-platform.git
 	branch = master
-[submodule "submodules/quickstart-titian-mosaic"]
-	path = submodules/quickstart-titian-mosaic
-	url = git@github.com:aws-quickstart/quickstart-titian-mosaic.git
-    branch = develop
-[submodule "submodules/quickstart-dotmatics"]
-	path = submodules/quickstart-dotmatics
-	url = git@github.com:aws-quickstart/quickstart-dotmatics.git
