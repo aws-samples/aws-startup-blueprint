@@ -65,11 +65,11 @@ Mappings:
     AMI:
       OVPN25HVM: OpenVPN-Access-Server-2.5.0-20180501
     us-east-1: 
-      OVPN25HVM: ami-548e4429
+      OVPN25HVM: ami-030add67c93791800
     us-west-2: 
-      OVPN25HVM: ami-7370ed0b
+      OVPN25HVM: ami-0f18500e6e4ebf9af
     eu-west-1: 
-      OVPN25HVM: ami-c24d18bb
+      OVPN25HVM: ami-03e932fa49855fcd3
 Resources: 
   rInternalDNSRecord:
     Type: AWS::Route53::RecordSet
@@ -192,6 +192,7 @@ Resources:
           reroute_dns=1
           admin_user=${pOpenVPNASAdminUser}
           admin_pw=${pOpenVPNASAdminPW}
+          /usr/local/openvpn_as/bin/ovpn-init --batch --ec2
           /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min --value 1.2 ConfigPut
           /usr/local/openvpn_as/scripts/sacli --key vpn.client.tls_version_min_strict --value true ConfigPut
           /usr/local/openvpn_as/scripts/sacli --key vpn.server.tls_version_min --value 1.2 ConfigPut
