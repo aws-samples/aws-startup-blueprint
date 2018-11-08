@@ -179,9 +179,9 @@ Parameters:
     Description: OpenVPN CIDR. This should be your corporate office IP address. Visit whatsmyip.com to get your current IP address. Using '0.0.0.0/0' would make it open to the world.
     Type: String
   pOpenVPNASAdminUsername:
-    Description: OpenVPN Admin Username. Default is admin.
+    Description: OpenVPN Admin Username. Default is openvpnadmin. DO NOT USE 'admin' as the value here.
     Type: String
-    Default: admin
+    Default: openvpnadmin
   pLaunchBenchlingPlatform:
     Description: Do you wish to launch Benchling as part of the Biotech Blueprint deployment?
     Type: String
