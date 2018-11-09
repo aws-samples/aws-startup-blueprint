@@ -49,9 +49,6 @@ Parameters:
   pPreclinicalVpcId: 
     Description: Preclinical VPC ID, something like vpc-ef5d0e8b
     Type: AWS::EC2::VPC::Id
-  pBastionAccessSecurityGroup: 
-    Description: Security group to allow bastion SSH access.
-    Type: AWS::EC2::SecurityGroup::Id
   pDnsHostedZoneID:
     Description: Internal DNS hosted zone ID.
     Type: AWS::Route53::HostedZone::Id

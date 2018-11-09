@@ -15,12 +15,11 @@ Metadata:
           - pAvailabilityZones
           - pPreclinicalVPCCidrAandBBlock
           - pManagementVPCCidrAandBBlock
-          - pBastionAccessCIDR
       - Label:
           default: Misc Options
         Parameters:
           - pNotifyEmail
-          - pEC2KeyPairBastion
+          - pEC2KeyPair
           - pEC2KeyPair
           - pSupportConfig
           - pDBMultiAZ
@@ -53,16 +52,12 @@ Metadata:
         default: A and B CIDR Blocks for Preclinical VPC
       pManagementVPCCidrAandBBlock:
         default: A and B CIDR Blocks for Management VPC
-      pBastionAccessCIDR:
-        default: Allowed Bastion External Access CIDR
       pAvailabilityZones:
         default: Availability Zones
       pNotifyEmail:
         default: Notification Email Address
-      pEC2KeyPairBastion:
-        default: Existing SSH Key for the Bastion Instance
       pEC2KeyPair:
-        default: Existing SSH Key for non-bastion EC2 instances spun up
+        default: Existing SSH Key for servers launched with this quickstart
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
       QSS3KeyPrefix:
@@ -105,10 +100,6 @@ Parameters:
     Description: Preferred A and B CIDR block for Management VPC. For example, this would be 10.81 in 10.81.0.0/20. Default is 10.81. 
     Type: String
     Default: 10.81
-  pBastionAccessCIDR:
-    Description: The CIDR IP range that is permitted to access the Bastion server. Set this value to your corporate office IP address. Visit whatsmyip.com to get your current IP address. We recommend that you avoid using  0.0.0.0/0 for security reasons.
-    Type: String
-    Default: 0.0.0.0/0
   pAvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC. Only
       two Availability Zones are used for this deployment, and the logical order of
@@ -117,11 +108,8 @@ Parameters:
   pNotifyEmail:
     Description: Notification email address for security events (you will receive a confirmation email)
     Type: String
-  pEC2KeyPairBastion:
-    Description: The SSH key pair in your account to use for the bastion host login
-    Type: AWS::EC2::KeyPair::KeyName
   pEC2KeyPair:
-    Description: The SSH key pair in your account to use for the non bastion host EC2 instances
+    Description: The SSH key pair in your account to use to login to the server launched by this quickstart.
     Type: AWS::EC2::KeyPair::KeyName
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
@@ -179,9 +167,9 @@ Parameters:
     Description: OpenVPN CIDR. This should be your corporate office IP address. Visit whatsmyip.com to get your current IP address. Using '0.0.0.0/0' would make it open to the world.
     Type: String
   pOpenVPNASAdminUsername:
-    Description: OpenVPN Admin Username. Default is admin.
+    Description: OpenVPN Admin Username. Default is openvpnadmin.
     Type: String
-    Default: admin
+    Default: openvpnadmin
   pLaunchBenchlingPlatform:
     Description: Do you wish to launch Benchling as part of the Biotech Blueprint deployment?
     Type: String
@@ -233,9 +221,6 @@ Mappings:
     eu-west-1:
       AMI: ami-d41d58a7
       InstanceType: m4.large
-  BastionHost:
-    Defaults:
-      InstanceType: t2.micro
   OpenVpn:
     Defaults:
       InstanceType: t2.large
@@ -277,7 +262,7 @@ Resources:
         AvailabilityZones: !Join [ "," , !Ref pAvailabilityZones ]
         CreateAdditionalPrivateSubnets: true
         CreatePrivateSubnets: true
-        KeyPairName: !Ref pEC2KeyPairBastion
+        KeyPairName: !Ref pEC2KeyPair
         NATInstanceType: !FindInMap [ AWSAMIRegionMap, !Ref "AWS::Region", InstanceType ]
         NumberOfAZs: 2
         PrivateSubnet1ACIDR: !Sub ${pPreclinicalVPCCidrAandBBlock}.96.0/21
@@ -299,7 +284,7 @@ Resources:
         AvailabilityZones: !Join [ "," , !Ref pAvailabilityZones ]
         CreateAdditionalPrivateSubnets: false
         CreatePrivateSubnets: true
-        KeyPairName: !Ref pEC2KeyPairBastion
+        KeyPairName: !Ref pEC2KeyPair
         NATInstanceType: !FindInMap [ AWSAMIRegionMap, !Ref "AWS::Region", InstanceType ]
         NumberOfAZs: 2
         PrivateSubnet1ACIDR: !Sub ${pManagementVPCCidrAandBBlock}.20.0/24
@@ -308,24 +293,6 @@ Resources:
         PublicSubnet2CIDR: !Sub ${pManagementVPCCidrAandBBlock}.2.0/24
         VPCCIDR: !Sub ${pManagementVPCCidrAandBBlock}.0.0/16
 
-  # Create Bastion Host in Management VPC
-  rBastion:
-    Type: AWS::CloudFormation::Stack
-    DependsOn: 
-    - rManagementVpc
-    - rLogging
-    Properties:
-      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template
-      Parameters:
-        BastionInstanceType: !FindInMap [ BastionHost, Defaults, InstanceType ]
-        EnableTCPForwarding: false
-        EnableX11Forwarding: false
-        KeyPairName: !Ref pEC2KeyPairBastion
-        NumBastionHosts: 1
-        PublicSubnet1ID: !GetAtt rManagementVpc.Outputs.PublicSubnet1ID
-        PublicSubnet2ID: !GetAtt rManagementVpc.Outputs.PublicSubnet2ID
-        RemoteAccessCIDR: !Ref pBastionAccessCIDR
-        VPCID: !GetAtt rManagementVpc.Outputs.VPCID
 
   # Create additional VPC networking - peering and Internal DNS
   rVpcNetworking:
@@ -333,7 +300,6 @@ Resources:
     DependsOn:
     - rManagementVpc
     - rPreclinicalVpc
-    - rBastion
     - rLogging
     Properties:
       TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/vpc-networking.template
@@ -370,7 +336,6 @@ Resources:
     Type: AWS::CloudFormation::Stack
     DependsOn:
     - rPreclinicalVpc
-    - rBastion
     - rLogging
     - rVpcNetworking
     Properties:
@@ -384,7 +349,6 @@ Resources:
         pOpenVPNASAdminPW: !Ref pOpenVPNASAdminPassword
         pPreclinicalDMZSubnetA: !GetAtt rPreclinicalVpc.Outputs.PublicSubnet1ID
         pPreclinicalVpcId: !GetAtt rPreclinicalVpc.Outputs.VPCID
-        pBastionAccessSecurityGroup: !GetAtt rBastion.Outputs.BastionSecurityGroupID
         pDnsHostedZoneID: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneIDParam
         pDnsHostedZoneApexDomain:  !GetAtt rVpcNetworking.Outputs.InternalHostedZoneApexDomainName
 
@@ -442,9 +406,6 @@ Resources:
 Outputs:
   TemplateVersion:
     Value: 1.0
-  BastionIP:
-    Description: Use this IP via SSH to connect to Bastion Instance
-    Value: !GetAtt rBastion.Outputs.EIP1
   BenchlingURL:
     Description: URL to access Benchling
     Value: !If [ cLaunchBenchlingPlatform, !GetAtt rBenchling.Outputs.BenchlingURL, Benchling not launched ]
