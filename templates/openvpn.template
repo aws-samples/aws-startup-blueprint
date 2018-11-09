@@ -49,9 +49,6 @@ Parameters:
   pPreclinicalVpcId: 
     Description: Preclinical VPC ID, something like vpc-ef5d0e8b
     Type: AWS::EC2::VPC::Id
-  pBastionAccessSecurityGroup: 
-    Description: Security group to allow bastion SSH access.
-    Type: AWS::EC2::SecurityGroup::Id
   pDnsHostedZoneID:
     Description: Internal DNS hosted zone ID.
     Type: AWS::Route53::HostedZone::Id
@@ -188,6 +185,7 @@ Resources:
           export DEBIAN_FRONTEND=noninteractive
           apt-get -q -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade
           apt-get -q -y install python-pip awscli python-setuptools --force-yes
+          
           reroute_gw=1
           reroute_dns=1
           admin_user=${pOpenVPNASAdminUser}
@@ -202,8 +200,15 @@ Resources:
           /usr/local/openvpn_as/scripts/sacli --user router GetAutologin >/home/openvpnas/routerconfig.ovpn
           aws s3 cp /home/openvpnas/routerconfig.ovpn s3://${rOpenVPNASBucket}/routerconfig.ovpn                
           rm /home/openvpnas/routerconfig.ovpn -f
+          
+          mkdir /tmp/ssm
+          cd /tmp/ssm
+          wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
+          dpkg -i amazon-ssm-agent.deb
+          systemctl enable amazon-ssm-agent
 
-          mkdir aws-cfn-bootstrap-latest
+          mkdir /tmp/aws-cfn-bootstrap-latest
+          cd /tmp/aws-cfn-bootstrap-latest
           curl https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz | tar xz -C aws-cfn-bootstrap-latest --strip-components 1
           easy_install aws-cfn-bootstrap-latest
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rOpenVPNASInstance --region ${AWS::Region}
@@ -232,6 +237,7 @@ Resources:
   rOpenVPNASRole: 
     Type: AWS::IAM::Role
     Properties: 
+      ManagedPolicyArns: ["arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"]
       AssumeRolePolicyDocument: 
         Statement: 
         - Effect: Allow
