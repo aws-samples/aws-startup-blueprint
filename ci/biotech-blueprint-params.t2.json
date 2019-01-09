@@ -29,7 +29,7 @@
     },
     {
         "ParameterKey": "pEC2KeyPair",
-        "ParameterValue": "paulu-hclscollab-taskcat"
+        "ParameterValue": "$[alfred_getkeypair]"
     },
     {
         "ParameterKey": "pOpenVPNASAccessCidr",
@@ -65,7 +65,7 @@
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "paulu-hclscollab-taskcat-bucket"
+        "ParameterValue": "ajfriedm-hclscollab-taskcat-bucket"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",
