@@ -62,11 +62,11 @@ Mappings:
     AMI:
       OVPN25HVM: OpenVPN-Access-Server-2.5.0-20180501
     us-east-1: 
-      OVPN25HVM: ami-030add67c93791800
+      OVPN25HVM: ami-07a8d85046c8ecc99
     us-west-2: 
-      OVPN25HVM: ami-0f18500e6e4ebf9af
+      OVPN25HVM: ami-0abbb3ceae54aa9fa
     eu-west-1: 
-      OVPN25HVM: ami-03e932fa49855fcd3
+      OVPN25HVM: ami-05122e65346f7f721
 Resources: 
   rInternalDNSRecord:
     Type: AWS::Route53::RecordSet
@@ -185,7 +185,7 @@ Resources:
           export DEBIAN_FRONTEND=noninteractive
           apt-get -q -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade
           apt-get -q -y install python-pip awscli python-setuptools --force-yes
-          
+            
           reroute_gw=1
           reroute_dns=1
           admin_user=${pOpenVPNASAdminUser}
@@ -201,12 +201,10 @@ Resources:
           aws s3 cp /home/openvpnas/routerconfig.ovpn s3://${rOpenVPNASBucket}/routerconfig.ovpn                
           rm /home/openvpnas/routerconfig.ovpn -f
           
-          wget https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/debian_amd64/amazon-ssm-agent.deb
-          dpkg -i amazon-ssm-agent.deb
-          systemctl enable amazon-ssm-agent
 
-          easy_install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+          python /usr/lib/python2.7/dist-packages/easy_install.py https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource rOpenVPNASInstance --region ${AWS::Region}
+          
     CreationPolicy:
       ResourceSignal:
         Timeout: PT20M          
