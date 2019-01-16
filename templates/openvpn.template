@@ -60,7 +60,7 @@ Conditions:
 Mappings: 
   AWSAMIRegionMap: 
     AMI:
-      OVPN25HVM: OpenVPN-Access-Server-2.5.0-20180501
+      OVPN25HVM: OpenVPN Access Server 2.6.1-fe8020db-5343-4c43-9e65-5ed4a825c931-ami-0f5d312e085235ed4.4
     us-east-1: 
       OVPN25HVM: ami-07a8d85046c8ecc99
     us-west-2: 
