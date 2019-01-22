@@ -57,15 +57,15 @@
     },
     {
         "ParameterKey": "pChemAxonRegistryDBPassword",
-        "ParameterValue": "Test1234!"
+        "ParameterValue": "$[taskcat_genpass_20]"
     }, 
     {   
         "ParameterKey": "pOpenVPNASAdminPassword",
-        "ParameterValue": "Test1234@"
+        "ParameterValue": "$[taskcat_genpass_20]"
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "ajfriedm-hclscollab-taskcat-bucket"
+        "ParameterValue": "$[taskcat_autobucket]"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",
