@@ -80,6 +80,12 @@ Resources:
         VPCRegion: !Ref AWS::Region
       - VPCId: !Ref pManagementVpcId
         VPCRegion: !Ref AWS::Region
+  rInformaticsAccessSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupName: "Informatics Access"
+      GroupDescription: "To be attached to resources that should have access to Informatics resources. Like a Client VPN Endpoint"
+      VpcId: !Ref pPreclinicalVpcId  
 
 Outputs:
   InternalHostedZoneIDParam:
@@ -94,4 +100,7 @@ Outputs:
   InternalHostedZoneSecondLevelDomainName:
     Value: !Ref pInternal2ndLevelDomainName
     Description: Route53 Hosted Zone 2nd level domain for biotech blueprint resources
+  InformaticsAccessSecurityGroup:
+    Value: !Ref rInformaticsAccessSG
+    Description: Security Group that should be attached to resources that need to access informatics resources.
             

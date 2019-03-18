@@ -2,6 +2,7 @@ global:
   marketplace-ami: false
   owner: quickstart-eng@amazon.com
   qsname: quickstart-biotech-blueprint
+  #s3bucket: paulu-hclscollab-taskcat-bucket
   regions:
     - eu-west-1
     - us-east-1
@@ -9,16 +10,11 @@ global:
   reporting: true
  
 tests:
-#  quickstart-biotech-blueprintt1:
-#    parameter_input: biotech-blueprint-params.t1.json
-#    template_file: biotech-blueprint-master.template
-#    regions:
-#    - us-east-1
-#    - us-west-2
-#    - eu-west-1
-  quickstart-biotech-blueprintt2:
-    parameter_input: biotech-blueprint-params.t2.json
+  quickstart-biotech-blueprintt1:
+    parameter_input: biotech-blueprint-params.t1.json
     template_file: biotech-blueprint-master.template
     regions:
     - us-east-1
     - us-west-2
+    - eu-west-1
+

@@ -1,0 +1,266 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Provision an EMR/Spark cluster with Hail 0.2
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: EMR Options
+      Parameters:
+        - EMRReleaseLabelVersion
+        - EC2KeyName
+        - VPC
+        - Subnet
+        - CoreNodeCount
+        - DiskSizeGB
+        - InstanceType
+        - AccessFromCIDRBlock
+        - HailBuildHailVersion
+        - HailBuildSparkVersion
+    - Label:
+        default: Tags
+      Parameters:
+        - NameTag
+        - OwnerTag
+        - PurposeTag
+    - Label:
+        default: AWS Quick Start Configuration
+      Parameters:
+        - QSS3BucketName
+        - QSS3KeyPrefix
+Parameters:
+  EnvironmentName:
+    Type: String
+    Description: >
+      An environment name that will be prefixed to resource names including
+      exported values. Should be unique per region.
+  EMRReleaseLabelVersion:
+    Type: String
+    MinLength: 1
+    Default: emr-5.19.0
+    Description: EMR release label corresponding to the Apache Spark version wanted
+  EC2KeyName:
+    Description: SSH key pair to use for EMR node login
+    Type: AWS::EC2::KeyPair::KeyName
+  VPC:
+    Description: VPC for EMR nodes.
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>'
+    Default: /BB/Networking/VPC/Research
+  Subnet:
+    Description: Subnet for EMR nodes, from the VPC selected above
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
+    Default: /BB/Networking/VPC/Research/Subnet/App/A
+  CoreNodeCount:
+    Description: Number of core nodes to provision (1-20)
+    Type: Number
+    MinValue: '1'
+    MaxValue: '80'
+    Default: '10'
+  DiskSizeGB:
+    Description: EBS Volume size (GB) for each node
+    Type: Number
+    MinValue: '50'
+    MaxValue: '1000'
+    Default: '500'    
+  InstanceType:
+    Type: String
+    Default: m4.16xlarge
+    AllowedValues:
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m4.16xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - r3.xlarge
+      - r3.2xlarge
+      - r3.4xlarge
+      - r3.8xlarge
+    Description: EMR node ec2 instance type - you can add more types by expanding
+      on this list.
+  OwnerTag:
+    Type: String
+    Default: Owner
+    MinLength: 1
+    Description: Your name - used to tag the cluster
+  PurposeTag:
+    Type: String
+    MinLength: 1
+    Default: Genomic
+    Description: Purpose - used to tag the cluster
+  NameTag:
+    Type: String
+    MinLength: 1
+    Default: hail-blog
+    Description: Environment name of the cluster
+  AccessFromCIDRBlock:
+    Type: String
+    MinLength: 9
+    Default: 0.0.0.0/0
+    Description: Restrict WebUI access to specified address or range - default 'anywhere'
+  HailBuildHailVersion:
+    Type: String
+    MinLength: 1
+    Default: master
+    Description: Hail version to build
+  HailBuildSparkVersion:
+    Type: String
+    MinLength: 1
+    Default: 2.3.2
+    Description: Spark version to compile Hail against
+  QSS3BucketName:
+    Default: /BB/QuickStart/QSS3BucketName
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: 'AWS::SSM::Parameter::Value<String>'  
+  QSS3KeyPrefix:
+    Default: /BB/QuickStart/QSS3KeyPrefix
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: 'AWS::SSM::Parameter::Value<String>'  
+Resources:
+  HailBuildOutput:
+    Type: AWS::S3::Bucket
+  EMRBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+  rEMREC2InstanceProfile:
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: rEMREC2Role
+    Type: AWS::IAM::InstanceProfile
+  rEMREC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role
+      Policies:
+      - PolicyName: Athena-for-EMR
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Resource: "*"
+            Action:
+            - athena:*
+            Effect: Allow
+  rEMRServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: "/"
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - elasticmapreduce.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole
+
+  rElasticMapReduceMasterPrivateSG: 
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref VPC
+      GroupDescription: "Master group for Elastic MapReduce."
+      SecurityGroupIngress: []
+      Tags: 
+      - Key: Name
+        Value: !Sub "${OwnerTag} - Master group for EMR"
+
+  
+  SparkCluster:
+    
+    Type: AWS::EMR::Cluster
+    Properties:
+      Applications:
+      - Name: Hadoop
+      - Name: Hive
+      - Name: Spark
+      - Name: Ganglia
+      - Name: Livy
+      BootstrapActions:
+      - Name: Build-Hail
+        ScriptBootstrapAction:
+          Path:  !Sub "s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/hail_build.sh"
+          Args:
+          - "--output-path"
+          - !Sub "s3://${HailBuildOutput}"
+          - "--hail-version"
+          - Ref: HailBuildHailVersion
+          - "--spark-version"
+          - Ref: HailBuildSparkVersion
+      Configurations:
+      - Classification: spark-defaults
+        ConfigurationProperties:
+          spark.driver.extraClassPath: "/usr/lib/hadoop-lzo/lib/*:/usr/lib/hadoop/hadoop-aws.jar:/usr/share/aws/aws-java-sdk/*:/usr/share/aws/emr/emrfs/conf:/usr/share/aws/emr/emrfs/lib/*:/usr/share/aws/emr/emrfs/auxlib/*:/usr/share/aws/emr/security/conf:/usr/share/aws/emr/security/lib/*:/home/hadoop/hail-all-spark.jar"
+          spark.executor.extraClassPath: "/usr/lib/hadoop-lzo/lib/*:/usr/lib/hadoop/hadoop-aws.jar:/usr/share/aws/aws-java-sdk/*:/usr/share/aws/emr/emrfs/conf:/usr/share/aws/emr/emrfs/lib/*:/usr/share/aws/emr/emrfs/auxlib/*:/usr/share/aws/emr/security/conf:/usr/share/aws/emr/security/lib/*:/home/hadoop/hail-all-spark.jar"
+          spark.serializer: "org.apache.spark.serializer.KryoSerializer"
+          spark.kryo.registrator: "is.hail.kryo.HailKryoRegistrator"
+        Configurations: []
+      - Classification: livy-conf
+        ConfigurationProperties:
+          livy.file.local-dir-whitelist: "/home/hadoop/"
+        Configurations: []
+      Instances:
+        Ec2KeyName:
+          Ref: EC2KeyName
+        Ec2SubnetId:
+          Ref: Subnet
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType:
+            Ref: InstanceType
+        CoreInstanceGroup:
+          InstanceCount:
+            Ref: CoreNodeCount
+          InstanceType:
+            Ref: InstanceType
+          EbsConfiguration:
+            EbsOptimized: true
+            EbsBlockDeviceConfigs:
+            - VolumeSpecification:
+                SizeInGB: 
+                  Ref: DiskSizeGB
+                VolumeType: standard
+      Name: spark-hail
+      JobFlowRole:
+        Ref: rEMREC2InstanceProfile
+      ServiceRole:
+        Ref: rEMRServiceRole
+      ReleaseLabel: 
+        Ref: EMRReleaseLabelVersion
+      LogUri: !Sub "s3://${EMRBucket}"
+      Tags:
+      - Key: Name
+        Value: !Sub "${NameTag}-hail-spark"
+      - Key: Owner
+        Value:
+          Ref: OwnerTag
+      - Key: Purpose
+        Value:
+          Ref: PurposeTag
+
+
+Outputs:
+  EMRBucket:
+    Description: EMR Scratch data and Logs bucket
+    Value: !Ref EMRBucket

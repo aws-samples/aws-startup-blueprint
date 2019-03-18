@@ -19,29 +19,19 @@ Metadata:
           default: Misc Options
         Parameters:
           - pNotifyEmail
-          - pEC2KeyPair
-          - pEC2KeyPair
           - pSupportConfig
-          - pDBMultiAZ
           - pLoadBalancerType
+          - pKeyPairName
       - Label:
-          default: OpenVPN Parameters
+          default: Managed VPN
         Parameters:
-          - pOpenVPNASAccessCidr
-          - pOpenVPNASAdminUsername
-          - pOpenVPNASAdminPassword
+          - pCreateClientVPNEndpoint
+          - pClientCidr
+          - pTargetNetworkCidr
       - Label:
-          default: Benchling Parameters
+          default: Biotech Blueprint Informatics Catalog
         Parameters:
-          - pLaunchBenchlingPlatform
-          - pBenchlingInternalHostedZoneSecondLevelDomainName
-          - pBenchlingPrivateLinkServiceName
-      - Label:
-          default: ChemAxon Compound Registry Parameters
-        Parameters:
-          - pLaunchChemAxonRegistry
-          - pChemAxonRegistryDBUsername
-          - pChemAxonRegistryDBPassword
+          - pLaunchServiceCatalogPortfolio
       - Label:
           default: AWS Quick Start Configuration
         Parameters:
@@ -56,8 +46,6 @@ Metadata:
         default: Availability Zones
       pNotifyEmail:
         default: Notification Email Address
-      pEC2KeyPair:
-        default: Existing SSH Key for servers launched with this quickstart
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
       QSS3KeyPrefix:
@@ -70,27 +58,16 @@ Metadata:
         default: Support AWS Config
       pLoadBalancerType:
         default: Load Balancer Type
-      pOpenVPNASAccessCidr:
-        default: OpenVPN Access CIDR
-      pOpenVPNASAdminUsername:
-        default: OpenVPN Username
-      pOpenVPNASAdminPassword:
-        default: OpenVPN Password
-      pDBMultiAZ:
-        default: MultiAZ RDS
-      pLaunchBenchlingPlatform:
-        default: "Launch Benchling?"
-      pBenchlingInternalHostedZoneSecondLevelDomainName:
-        default: Benchling subdomain
-      pBenchlingPrivateLinkServiceName:
-        default: Benchling PrivateLink service name.
-      pLaunchChemAxonRegistry:
-        default: "Launch ChemAxon Compound Registry?"
-      pChemAxonRegistryDBUsername:
-        default: ChemAxon Compound Registry DB Username
-      pChemAxonRegistryDBPassword:
-        default: ChemAxon Compound Registry DB Password
-
+      pCreateClientVPNEndpoint:
+        default: Create an Client VPN Endpoint
+      pClientCidr:
+        default: VPN Client CIDR Range (when connected)
+      pTargetNetworkCidr:
+        default: Inbound VPN Client CIDR Range (for ingress)
+      pLaunchServiceCatalogPortfolio:
+        default: Create Informatics Catalog?
+      pKeyPairName:
+        default: Key Pair 
 Parameters:
   pPreclinicalVPCCidrAandBBlock:
     Description: Preferred A and B CIDR block for Preclinical VPC. For example, this would be 10.82 in 10.82.0.0/20. Default is 10.82.
@@ -108,9 +85,6 @@ Parameters:
   pNotifyEmail:
     Description: Notification email address for security events (you will receive a confirmation email)
     Type: String
-  pEC2KeyPair:
-    Description: The SSH key pair in your account to use to login to the server launched by this quickstart.
-    Type: AWS::EC2::KeyPair::KeyName
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
@@ -145,61 +119,38 @@ Parameters:
       - "Yes"
       - "No"
     Default: "No"
-  pDBMultiAZ:
-    Description: Do you want the database to be multi AZ?
-    Type: String
-    AllowedValues:
-    - "true"
-    - "false"
-    Default: "false"
   pLoadBalancerType:
-    Description: Internal by default. Internal load balancers are only accessible within your VPC. For example, users connected to the OpenVPN server can reach internal load balancers, but internet traffic cannot.
+    Description: Internal by default. Internal load balancers are only accessible within your VPC. For example, users connected to the Client VPN Endpoint can reach internal load balancers, but internet traffic cannot.
     Default: internal
     Type: String
     AllowedValues: 
       - internet-facing
       - internal
-  pOpenVPNASAdminPassword:
-    Description: OpenVPN Admin Password
-    Type: String
-    NoEcho: true
-  pOpenVPNASAccessCidr:
-    Description: OpenVPN CIDR. This should be your corporate office IP address. Visit whatsmyip.com to get your current IP address. Using '0.0.0.0/0' would make it open to the world.
-    Type: String
-  pOpenVPNASAdminUsername:
-    Description: OpenVPN Admin Username. Default is openvpnadmin. DO NOT USE 'admin' as the value here.
-    Type: String
-    Default: openvpnadmin
-  pLaunchBenchlingPlatform:
-    Description: Do you wish to launch Benchling as part of the Biotech Blueprint deployment?
+  pCreateClientVPNEndpoint: 
+    Description: Do want to deploy the AWS Client VPN Endpoint solution? This is a managed VPN solution to securely access the VPCs created by the quickstart.
     Type: String
     AllowedValues:
       - "Yes"
       - "No"
-    Default: "No"
-  pBenchlingInternalHostedZoneSecondLevelDomainName:
-    Description: Benchling Route53 Hosted Zone 2nd level domain resources. This should be something like 'corp' to create the internal DNS entry for corp.benchling.com.
+    Default: "Yes"
+  pClientCidr:
+    Description: What CIDR range should you give your VPN clients? Leave the default if you are unsure what this is. 
     Type: String
-  pBenchlingPrivateLinkServiceName:
-    Description: The private link endpoint service name. Leave this blank (default) unless Benchling has already provided you with one.
+    Default: "11.0.0.0/16"
+  pTargetNetworkCidr:
+    Description: "What CIDR range will your VPN clients be coming from? This could be your corporate network or 0.0.0.0/0 to make it public."
     Type: String
-    Default: ""
-  pLaunchChemAxonRegistry:
-    Description: Do you wish to launch ChemAxon Compound Registry as part of the Biotech Blueprint deployment?
+    Default: "0.0.0.0/0"
+  pLaunchServiceCatalogPortfolio:
+    Description: Do you want to make additional informatics tools available after deployment via service catalog?
     Type: String
     AllowedValues:
       - "Yes"
       - "No"
-    Default: "No"
-  pChemAxonRegistryDBUsername: 
-    Description: ChemAxon Compound Registry Database User/Owner. Default is cacrDBUser.
-    Type: String
-    Default: cacrDBUser
-  pChemAxonRegistryDBPassword: 
-    Description: ChemAxon Compound Registry Database User/Owner Password
-    Type: String
-    NoEcho: true
-
+    Default: "Yes"
+  pKeyPairName:
+    Description: Public/private key pairs allow you to securely connect to your NAT instance after it launches. This is used only if the region does not support NAT gateways, but still required.
+    Type: AWS::EC2::KeyPair::KeyName
 Mappings:
   RegionServiceSupport:
     us-east-1:
@@ -221,19 +172,11 @@ Mappings:
     eu-west-1:
       AMI: ami-d41d58a7
       InstanceType: m4.large
-  OpenVpn:
-    Defaults:
-      InstanceType: t2.large
-  ChemAxonRegistry:
-    Defaults:
-      AppServerInstanceType: t2.large
-      DBInstanceType: db.t2.large
-      DBAllocatedStorage: 50
 
 Conditions:
   cLoadConfigRulesTemplate: !And [ !Equals [ !FindInMap [ RegionServiceSupport, !Ref "AWS::Region", ConfigRules ] , true ] , !Equals [ pSupportConfig , "Yes" ] ]
-  cLaunchBenchlingPlatform: !Equals [ !Ref pLaunchBenchlingPlatform , "Yes" ]
-  cLaunchChemAxonRegistry: !Equals [ !Ref pLaunchChemAxonRegistry , "Yes" ]
+  cCreateClientVPNEndpoint: !Equals [ !Ref pCreateClientVPNEndpoint , "Yes" ]
+  cLaunchServiceCatalogPortfolio: !Equals [ !Ref pLaunchServiceCatalogPortfolio , "Yes" ]
 
 Resources:
   # Create standard IAM users
@@ -262,7 +205,7 @@ Resources:
         AvailabilityZones: !Join [ "," , !Ref pAvailabilityZones ]
         CreateAdditionalPrivateSubnets: true
         CreatePrivateSubnets: true
-        KeyPairName: !Ref pEC2KeyPair
+        KeyPairName: !Ref pKeyPairName
         NATInstanceType: !FindInMap [ AWSAMIRegionMap, !Ref "AWS::Region", InstanceType ]
         NumberOfAZs: 2
         PrivateSubnet1ACIDR: !Sub ${pPreclinicalVPCCidrAandBBlock}.96.0/21
@@ -272,7 +215,9 @@ Resources:
         PublicSubnet1CIDR: !Sub ${pPreclinicalVPCCidrAandBBlock}.10.0/24
         PublicSubnet2CIDR: !Sub ${pPreclinicalVPCCidrAandBBlock}.20.0/24
         VPCCIDR: !Sub ${pPreclinicalVPCCidrAandBBlock}.0.0/16
-                
+        PublicSubnetTag1: "Name=DMZ Subnet"
+        PrivateSubnetATag1: "Name=App Subnet"
+        PrivateSubnetBTag1: "Name=DB Subnet"
   # Create management VPC
   rManagementVpc:
     Type: AWS::CloudFormation::Stack
@@ -284,7 +229,7 @@ Resources:
         AvailabilityZones: !Join [ "," , !Ref pAvailabilityZones ]
         CreateAdditionalPrivateSubnets: false
         CreatePrivateSubnets: true
-        KeyPairName: !Ref pEC2KeyPair
+        KeyPairName: !Ref pKeyPairName
         NATInstanceType: !FindInMap [ AWSAMIRegionMap, !Ref "AWS::Region", InstanceType ]
         NumberOfAZs: 2
         PrivateSubnet1ACIDR: !Sub ${pManagementVPCCidrAandBBlock}.20.0/24
@@ -292,6 +237,8 @@ Resources:
         PublicSubnet1CIDR: !Sub ${pManagementVPCCidrAandBBlock}.1.0/24
         PublicSubnet2CIDR: !Sub ${pManagementVPCCidrAandBBlock}.2.0/24
         VPCCIDR: !Sub ${pManagementVPCCidrAandBBlock}.0.0/16
+        PublicSubnetTag1: "Name=DMZ Subnet"
+        PrivateSubnetATag1: "Name=Private Subnet"
 
 
   # Create additional VPC networking - peering and Internal DNS
@@ -331,85 +278,63 @@ Resources:
       Parameters:
         pRequiredTagKey: ""
 
-  # Add OpenVPN
-  rOpenVpn:
-    Type: AWS::CloudFormation::Stack
-    DependsOn:
-    - rPreclinicalVpc
-    - rLogging
-    - rVpcNetworking
-    Properties:
-      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/openvpn.template
-      Parameters:
-        pKeyPairName: !Ref pEC2KeyPair
-        pMobileUse: "No"
-        pOpenVPNASAccessIP: !Ref pOpenVPNASAccessCidr
-        pOpenVPNASInstanceType: !FindInMap [ OpenVpn, Defaults, InstanceType ]
-        pOpenVPNASAdminUser: !Ref pOpenVPNASAdminUsername
-        pOpenVPNASAdminPW: !Ref pOpenVPNASAdminPassword
-        pPreclinicalDMZSubnetA: !GetAtt rPreclinicalVpc.Outputs.PublicSubnet1ID
-        pPreclinicalVpcId: !GetAtt rPreclinicalVpc.Outputs.VPCID
-        pDnsHostedZoneID: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneIDParam
-        pDnsHostedZoneApexDomain:  !GetAtt rVpcNetworking.Outputs.InternalHostedZoneApexDomainName
 
-  # Partner Templates
-  # Benchling
-  rBenchling:
+  rClientVpnEndpoint:
     Type: AWS::CloudFormation::Stack
-    Condition: cLaunchBenchlingPlatform
+    Condition: cCreateClientVPNEndpoint
     DependsOn:
+    - rSystemsManager
     - rPreclinicalVpc
-    - rVpcNetworking
     - rLogging
-    - rOpenVpn
+    - rVpcNetworking
     Properties:
-      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-benchling-platform/templates/benchling-platform.template
+      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/clientvpnendpoint.template
       Parameters:
-        pInternalHostedZoneSecondLevelDomainName: !Ref pBenchlingInternalHostedZoneSecondLevelDomainName
-        pAppSubnetA: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet1AID
-        pAppSubnetB: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet2AID
-        pPrivateLinkServiceName: !Ref pBenchlingPrivateLinkServiceName
-        pSecurityGroupForWebAccess: !GetAtt rOpenVpn.Outputs.rOpenVPNASAllowWebPortsSGParam
-        pVpcId: !GetAtt rPreclinicalVpc.Outputs.VPCID
-
-  # ChemAxon Compound Registry
-  rChemAxonCompoundRegistry:
+        pClientCidr: !Ref pClientCidr
+        pTargetNetworkCidr: !Ref pTargetNetworkCidr
+        
+  rServiceCatalog:
     Type: AWS::CloudFormation::Stack
-    Condition: cLaunchChemAxonRegistry
     DependsOn:
-    - rPreclinicalVpc
-    - rOpenVpn
-    - rVpcNetworking
-    - rLogging
+    - rSystemsManager
+    Condition: cLaunchServiceCatalogPortfolio
     Properties:
-      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-chemaxon-registry/templates/chemaxon-registry.template
+      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/servicecatalog.template
       Parameters:
-        pAppSubnetA: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet1AID
-        pAppSubnetB: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet2AID
-        pAppServerInstanceType: !FindInMap [ ChemAxonRegistry, Defaults, AppServerInstanceType ]
-        pDBUsername: !Ref pChemAxonRegistryDBUsername
-        pDBPassword: !Ref pChemAxonRegistryDBPassword
-        pDBInstanceType: !FindInMap [ ChemAxonRegistry, Defaults, DBInstanceType ]
-        pDBAllocatedStorage: !FindInMap [ ChemAxonRegistry, Defaults, DBAllocatedStorage ]
-        pDBSubnetA: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet1BID
-        pDBSubnetB: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet2BID
-        pDBMultiAZ: !Ref pDBMultiAZ
-        pDmzSubnetA: !GetAtt rPreclinicalVpc.Outputs.PublicSubnet1ID
-        pDmzSubnetB: !GetAtt rPreclinicalVpc.Outputs.PublicSubnet2ID
-        pEC2KeyPair: !Ref pEC2KeyPair
-        pLoadBalancerType: !Ref pLoadBalancerType
-        pSecurityGroupForWebAccess: !GetAtt rOpenVpn.Outputs.rOpenVPNASAllowWebPortsSGParam
-        pVpcId: !GetAtt rPreclinicalVpc.Outputs.VPCID
+        QSS3BucketName: !Ref QSS3BucketName
+        QSS3KeyPrefix:  !Ref QSS3KeyPrefix
+        
+  rSystemsManager:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - rIam
+      - rPreclinicalVpc
+      - rManagementVpc
+      - rLogging
+      - rVpcNetworking
+    Properties:
+      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/systemsmanager.template
+      Parameters:
+        pVpcResearch: !GetAtt rPreclinicalVpc.Outputs.VPCID
+        pVpcResearchSubnetDmzA: !GetAtt rPreclinicalVpc.Outputs.PublicSubnet1ID
+        pVpcResearchSubnetDmzB:  !GetAtt rPreclinicalVpc.Outputs.PublicSubnet2ID
+        pVpcResearchSubnetAppA: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet1AID
+        pVpcResearchSubnetAppB: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet2AID
+        pVpcResearchSubnetDbA: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet1BID
+        pVpcResearchSubnetDbB: !GetAtt rPreclinicalVpc.Outputs.PrivateSubnet2BID
+        pQSS3BucketName: !Ref QSS3BucketName
+        pQSS3KeyPrefix:  !Ref QSS3KeyPrefix
         pDnsHostedZoneID: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneIDParam
         pDnsHostedZoneApexDomain: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneApexDomainName
+        pInformaticsAccessSG: !GetAtt rVpcNetworking.Outputs.InformaticsAccessSecurityGroup
+        pInternalHostedZoneTLDDomainName: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneTLDDomainName
+        pInternalHostedZoneSecondLevelDomainName: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneSecondLevelDomainName
+  
+  
+
 
 Outputs:
   TemplateVersion:
     Value: 1.0
-  BenchlingURL:
-    Description: URL to access Benchling
-    Value: !If [ cLaunchBenchlingPlatform, !GetAtt rBenchling.Outputs.BenchlingURL, Benchling not launched ]
-  ChemAxonRegistryDNS:
-    Description: DNS of Load Balancer to access ChemAxon Compound Registry
-    Value: !If [ cLaunchChemAxonRegistry, !GetAtt rChemAxonCompoundRegistry.Outputs.oLoadBalancerDNS, ChemAxon Compound Registry not launched ]
+
   

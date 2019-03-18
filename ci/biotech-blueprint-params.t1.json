@@ -5,11 +5,11 @@
     },
     {
         "ParameterKey": "pPreclinicalVPCCidrAandBBlock",
-        "ParameterValue": "10.121"
+        "ParameterValue": "10.131"
     },
     {
         "ParameterKey": "pManagementVPCCidrAandBBlock",
-        "ParameterValue": "10.122"
+        "ParameterValue": "10.132"
     },
     {
         "ParameterKey": "pInternalDnsSecondLevelDomain",
@@ -28,56 +28,17 @@
         "ParameterValue": "distlist@example.org"
     },
     {
-        "ParameterKey": "pEC2KeyPair",
-        "ParameterValue": "ajfriedm-hclscollab-taskcat"
-    },
-    {   
-        "ParameterKey": "pEC2KeyPairBastion",
-        "ParameterValue": "ajfriedm-hclscollab-taskcat"
-    },
-    {
-        "ParameterKey": "pBastionAccessCIDR",
-        "ParameterValue": "0.0.0.0/0"
-    },
-    {
-        "ParameterKey": "pOpenVPNASAccessCidr",
-        "ParameterValue": "0.0.0.0/0"
-    },
-    {
-        "ParameterKey": "pDBMultiAZ",
-        "ParameterValue": "true"
-    },
-    {
-        "ParameterKey": "pLaunchBenchlingPlatform",
-        "ParameterValue": "Yes"
-    },
-    {
-        "ParameterKey": "pLaunchChemAxonRegistry",
-        "ParameterValue": "Yes"
-    },
-    {
-        "ParameterKey": "pBenchlingInternalHostedZoneSecondLevelDomainName",
-        "ParameterValue": "biotechtx-private"
+        "ParameterKey": "pKeyPairName",
+        "ParameterValue": "paulu-hclscollab-taskcat"
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "ajfriedm-hclscollab-taskcat-bucket"
+        "ParameterValue": "paulu-hclscollab-taskcat-bucket"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",
         "ParameterValue": "quickstart-biotech-blueprint/"
-    },
-    {
-        "ParameterKey": "pChemAxonRegistryDBUsername",
-        "ParameterValue": "cacrDBUser"
-    },
-    {
-        "ParameterKey": "pChemAxonRegistryDBPassword",
-        "ParameterValue": "Test1234!"
-    }, 
-    {   
-        "ParameterKey": "pOpenVPNASAdminPassword",
-        "ParameterValue": "Test1234@"
     }
 ]
+
 
