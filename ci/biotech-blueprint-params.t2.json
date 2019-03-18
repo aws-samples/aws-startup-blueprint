@@ -28,44 +28,12 @@
         "ParameterValue": "distlist@example.org"
     },
     {
-        "ParameterKey": "pEC2KeyPair",
+        "ParameterKey": "pKeyPairName",
         "ParameterValue": "$[alfred_getkeypair]"
     },
     {
-        "ParameterKey": "pOpenVPNASAccessCidr",
-        "ParameterValue": "10.0.0.0/16"
-    },
-    {
-        "ParameterKey": "pDBMultiAZ",
-        "ParameterValue": "false"
-    },
-    {
-        "ParameterKey": "pLaunchBenchlingPlatform",
-        "ParameterValue": "No"
-    },
-    {
-        "ParameterKey": "pLaunchChemAxonRegistry",
-        "ParameterValue": "No"
-    },
-    {
-        "ParameterKey": "pBenchlingInternalHostedZoneSecondLevelDomainName",
-        "ParameterValue": "biotechtx-private"
-    },
-    {
-        "ParameterKey": "pChemAxonRegistryDBUsername",
-        "ParameterValue": "cacrDBUser"
-    },
-    {
-        "ParameterKey": "pChemAxonRegistryDBPassword",
-        "ParameterValue": "$[taskcat_genpass_20]"
-    }, 
-    {   
-        "ParameterKey": "pOpenVPNASAdminPassword",
-        "ParameterValue": "$[taskcat_genpass_20]"
-    },
-    {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "$[taskcat_autobucket]"
+        "ParameterValue": "paulu-hclscollab-taskcat-bucket"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",

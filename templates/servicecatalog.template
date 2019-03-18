@@ -1,0 +1,94 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: This is the Biotech Blueprint Informatics Service Catalog template that creates a Serivce Catalog portfolio and stocks it with a variety of informatics components you can easily deploy.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: AWS Quick Start Configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3KeyPrefix  
+    ParameterLabels:
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix       
+Parameters:
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: aws-quickstart
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and a forward slash (/) at the end of the prefix.
+    Default: quickstart-biotech-blueprint/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
+          
+Resources:
+  PorfolioBB:
+    Type: "AWS::ServiceCatalog::Portfolio"
+    Properties:
+      ProviderName: AWS
+      Description: Collection of Bio and Chem informatics tools assembled by AWS to make life easier for biotechs.
+      DisplayName: Biotech Blueprint Informatics Tools
+  # HailProduct:  
+  #   Type: "AWS::ServiceCatalog::CloudFormationProduct"
+  #   Properties:
+  #     Owner: AWS
+  #     Description: Hail is an open-source, scalable framework for exploring and analyzing genomic data.
+  #     Distributor: Broad Institute
+  #     SupportUrl: https://hail.is
+  #     Name: Hail 0.2
+  #     ProvisioningArtifactParameters:
+  #       - Info:
+  #           LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/hail.template"
+  # HailProductAssociation:         
+  #   Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+  #   Properties:
+  #     PortfolioId: !Ref PorfolioBB
+  #     ProductId: !Ref HailProduct
+  ChemAxonProduct:  
+    Type: "AWS::ServiceCatalog::CloudFormationProduct"
+    Properties:
+      Owner: AWS
+      Description: ChemAxon's Compound Registration is a system built on a set of web services, aiding users to register molecular structures into a compound database. The registration process spots unique compounds among a set of structures already contained within the database.
+      Distributor: ChemAxon
+      SupportUrl: https://chemaxon.com/support
+      Name: ChemAxon Compound Registry
+      ProvisioningArtifactParameters:
+        - Info:
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/bb.chemaxon-registry.template"
+  ChemAxonProductAssociation:         
+    Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+    Properties:
+      PortfolioId: !Ref PorfolioBB
+      ProductId: !Ref ChemAxonProduct      
+      
+  BenchlingProduct:  
+    Type: "AWS::ServiceCatalog::CloudFormationProduct"
+    Properties:
+      Owner: AWS
+      Description: Benchling Biotech Blueprint template to automate creating PrivateLink and split horizon DNS configs to Benchling's SaaS platform.
+      Distributor: Benchling
+      SupportUrl: https://benchling.com/enterprise
+      Name: Benchling
+      ProvisioningArtifactParameters:
+        - Info:
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/bb.benchling-platform.template"
+  BenchlingProductAssociation:         
+    Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+    Properties:
+      PortfolioId: !Ref PorfolioBB
+      ProductId: !Ref BenchlingProduct            
+      
