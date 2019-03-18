@@ -33,7 +33,7 @@
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "paulu-hclscollab-taskcat-bucket"
+        "ParameterValue": "$[taskcat_autobucket]"
     },
     {
         "ParameterKey": "QSS3KeyPrefix",
