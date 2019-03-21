@@ -20,7 +20,6 @@ Metadata:
         Parameters:
           - pNotifyEmail
           - pSupportConfig
-          - pLoadBalancerType
           - pKeyPairName
       - Label:
           default: Managed VPN
@@ -56,8 +55,6 @@ Metadata:
         default: Preferred internal top level domain name
       pSupportConfig:
         default: Support AWS Config
-      pLoadBalancerType:
-        default: Load Balancer Type
       pCreateClientVPNEndpoint:
         default: Create an Client VPN Endpoint
       pClientCidr:
@@ -119,13 +116,6 @@ Parameters:
       - "Yes"
       - "No"
     Default: "No"
-  pLoadBalancerType:
-    Description: Internal by default. Internal load balancers are only accessible within your VPC. For example, users connected to the Client VPN Endpoint can reach internal load balancers, but internet traffic cannot.
-    Default: internal
-    Type: String
-    AllowedValues: 
-      - internet-facing
-      - internal
   pCreateClientVPNEndpoint: 
     Description: Do want to deploy the AWS Client VPN Endpoint solution? This is a managed VPN solution to securely access the VPCs created by the quickstart.
     Type: String
