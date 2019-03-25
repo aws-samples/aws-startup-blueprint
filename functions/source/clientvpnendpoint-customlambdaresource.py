@@ -3,6 +3,7 @@ import os
 import sys
 import boto3
 import logging
+import time
 import json
 from botocore.vendored import requests
 import traceback
@@ -48,8 +49,9 @@ def create_endpoint(event, context):
       vpnConfigBucket = event['ResourceProperties']['VpnConfigBucket']
       vpcId = event['ResourceProperties']['VpcId']
       vpcSecurityGroup = event['ResourceProperties']['VpcSecurityGroup']
+      dnsServerIP = event['ResourceProperties']['DNSServerIP']
+      vpcAandBClassToRoutableNetworks = event['ResourceProperties']['VpcAandBClassToRoutableNetworks']
 
-  
       installEasyRSACommands = ['curl -L https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.6/EasyRSA-unix-v3.0.6.tgz -O',
                             'mkdir /tmp/easyrsa',
                             'mkdir /tmp/vpndetails',
@@ -78,14 +80,16 @@ def create_endpoint(event, context):
           CertificateChain=get_bytes_from_file('/tmp/vpndetails/ca.crt')
       )
       
+      
       clientCertResponse = acm.import_certificate(
           Certificate=get_bytes_from_file('/tmp/vpndetails/client1.domain.tld.crt'),
           PrivateKey=get_bytes_from_file('/tmp/vpndetails/client1.domain.tld.key'),
           CertificateChain=get_bytes_from_file('/tmp/vpndetails/ca.crt')
       )
       
-      createClientCmd = ['aws ec2 create-client-vpn-endpoint --client-cidr-block {0} --server-certificate-arn {1} --authentication-options Type=certificate-authentication,MutualAuthentication={{ClientRootCertificateChainArn={2}}} --connection-log-options Enabled=True,CloudwatchLogGroup={3},CloudwatchLogStream={4}'.format(
-                          clientCidr,serverCertResponse['CertificateArn'], clientCertResponse['CertificateArn'], logGroup, logStream)]
+      
+      createClientCmd = ['aws ec2 create-client-vpn-endpoint --client-cidr-block {0} --server-certificate-arn {1} --authentication-options Type=certificate-authentication,MutualAuthentication={{ClientRootCertificateChainArn={2}}} --connection-log-options Enabled=True,CloudwatchLogGroup={3},CloudwatchLogStream={4} --dns-servers {5}'.format(
+                          clientCidr,serverCertResponse['CertificateArn'], clientCertResponse['CertificateArn'], logGroup, logStream, dnsServerIP)]
       endpointResponseRaw = runCommandSet(createClientCmd)
       
       endpointResponse = json.loads(endpointResponseRaw[0])
@@ -124,6 +128,14 @@ def create_endpoint(event, context):
       configText += "\nkey client1.domain.tld.key"
       configText += "\ncert client1.domain.tld.crt"
       
+      configText += "\nroute 0.0.0.0 192.0.0.0 net_gateway"
+      configText += "\nroute 64.0.0.0 192.0.0.0 net_gateway"
+      configText += "\nroute 128.0.0.0 192.0.0.0 net_gateway"
+      configText += "\nroute 192.0.0.0 192.0.0.0 net_gateway"
+      
+      for AandBClassOctet in vpcAandBClassToRoutableNetworks:
+        configText += "\nroute {0}.0.0 255.255.0.0 vpn_gateway".format(AandBClassOctet)
+        
       logger.info(configText)
       
       with open("/tmp/vpndetails/openvpnclientconfig.ovpn", "w") as confFile:

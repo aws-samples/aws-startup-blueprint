@@ -32,6 +32,10 @@
         "ParameterValue": "paulu-hclscollab-taskcat"
     },
     {
+        "ParameterKey": "pTargetNetworkCidr",
+        "ParameterValue": "0.0.0.0/0"
+    },
+    {
         "ParameterKey": "QSS3BucketName",
         "ParameterValue": "$[taskcat_autobucket]"
     },

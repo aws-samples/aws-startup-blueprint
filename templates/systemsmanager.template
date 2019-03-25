@@ -30,7 +30,32 @@ Parameters:
     Type: "String"
   pInformaticsAccessSG:
     Type: "String"
+  pPreclinicalVPCCidrAandBBlock:
+    Type: "String"
+  pManagementVPCCidrAandBBlock: 
+    Type: "String"
 Resources:
+  VpcResearchCidrRangeAndBClass:
+    Type: "AWS::SSM::Parameter"
+    Properties: 
+      Description: Research VPC A and B block ranges to be used for routing VPN clients
+      Name: /BB/Networking/VPC/Research/AandBblock
+      Value: !Ref pPreclinicalVPCCidrAandBBlock
+      Type: String
+  VpcManagmentCidrRangeAndBClass:
+    Type: "AWS::SSM::Parameter"
+    Properties: 
+      Description: Management VPC A and B block ranges to be used for routing VPN clients
+      Name: /BB/Networking/VPC/Managment/AandBblock
+      Value: !Ref pManagementVPCCidrAandBBlock
+      Type: String
+  VpnRoutableRanges:
+    Type: "AWS::SSM::Parameter"
+    Properties: 
+      Description: A and B Class IP octets that can be NATed to the optional Client VPN Endpoint
+      Name: /BB/Networking/VPN/RoutableOctets
+      Value: !Sub "${pManagementVPCCidrAandBBlock},${pPreclinicalVPCCidrAandBBlock}"
+      Type: StringList
   VpcResearch:
     Type: "AWS::SSM::Parameter"
     Properties: 

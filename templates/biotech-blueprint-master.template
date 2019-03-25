@@ -130,7 +130,6 @@ Parameters:
   pTargetNetworkCidr:
     Description: "What CIDR range will your VPN clients be coming from? This could be your corporate network or 0.0.0.0/0 to make it public."
     Type: String
-    Default: "0.0.0.0/0"
   pLaunchServiceCatalogPortfolio:
     Description: Do you want to make additional informatics tools available after deployment via service catalog?
     Type: String
@@ -319,9 +318,8 @@ Resources:
         pInformaticsAccessSG: !GetAtt rVpcNetworking.Outputs.InformaticsAccessSecurityGroup
         pInternalHostedZoneTLDDomainName: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneTLDDomainName
         pInternalHostedZoneSecondLevelDomainName: !GetAtt rVpcNetworking.Outputs.InternalHostedZoneSecondLevelDomainName
-  
-  
-
+        pPreclinicalVPCCidrAandBBlock: !Ref pPreclinicalVPCCidrAandBBlock
+        pManagementVPCCidrAandBBlock: !Ref pManagementVPCCidrAandBBlock
 
 Outputs:
   TemplateVersion:

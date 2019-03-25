@@ -42,22 +42,6 @@ Resources:
       ProviderName: AWS
       Description: Collection of Bio and Chem informatics tools assembled by AWS to make life easier for biotechs.
       DisplayName: Biotech Blueprint Informatics Tools
-  # HailProduct:  
-  #   Type: "AWS::ServiceCatalog::CloudFormationProduct"
-  #   Properties:
-  #     Owner: AWS
-  #     Description: Hail is an open-source, scalable framework for exploring and analyzing genomic data.
-  #     Distributor: Broad Institute
-  #     SupportUrl: https://hail.is
-  #     Name: Hail 0.2
-  #     ProvisioningArtifactParameters:
-  #       - Info:
-  #           LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/hail.template"
-  # HailProductAssociation:         
-  #   Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
-  #   Properties:
-  #     PortfolioId: !Ref PorfolioBB
-  #     ProductId: !Ref HailProduct
   ChemAxonProduct:  
     Type: "AWS::ServiceCatalog::CloudFormationProduct"
     Properties:
@@ -68,7 +52,7 @@ Resources:
       Name: ChemAxon Compound Registry
       ProvisioningArtifactParameters:
         - Info:
-            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/bb.chemaxon-registry.template"
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/bb.chemaxon-registry.template"
   ChemAxonProductAssociation:         
     Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
     Properties:
@@ -85,7 +69,7 @@ Resources:
       Name: Benchling
       ProvisioningArtifactParameters:
         - Info:
-            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}scripts/bb.benchling-platform.template"
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/bb.benchling-platform.template"
   BenchlingProductAssociation:         
     Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
     Properties:

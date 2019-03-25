@@ -8,7 +8,6 @@ global:
     - us-east-1
     - us-west-2
   reporting: true
- 
 tests:
   quickstart-biotech-blueprintt1:
     parameter_input: biotech-blueprint-params.t1.json
@@ -17,4 +16,3 @@ tests:
     - us-east-1
     - us-west-2
     - eu-west-1
-
