@@ -45,10 +45,12 @@ Resources:
   ChemAxonProduct:  
     Type: "AWS::ServiceCatalog::CloudFormationProduct"
     Properties:
-      Owner: AWS
+      Owner: ChemAxon
       Description: ChemAxon's Compound Registration is a system built on a set of web services, aiding users to register molecular structures into a compound database. The registration process spots unique compounds among a set of structures already contained within the database.
-      Distributor: ChemAxon
-      SupportUrl: https://chemaxon.com/support
+      Distributor: AWS
+      SupportDescription: "You need to subscribe to the ChemAxon marketplace AMI before you can deploy this software. https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631&sr=0-1&ref_=srh_res_product_title."
+      SupportUrl: "https://chemaxon.com/support"
+      SupportEmail: support@chemaxon.com
       Name: ChemAxon Compound Registry
       ProvisioningArtifactParameters:
         - Info:
