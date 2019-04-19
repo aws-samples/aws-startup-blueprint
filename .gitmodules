@@ -14,3 +14,7 @@
 	path = submodules/quickstart-benchling-platform
 	url = ../../aws-quickstart/quickstart-benchling-platform.git
 	branch = master
+[submodule "submodules/quickstart-dotmatics"]
+	path = submodules/quickstart-dotmatics
+	url = https://github.com/aws-quickstarts/quickstart-dotmatics
+	branch = master
