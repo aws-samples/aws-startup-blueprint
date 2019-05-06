@@ -141,7 +141,7 @@ Resources:
       VpcId: !Ref pVpcId
       DNSServerIP: !Sub "${pVpcAandBClassProvidingDns}.0.2"
       VpcAandBClassToRoutableNetworks: !Ref pVpcAandBClassToRoutableNetworks
-      HandlerShimUrl: !Sub "https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}functions/source/clientvpnendpoint-customlambdaresource.py"
+      HandlerShimUrl: !Sub "https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/clientvpnendpoint-customlambdaresource.py"
 
   rClientVPNLogGroup: 
     Type: AWS::Logs::LogGroup
