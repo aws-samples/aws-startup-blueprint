@@ -1,0 +1,370 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  (WWPS-GLS-WF-ROOT) Scalable genomics workflows environment
+
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Required Parameters
+        Parameters:
+          - KeyPairName
+          - S3BucketName
+          - ExistingBucket
+          - S3NextflowScriptPrefix
+          - S3NextflowWorkDirPrefix
+      - Label:
+          default: Tags 
+        Parameters:
+          - OwnerTag
+          - NameTag
+          - PurposeTag
+      - Label:
+          default: Notebook Options (optional)
+        Parameters:
+          - DeployNotebook
+          - NotebookInstanceSize
+          - NotebookSubnet
+          - NotebookStorageSpace
+      - Label:
+          default: VPC Info (optional)
+        Parameters:
+          - VpcId
+          - AppSubnetA
+          - AppSubnetB
+      - Label:
+          default: Optional Batch Configs (optional)
+        Parameters:
+          - SpotBidPercentage
+          - DefaultCEMinvCpus
+          - DefaultCEMaxvCpus
+          - HighPriorityCEMinvCpus
+          - HighPriorityCEMaxvCpus
+          - TemplateRootUrl
+          - StartingScratchVolumeSize
+          - ScratchMountPoint
+      - Label:
+          default: Nextflow Resources (optional)
+        Parameters:
+          - NextflowContainerImage
+    ParameterLabels:
+      S3BucketName:
+        default: S3 Bucket Name
+      ExistingBucket:
+        default: Existing Bucket?
+      VpcId:
+        default: VPC ID
+      SubnetIds:
+        default: VPC Subnet IDs
+      KeyPairName:
+        default: EC2 Key Pair Name
+      SpotBidPercentage:
+        default: Spot Bid %
+      DefaultCEMinvCpus:
+        default: Default Min vCPU
+      DefaultCEMaxvCpus:
+        default: Default Max vCPU
+      HighPriorityCEMinvCpus:
+        default: High Priority Min vCPU
+      HighPriorityCEMaxvCpus:
+        default: High Priority Max vCPU
+      TemplateRootUrl:
+        default: Template Root URL
+      StartingScratchVolumeSize:
+        default: Starting size for scratch EBS volumes 
+      ScratchMountPoint:
+        default: Location to mount scratch point
+    
+    
+Parameters:
+  NotebookSubnet:
+    Description: Subnet for Notebook nodes, from the VPC selected above
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
+    Default: /BB/Networking/VPC/Research/Subnet/DMZ/A           
+  NotebookInstanceSize:
+    Description: Instance type to use for the JupyterLabs notebook. 
+    Type: 'String'
+    Default: ml.t2.medium       
+  NotebookStorageSpace: 
+    Description: GB of EBS storage for the JuptyerLab notebook.
+    Type: Number
+    Default: 50
+  OwnerTag:
+    Type: String
+    Default: Owner
+    MinLength: 1
+    Description: Your name - used to tag resources launched by the template
+  PurposeTag:
+    Type: String
+    MinLength: 1
+    Default: genomics
+    Description: Purpose - used to tag the resources launched by the template
+  NameTag:
+    Type: String
+    MinLength: 1
+    Default: nextflow
+    Description: Environment - used to tag resources launched by the template
+    
+  DeployNotebook:
+    Description: Would you like to deploy an integrated SageMaker Jupyter Notebook
+    Type: String
+    AllowedValues:
+      - Yes
+      - No
+    Default: Yes
+  VpcId:
+    Description: 'The VPC to create security groups and deploy AWS Batch to. NOTE: Must be the same VPC as the provided subnet IDs.'
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>'
+    Default: /BB/Networking/VPC/Research
+    
+  AppSubnetA:
+    Description: 'Subnet you want your batch compute environment to launch in. We recommend private subnets. NOTE: Must be from the VPC provided.' 
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
+    Default: /BB/Networking/VPC/Research/Subnet/App/A
+  AppSubnetB:
+    Description: 'Subnets you want your batch compute environment to launch in. We recommend private subnets. NOTE: Must be from the VPC provided.'
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
+    Default: /BB/Networking/VPC/Research/Subnet/App/B    
+    
+  S3BucketName:
+    Description: >-
+      A S3 bucket name for storing analysis results.
+      The bucket name must respect the S3 bucket naming conventions 
+      (can contain lowercase letters, numbers, periods and hyphens).
+    Type: String
+    AllowedPattern: "(?=^.{3,63}$)(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)"
+    ConstraintDescription: "Must respect AWS naming conventions"
+  ExistingBucket:
+    Description: Does this bucket already exist?
+    Type: String
+    AllowedValues:
+      - Yes
+      - No
+    Default: Yes
+  KeyPairName:
+    Description: Key Pair name
+    Type: AWS::EC2::KeyPair::KeyName
+  SpotBidPercentage:
+    Description: The percent of on-demand pricing for max bid for Spot intances
+    Type: Number
+    Default: 100
+  DefaultCEMinvCpus:
+    Description: The minimum number of CPUs for the default Batch Compute Environment
+    Type: Number
+    Default: 0
+  DefaultCEMaxvCpus:
+    Description: The maximum number of CPUs for the default Batch Compute Environment
+    Type: Number
+    Default: 100
+  HighPriorityCEMinvCpus:
+    Description: The minimum number of CPUs for the high-priority Batch Compute Environment
+    Type: Number
+    Default: 0
+  HighPriorityCEMaxvCpus:
+    Description: The maximum number of CPUs for the high-priority Batch Compute Environment
+    Type: Number
+    Default: 100
+  StartingScratchVolumeSize:
+    Description: The starting scratch space EBS volume size.
+    Type: Number
+    Default: 200
+  TemplateRootUrl:
+    Type: String
+    Description: >-
+      Root URL for where nested templates are stored
+    Default: https://s3.amazonaws.com/aws-genomics-workflows/templates
+    ConstraintDescription: >-
+      Must be a valid S3 URL
+    AllowedPattern: "https://s3(-[a-z0-9]+)*\\.amazonaws\\.com/[a-z0-9-./]{3,}"
+  S3NextflowWorkDirPrefix:
+    Type: String
+    Description: >-
+      Parent folder in the S3 bucket that will contains workflow execution logs. This folder does not have to already exist. 
+  S3NextflowScriptPrefix:
+    Type: String
+    Description: >-
+      Parent folder in the S3 bucket that will contains *.nf workflow scripts. This folder does not have to already exist. 
+  NextflowContainerImage:
+    Type: String
+    Description: >-
+      This is optional. If you dont supply a value, CloudFormation will build a container for you. If you have a customer container image for nextflow with custom entrypoint, supply the containers location. (Example, "<dockerhubuser>/nextflow:latest")
+  ScratchMountPoint:
+    Type: String
+    Default: ""
+    Description: >-
+      Path for the scratch mount point in the instance. Leave this blank to use the auto-expanding EBS volume.  
+  QSS3BucketName:
+    Default: /BB/QuickStart/QSS3BucketName
+    Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
+      can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+    Type: 'AWS::SSM::Parameter::Value<String>'  
+  QSS3KeyPrefix:
+    Default: /BB/QuickStart/QSS3KeyPrefix
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: 'AWS::SSM::Parameter::Value<String>' 
+    
+Resources:
+
+  NotebookSecurityGroup: 
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref VpcId
+      GroupDescription: !Sub "Security group for ${OwnerTag}-${NameTag}-${PurposeTag} Sagemaker Notebook to connect to Hail cluster."
+      SecurityGroupIngress: []
+      Tags: 
+      - Key: Name
+        Value: !Sub "${OwnerTag}-${NameTag}-${PurposeTag} - Notebook security group."
+  JupyterLabInstance:
+    Type: "AWS::SageMaker::NotebookInstance"
+    DependsOn:
+      - JupterLabBoostrap
+    Properties:
+      InstanceType: !Ref NotebookInstanceSize
+      RoleArn: !GetAtt JupyterRole.Arn
+      LifecycleConfigName: !Sub "${OwnerTag}-${NameTag}-${PurposeTag}-SetupNextflow"
+      NotebookInstanceName: !Sub "${OwnerTag}-${NameTag}-${PurposeTag}"
+      RootAccess: Enabled
+      SubnetId: !Ref NotebookSubnet
+      VolumeSizeInGB: !Ref NotebookStorageSpace
+      SecurityGroupIds: 
+        - !Ref NotebookSecurityGroup
+    
+  JupterLabBoostrap: 
+    Type: "AWS::SageMaker::NotebookInstanceLifecycleConfig"
+    Properties:
+      NotebookInstanceLifecycleConfigName: !Sub "${OwnerTag}-${NameTag}-${PurposeTag}-SetupNextflow"
+      OnCreate: 
+        - Content:
+            Fn::Base64: !Sub |
+          
+              mkdir /home/ec2-user/SageMaker/nextflowbatchhelper
+              curl https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/nextflow/nf-core-rnaseq-example.ipynb -o /home/ec2-user/SageMaker/nf-core-rnaseq-example.ipynb
+              curl https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/nextflow/nextflowbatchhelper/tailCloudwatch.py -o /home/ec2-user/SageMaker/nextflowbatchhelper/tailCloudwatch.py
+              curl https://s3.amazonaws.com/${QSS3BucketName}/${QSS3KeyPrefix}scripts/nextflow/nextflowbatchhelper/bb.nextflow.diagram.png -o /home/ec2-user/SageMaker/nextflowbatchhelper/bb.nextflow.diagram.png
+              
+              jobQueueArn="${BatchStack.Outputs.DefaultJobQueueArn}"
+              jobQueueName=$(cut -d "/" -f 2 <<< $jobQueueArn)
+              
+              sed -i s/xxWorkflowBucketxx/${S3BucketName}/g /home/ec2-user/SageMaker/nf-core-rnaseq-example.ipynb
+              sed -i s/xxWorkflowPrefixxx/${S3NextflowScriptPrefix}/g /home/ec2-user/SageMaker/nf-core-rnaseq-example.ipynb
+              sed -i s/xxJobQueuexx/$jobQueueName/g /home/ec2-user/SageMaker/nf-core-rnaseq-example.ipynb
+              
+              git clone https://github.com/nf-core/rnaseq.git /home/ec2-user/SageMaker/nf-core/rnaseq
+              
+  JupyterRole: 
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Principal: 
+              Service: 
+                - "sagemaker.amazonaws.com"
+            Action: 
+              - "sts:AssumeRole"
+      Path: "/"
+      ManagedPolicyArns: ["arn:aws:iam::aws:policy/AWSBatchFullAccess", "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"]
+      Policies: 
+        - 
+          PolicyName: "s3Access"
+          PolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action: "*"
+                Resource: !Sub "arn:aws:s3:::${S3BucketName}/${S3NextflowScriptPrefix}/*"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Action: "*"
+                Resource: !Sub "arn:aws:s3:::${S3BucketName}"
+
+  NextflowStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - BatchStack
+    Properties:
+      TemplateURL:  !Sub ${TemplateRootUrl}/nextflow/nextflow-resources.template.yaml
+      Parameters:
+        S3DataBucketName: !Ref S3BucketName
+        S3NextflowBucketName: !Ref S3BucketName
+        ExistingBucket: !Ref ExistingBucket
+        S3WorkDirPrefix: !Ref S3NextflowWorkDirPrefix
+        S3ScriptPrefix: !Ref S3NextflowScriptPrefix
+        NextflowContainerImage: !Ref NextflowContainerImage
+        BatchDefaultJobQueue: !GetAtt BatchStack.Outputs.DefaultJobQueueArn
+
+  S3Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub ${TemplateRootUrl}/aws-genomics-s3.template.yaml
+      TimeoutInMinutes: 5
+      Parameters:
+        S3BucketName: !Ref S3BucketName
+        ExistingBucket: !Ref ExistingBucket
+  
+  IamStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: S3Stack
+    Properties:
+      TemplateURL: !Sub ${TemplateRootUrl}/aws-genomics-iam.template.yaml
+      TimeoutInMinutes: 10
+      Parameters:
+        S3BucketName: !Ref S3BucketName
+  
+  LaunchTplStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub ${TemplateRootUrl}/aws-genomics-launch-template.template.yaml
+      Parameters:
+        WorkflowOrchestrator: nextflow
+        ScratchVolumeSize: !Ref StartingScratchVolumeSize
+        ScratchMountPoint: !Ref ScratchMountPoint
+  
+  BatchStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - IamStack
+      - LaunchTplStack
+    Properties:
+      TemplateURL: !Sub ${TemplateRootUrl}/aws-genomics-batch.template.yaml
+      TimeoutInMinutes: 10
+      Parameters:
+        LaunchTemplateId: !Sub ${LaunchTplStack.Outputs.LaunchTemplateId}
+        Ec2KeyPairName: !Ref KeyPairName
+        VpcId: !Ref VpcId
+        SubnetIds: !Sub "${AppSubnetA},${AppSubnetB}"
+        SpotBidPercentage: !Ref SpotBidPercentage
+        DefaultCEMinvCpus: !Ref DefaultCEMinvCpus
+        DefaultCEMaxvCpus: !Ref DefaultCEMaxvCpus
+        HighPriorityCEMinvCpus: !Ref HighPriorityCEMinvCpus
+        HighPriorityCEMaxvCpus: !Ref HighPriorityCEMaxvCpus
+        BatchServiceRoleArn: !Sub ${IamStack.Outputs.BatchServiceRoleArn}
+        Ec2InstanceProfileArn: !Sub ${IamStack.Outputs.BatchInstanceProfileArn}
+        SpotFleetRoleArn: !Sub ${IamStack.Outputs.BatchSpotFleetRoleArn}
+
+
+Outputs:
+  GenomicsEnvS3Bucket:
+    Value: !Sub ${S3Stack.Outputs.BucketName}
+    Export:
+        Name: !Sub "${AWS::StackName}-Genomics-S3Bucket"
+  GenomicsEnvBatchJobRoleArn:
+    Value: !Sub ${IamStack.Outputs.BatchJobRoleArn}
+    Export:
+        Name: !Sub "${AWS::StackName}-Genomics-BatchJobRoleArn"
+  GenomicsEnvDefaultJobQueueArn:
+    Value: !Sub ${BatchStack.Outputs.DefaultJobQueueArn}
+    Export:
+        Name: !Sub "${AWS::StackName}-Genomics-DefaultJobQueueArn"
+  GenomicsEnvHighPriorityJobQueueArn:
+    Value: !Sub ${BatchStack.Outputs.HighPriorityJobQueueArn}
+    Export:
+        Name: !Sub "${AWS::StackName}-Genomics-HighPriorityJobQueueArn"
