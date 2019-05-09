@@ -272,17 +272,14 @@ Resources:
       ManagedPolicyArns: ["arn:aws:iam::aws:policy/AWSBatchFullAccess", "arn:aws:iam::aws:policy/CloudWatchLogsReadOnlyAccess"]
       Policies: 
         - 
-          PolicyName: "s3Access"
+          PolicyName: !Sub "${OwnerTag}-${NameTag}-${PurposeTag}-NotebookS3Access"
           PolicyDocument: 
             Version: "2012-10-17"
             Statement: 
-              - 
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: "*"
                 Resource: !Sub "arn:aws:s3:::${S3BucketName}/${S3NextflowScriptPrefix}/*"
-            Statement: 
-              - 
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: "*"
                 Resource: !Sub "arn:aws:s3:::${S3BucketName}"
 
