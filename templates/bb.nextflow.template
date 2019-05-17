@@ -75,26 +75,28 @@ Metadata:
         default: Starting size for scratch EBS volumes 
       ScratchMountPoint:
         default: Location to mount scratch point
-    
-    
+      StartingScratchVolumeSize:
+        default: Starting size for scratch EBS volumes
+
+
 Parameters:
   NotebookSubnet:
-    Description: Subnet for Notebook nodes, from the VPC selected above
+    Description: The ID of the public subnet you want to use for the Jupyter notebook nodes. This must be a subnet of the VPC you specify with the VPC ID parameter.
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
     Default: /BB/Networking/VPC/Research/Subnet/DMZ/A           
   NotebookInstanceSize:
-    Description: Instance type to use for the JupyterLabs notebook. 
+    Description: The SageMaker instance type to use for the Jupyter notebook. The Quick Start provides a selection of instance types that are optimized for different machine learning (ML) use cases. For more information about ML instance type specifications and prices, see the SageMaker webpage. 
     Type: 'String'
     Default: ml.t2.medium       
   NotebookStorageSpace: 
-    Description: GB of EBS storage for the JuptyerLab notebook.
+    Description: The amount of Amazon Elastic Block Store (Amazon EBS) storage to use for the Jupyter notebook instance, in GiB.
     Type: Number
     Default: 50
   OwnerTag:
     Type: String
-    Default: Owner
+    Default: owner
     MinLength: 1
-    Description: Your name - used to tag resources launched by the template
+    Description: Your name - used to tag resources launched by the template. For example, the notebook will have the name owner-nextflow-genomics in SageMaker.
   PurposeTag:
     Type: String
     MinLength: 1
@@ -107,50 +109,54 @@ Parameters:
     Description: Environment - used to tag resources launched by the template
     
   DeployNotebook:
-    Description: Would you like to deploy an integrated SageMaker Jupyter Notebook
+    Description: Set this parameter to No if you don’t want to deploy a Jupyter notebook to provide an example of the Nextflow workflow orchestration environment.
     Type: String
     AllowedValues:
       - Yes
       - No
     Default: Yes
   VpcId:
-    Description: 'The VPC to create security groups and deploy AWS Batch to. NOTE: Must be the same VPC as the provided subnet IDs.'
+    Description: 'The ID of your existing VPC (e.g., vpc-0343606e) to use for the Nextflow environment.'
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>'
     Default: /BB/Networking/VPC/Research
     
   AppSubnetA:
-    Description: 'Subnet you want your batch compute environment to launch in. We recommend private subnets. NOTE: Must be from the VPC provided.' 
+    Description: 'The ID of the first subnet in your existing VPC for setting up the AWS Batch compute environment (e.g., subnet-a0246dcd). We recommend using a private subnet.' 
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
     Default: /BB/Networking/VPC/Research/Subnet/App/A
   AppSubnetB:
-    Description: 'Subnets you want your batch compute environment to launch in. We recommend private subnets. NOTE: Must be from the VPC provided.'
+    Description: 'The ID of the second subnet in your existing VPC for setting up the AWS Batch compute environment (e.g., subnet-b58c3d67). We recommend using a private subnet.'
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>'
     Default: /BB/Networking/VPC/Research/Subnet/App/B    
     
   S3BucketName:
     Description: >-
-      A S3 bucket name for storing analysis results.
-      The bucket name must respect the S3 bucket naming conventions 
+      A S3 bucket name for storing analysis results and staging your Nextflow workflow scripts. This can be an existing or new bucket.
+      The bucket name must respect the S3 bucket naming conventions
       (can contain lowercase letters, numbers, periods and hyphens).
     Type: String
     AllowedPattern: "(?=^.{3,63}$)(?!^(\\d+\\.)+\\d+$)(^(([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])\\.)*([a-z0-9]|[a-z0-9][a-z0-9\\-]*[a-z0-9])$)"
     ConstraintDescription: "Must respect AWS naming conventions"
   ExistingBucket:
-    Description: Does this bucket already exist?
+    Description: Set this parameter to False if the S3 bucket you specified in the previous parameter doesn’t exist, and you want the Quick Start to create a new bucket for storing analysis results.
     Type: String
     AllowedValues:
       - Yes
       - No
     Default: Yes
   KeyPairName:
-    Description: Key Pair name
+    Description: A public/private key pair, which allows you to connect securely to any instances Batch launches.
     Type: AWS::EC2::KeyPair::KeyName
   SpotBidPercentage:
-    Description: The percent of on-demand pricing for max bid for Spot intances
+    Description: >-
+      The bid percentage set for the AWS Batch managed compute environment with Spot Instances. Specify a value between 1 and 100.
+      The bid percentage specifies the maximum percentage that a Spot Instance price can be when compared with the On-Demand price for that instance type before instances are launched. 
+      For example, if you set this parameter to 20, the Spot price must be below 20% of the current On-Demand price for that EC2 instance. You always pay the lowest (market) price and never more than your maximum percentage. 
+      For more information, see the Spot Instance pricing webpage. 
     Type: Number
     Default: 100
   DefaultCEMinvCpus:
-    Description: The minimum number of CPUs for the default Batch Compute Environment
+    Description: The minimum number of virtual CPUs for the default-priority AWS Batch compute environment. Leaving this at zero means Batch will remove any compute resources when there are no jobs on the queue.
     Type: Number
     Default: 0
   DefaultCEMaxvCpus:
@@ -158,21 +164,21 @@ Parameters:
     Type: Number
     Default: 100
   HighPriorityCEMinvCpus:
-    Description: The minimum number of CPUs for the high-priority Batch Compute Environment
+    Description: The minimum number of virtual CPUs for the high-priority AWS Batch compute environment. Leaving this at zero means Batch will remove any compute resources when there are no jobs on the queue.
     Type: Number
     Default: 0
   HighPriorityCEMaxvCpus:
     Description: The maximum number of CPUs for the high-priority Batch Compute Environment
     Type: Number
     Default: 100
-  StartingScratchVolumeSize:
-    Description: The starting scratch space EBS volume size.
+  StartingScratchVolumeSize: The starting EBS volume size for the scratch space, which provides auto-expanding storage to support unpredictable runtime demands.
+    Description: The 
     Type: Number
     Default: 200
   TemplateRootUrl:
     Type: String
     Description: >-
-      Root URL for where nested templates are stored
+      Root URL for where nested templates are stored. Unless you have forked the aws-samples/aws-genomics-workflows repo, you should leave the default value.
     Default: https://s3.amazonaws.com/aws-genomics-workflows/templates
     ConstraintDescription: >-
       Must be a valid S3 URL
@@ -180,20 +186,20 @@ Parameters:
   S3NextflowWorkDirPrefix:
     Type: String
     Description: >-
-      Parent folder in the S3 bucket that will contains workflow execution logs. This folder does not have to already exist. 
+      The parent folder in the S3 bucket that will contain Nextflow working directory (intermediate and output) files. The Quick Start will create this folder for you.
   S3NextflowScriptPrefix:
     Type: String
     Description: >-
-      Parent folder in the S3 bucket that will contains *.nf workflow scripts. This folder does not have to already exist. 
+      The parent folder in the S3 bucket that will contain Nextflow workflow scripts (*.nf, *.config, etc. files). The Quick Start will create this folder for you. 
   NextflowContainerImage:
     Type: String
     Description: >-
-      This is optional. If you dont supply a value, CloudFormation will build a container for you. If you have a customer container image for nextflow with custom entrypoint, supply the containers location. (Example, "<dockerhubuser>/nextflow:latest")
+      Optional. The location of your existing container image for Nextflow, if you have one (e.g., “/nextflow:latest”). If you leave this setting blank, the Quick Start will build a container for you. 
   ScratchMountPoint:
     Type: String
     Default: ""
     Description: >-
-      Path for the scratch mount point in the instance. Leave this blank to use the auto-expanding EBS volume.  
+      Path for the scratch mount point in the instance. Leave this blank to use the auto-expanding EBS capability described here https://docs.opendata.aws/genomics-workflows/core-env/create-custom-compute-resources/ .  
   QSS3BucketName:
     Default: /BB/QuickStart/QSS3BucketName
     Description: S3 bucket name for the Quick Start assets. Quick Start bucket name
