@@ -88,7 +88,7 @@ Resources:
       Name: Nextflow
       ProvisioningArtifactParameters:
         - Info:
-            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/bb.nextflow.template"
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-nextflow/src/bb.nextflow.template"
   NextflowProductAssociation:         
     Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
     Properties:

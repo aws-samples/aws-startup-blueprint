@@ -14,3 +14,7 @@
 	path = submodules/quickstart-benchling-platform
 	url = ../../aws-quickstart/quickstart-benchling-platform.git
 	branch = master
+[submodule "submodules/quickstart-nextflow"]
+	path = submodules/quickstart-nextflow
+	url = git@github.com:aws-quickstart/quickstart-nextflow.git
+	branch = wip
