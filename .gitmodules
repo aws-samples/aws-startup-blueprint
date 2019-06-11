@@ -1,18 +1,18 @@
 [submodule "submodules/quickstart-aws-vpc"]
 	path = submodules/quickstart-aws-vpc
-	url = ../../aws-quickstart/quickstart-aws-vpc.git
+	url = git@github.com:aws-quickstart/quickstart-aws-vpc.git
 	branch = master
 [submodule "submodules/quickstart-compliance-common"]
 	path = submodules/quickstart-compliance-common
-	url = ../../aws-quickstart/quickstart-compliance-common.git
+	url = git@github.com:aws-quickstart/quickstart-compliance-common.git
 	branch = master
 [submodule "submodules/quickstart-chemaxon-registry"]
 	path = submodules/quickstart-chemaxon-registry
-	url = ../../aws-quickstart/quickstart-chemaxon-registry.git
+	url = git@github.com:aws-quickstart/quickstart-chemaxon-registry.git
 	branch = master 
 [submodule "submodules/quickstart-benchling-platform"]
 	path = submodules/quickstart-benchling-platform
-	url = ../../aws-quickstart/quickstart-benchling-platform.git
+	url = git@github.com:aws-quickstart/quickstart-benchling-platform.git
 	branch = master
 [submodule "submodules/quickstart-titian-mosaic"]
 	path = submodules/quickstart-titian-mosaic
