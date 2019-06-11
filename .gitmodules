@@ -17,4 +17,4 @@
 [submodule "submodules/quickstart-titian-mosaic"]
 	path = submodules/quickstart-titian-mosaic
 	url = git@github.com:aws-quickstart/quickstart-titian-mosaic.git
-	branch = wip
+	branch = master 
