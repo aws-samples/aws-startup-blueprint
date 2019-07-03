@@ -16,5 +16,9 @@
 	branch = master
 [submodule "submodules/quickstart-dotmatics"]
 	path = submodules/quickstart-dotmatics
-	url = https://github.com/aws-quickstarts/quickstart-dotmatics
+	url = ../../aws-quickstar/quickstart-dotmatics.git
 	branch = master
+[submodule "submodules/quickstart-titian-mosaic"]
+	path = submodules/quickstart-titian-mosaic
+	url = ../../aws-quickstart/quickstart-titian-mosaic.git
+	branch = master 
