@@ -17,4 +17,8 @@
 [submodule "submodules/quickstart-nextflow"]
 	path = submodules/quickstart-nextflow
 	url = git@github.com:aws-quickstart/quickstart-nextflow.git
+	branch = master
+[submodule "submodules/quickstart-titian-mosaic"]
+	path = submodules/quickstart-titian-mosaic
+	url = ../../aws-quickstart/quickstart-titian-mosaic.git
 	branch = master 
