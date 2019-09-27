@@ -116,3 +116,25 @@ Resources:
     Properties:
       PortfolioId: !Ref PorfolioBB
       ProductId: !Ref TitianMosaicProduct    
+
+      
+  DotmaticsProduct:  
+    Type: "AWS::ServiceCatalog::CloudFormationProduct"
+    Properties:
+      Owner: "Dotmatics"
+      Description: "Dotmatics Suite running on AWS.  Please contact sales@dotmatics.com for licensing details."
+      Distributor: "Dotmatics"
+      SupportUrl: "https://support.dotmatics.com"
+      SupportDescription: "Support is provided through our usual channels – please visit our support pages or drop us an email."
+      SupportEmail: "support@dotmatics.com"
+      Name: "Dotmatics Suite"
+      ProvisioningArtifactParameters:
+        - Info:
+            LoadTemplateFromURL: !Sub "https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-dotmatics/templates/bb.dotmatics.template"
+            
+  DotmaticsProductAssociation:         
+    Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
+    Properties:
+      PortfolioId: !Ref PorfolioBB
+      ProductId: !Ref DotmaticsProduct      
+
