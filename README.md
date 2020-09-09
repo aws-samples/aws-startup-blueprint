@@ -1,14 +1,16 @@
-# Welcome to your CDK TypeScript project!
+# AWS Startup Blueprint
 
-This is a blank project for TypeScript development with CDK.
+This is a strongly opinionated CDK application built for Startups looking to follow AWS best practices on Day 1. 
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+```bash
+git clone GITURLGOESHERE
+npm run build 
+cdk bootstrap
+```
 
-## Useful commands
+Once that completes, to deploy or update the blueprint's architecture, you just need to run 
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+```bash 
+npm run build && cdk deploy
+```
+
