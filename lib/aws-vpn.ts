@@ -117,21 +117,21 @@ export class ClientVpn extends core.Construct {
     new ec2.CfnClientVpnAuthorizationRule(this, 'ProductionAuthorization', {
         clientVpnEndpointId: VpnEndpoint.ref,
         targetNetworkCidr: props.ProductionVpc.vpcCidrBlock,
-        accessGroupId: vpnUsersSecurityGroup.securityGroupId,
+        authorizeAllGroups: true,
         description: "Allows VPN users access to Production VPC"
     });
     
     new ec2.CfnClientVpnAuthorizationRule(this, 'DevelopmentAuthorization', {
         clientVpnEndpointId: VpnEndpoint.ref,
-        targetNetworkCidr: props.DevelopmentVpc.vpcCidrBlock,
-        accessGroupId: vpnUsersSecurityGroup.securityGroupId,
+        targetNetworkCidr: props.DevelopmentVpc.vpcCidrBlock,        
+        authorizeAllGroups: true,
         description: "Allows VPN users access to Development VPC"
     });
     
     new ec2.CfnClientVpnAuthorizationRule(this, 'ManagmentAuthorization', {
         clientVpnEndpointId: VpnEndpoint.ref,
-        targetNetworkCidr: props.ManagmentVPC.vpcCidrBlock,
-        accessGroupId: vpnUsersSecurityGroup.securityGroupId,
+        targetNetworkCidr: props.ManagmentVPC.vpcCidrBlock,        
+        authorizeAllGroups: true,
         description: "Allows Transit VPN users access to Managment VPC"
     });
             
