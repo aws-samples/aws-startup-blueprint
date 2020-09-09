@@ -1,6 +1,14 @@
 # AWS Startup Blueprint
 
-This is a strongly opinionated CDK application built for Startups looking to follow AWS best practices on Day 1. 
+This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
+
+(diagram goes here)
+
+## Install instructions
+
+If you just want to get the above working in your account ASAP, download the pre-synthed CloudFormation Template and use the AWS CloudFormation web console to deploy it.
+
+If you value the principles of infrastructure as code and want to manage/adapt/update the architecture over time, its best to clone this repository and manage the architecture as you would any CDK application:
 
 ```bash
 git clone GITURLGOESHERE
@@ -13,4 +21,38 @@ Once that completes, to deploy or update the blueprint's architecture, you just 
 ```bash 
 npm run build && cdk deploy
 ```
+
+## Connect to the VPN
+
+Once the deployment is complete, go to the AWS VPC web console, and scroll down to the "Client VPN Endpoints" section. Select the Client VPN Endpoint listed and click the "Download Client Configuration" button. Your browser will download a `downloaded-client-config.ovpn` file.
+
+Now go to the AWS S3 web console and open the bucket prefixed `awsstartupblueprintstack-clientvpnvpnconfigbucket*`. You will see 5 files listed. Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on. For now, you just need `client1.domain.tld.key` and `client1.domain.tld.crt`.
+
+At this point we have to edit make some tweaks to the `downloaded-client-config.ovpn` file so open it in a text editor:
+
+Find this line: 
+
+```
+remote cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
+```
+
+And update it to: 
+
+```
+remote *corp*.cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
+```
+
+Finally, add the following lines to the bottom of the file:
+
+```
+<cert>
+Contents of client certificate (client1.domain.tld.crt) file
+</cert>
+
+<key>
+Contents of private key (client1.domain.tld.key) file
+</key>
+```
+
+Save the `downloaded-client-config.ovpn`. You should be able to open/import that file with any OpenVPN client. You can find instructions for using the (AWS VPN Client)[https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html] or the official (OpenVPN client)[https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html] for Mac/Windows/Linux on our docs pages.
 
