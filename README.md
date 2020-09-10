@@ -6,9 +6,9 @@ This is a strongly opinionated CDK architecture built for Startups looking to fo
 
 ## Install instructions
 
-If you just want to get the above working in your account ASAP, download the pre-synthed CloudFormation Template and use the AWS CloudFormation web console to deploy it.
+If you just want to get the above working in your account ASAP, download the [pre-synthed CloudFormation Template](https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/mainline/cdk.out/AwsStartupBlueprintStack.template.json) and use the AWS CloudFormation web console to deploy it.
 
-If you value the principles of infrastructure as code and want to manage/adapt/update the architecture over time, its best to clone this repository and manage the architecture as you would any CDK application:
+If you value the principles of infrastructure as code and want to manage/adapt/update the architecture over time using code, its best to clone this repository and manage the architecture as you would any CDK application.
 
 ```bash
 git clone GITURLGOESHERE
