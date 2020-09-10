@@ -8,11 +8,8 @@ import { BlueprintVpcs } from './aws-vpcs'
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
 
-
-
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
-
 
     const blueprintVPCs = new BlueprintVpcs(this, 'VpcCore', {});
 
