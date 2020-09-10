@@ -39,7 +39,7 @@ remote cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
 And update it to: 
 
 ```
-remote **corp**.cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
+remote corp.cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
 ```
 
 Finally, add the following lines to the bottom of the file:
