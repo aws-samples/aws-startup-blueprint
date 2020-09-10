@@ -2,7 +2,7 @@
 
 This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
 
-(diagram goes here)
+![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
 ## Install instructions
 
