@@ -54,7 +54,7 @@ Contents of private key (client1.domain.tld.key) file
 </key>
 ```
 
-Save the `downloaded-client-config.ovpn`. You should be able to open/import that file with any OpenVPN client. You can find instructions for using the (AWS VPN Client)[https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html] or the official (OpenVPN client)[https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html] for Mac/Windows/Linux on our docs pages.
+Save the `downloaded-client-config.ovpn`. You should be able to open/import that file with any OpenVPN client. You can find instructions for using the [AWS VPN Client](https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html) or the [official OpenVPN client](https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html) for Mac/Windows/Linux on our docs pages.
 
 
 ## Security
