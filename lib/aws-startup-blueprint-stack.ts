@@ -4,6 +4,7 @@ import * as s3 from '@aws-cdk/aws-s3';
 import { ConfigConformancePacks } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
+import { Dns } from './aws-dns'
 
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
@@ -22,6 +23,13 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     });
 
     new ConfigConformancePacks(this, 'ConfigPacks', {});
+
+    new Dns(this,'Dns', {
+      ManagmentVPC: blueprintVPCs.ManagmentVPC,
+      ProductionVpc: blueprintVPCs.ProductionVpc,
+      DevelopmentVpc: blueprintVPCs.DevelopmentVpc,      
+      TopLevelDomain: "corp"      
+    });
 
   }
 }
