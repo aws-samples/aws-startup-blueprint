@@ -24,17 +24,17 @@ export class BlueprintVpcs extends core.Construct {
         natGateways: 1,
         subnetConfiguration: [
           { 
-            cidrMask: 26,
+            cidrMask: 23,
             subnetType: ec2.SubnetType.PUBLIC,    
             name: 'DMZ',
           },
           {
-            cidrMask: 26,
+            cidrMask: 23,
             name: 'Application',
             subnetType: ec2.SubnetType.PRIVATE,
           },
           {
-            cidrMask: 26,
+            cidrMask: 23,
             name: 'Database',
             subnetType: ec2.SubnetType.ISOLATED,    
           }
@@ -52,17 +52,17 @@ export class BlueprintVpcs extends core.Construct {
         natGateways: 1,
         subnetConfiguration: [
           {
-            cidrMask: 26,
+            cidrMask: 23,
             subnetType: ec2.SubnetType.PUBLIC,    
             name: 'DMZ',
           },
           {
-            cidrMask: 26,
+            cidrMask: 23,
             name: 'Application',
             subnetType: ec2.SubnetType.PRIVATE,
           },
           {
-            cidrMask: 26,
+            cidrMask: 23,
             name: 'Database',
             subnetType: ec2.SubnetType.ISOLATED,    
           }
@@ -80,12 +80,12 @@ export class BlueprintVpcs extends core.Construct {
         natGateways: 1,
         subnetConfiguration: [
           {
-            cidrMask: 26,
+            cidrMask: 23,
             subnetType: ec2.SubnetType.PUBLIC,    
             name: 'DMZ',
           },
           {
-            cidrMask: 26,
+            cidrMask: 23,
             name: 'Application',
             subnetType: ec2.SubnetType.PRIVATE,
           }

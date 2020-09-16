@@ -22,7 +22,7 @@
     "VpcCoreProductionDMZSubnet1Subnet8CB63360": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.0.0/26",
+        "CidrBlock": "10.50.0.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -144,7 +144,7 @@
     "VpcCoreProductionDMZSubnet2Subnet544A7F20": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.0.64/26",
+        "CidrBlock": "10.50.2.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -228,7 +228,7 @@
     "VpcCoreProductionApplicationSubnet1SubnetE209B72D": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.0.128/26",
+        "CidrBlock": "10.50.4.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -309,7 +309,7 @@
     "VpcCoreProductionApplicationSubnet2SubnetFF60B9F3": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.0.192/26",
+        "CidrBlock": "10.50.6.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -390,7 +390,7 @@
     "VpcCoreProductionDatabaseSubnet1Subnet09EF33D9": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.1.0/26",
+        "CidrBlock": "10.50.8.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -456,7 +456,7 @@
     "VpcCoreProductionDatabaseSubnet2Subnet128DE8A2": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.50.1.64/26",
+        "CidrBlock": "10.50.10.0/23",
         "VpcId": {
           "Ref": "VpcCoreProductionD971AE3A"
         },
@@ -612,7 +612,7 @@
     "VpcCoreDevelopmentDMZSubnet1SubnetD48B44F5": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.0.0/26",
+        "CidrBlock": "10.60.0.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -734,7 +734,7 @@
     "VpcCoreDevelopmentDMZSubnet2SubnetD5020296": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.0.64/26",
+        "CidrBlock": "10.60.2.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -818,7 +818,7 @@
     "VpcCoreDevelopmentApplicationSubnet1Subnet5A750B62": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.0.128/26",
+        "CidrBlock": "10.60.4.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -899,7 +899,7 @@
     "VpcCoreDevelopmentApplicationSubnet2Subnet3230F190": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.0.192/26",
+        "CidrBlock": "10.60.6.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -980,7 +980,7 @@
     "VpcCoreDevelopmentDatabaseSubnet1Subnet08D67DFC": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.1.0/26",
+        "CidrBlock": "10.60.8.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -1046,7 +1046,7 @@
     "VpcCoreDevelopmentDatabaseSubnet2Subnet05D038F0": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.60.1.64/26",
+        "CidrBlock": "10.60.10.0/23",
         "VpcId": {
           "Ref": "VpcCoreDevelopment37E2B994"
         },
@@ -1202,7 +1202,7 @@
     "VpcCoreManagmentDMZSubnet1Subnet3D4DB21E": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.70.0.0/26",
+        "CidrBlock": "10.70.0.0/23",
         "VpcId": {
           "Ref": "VpcCoreManagment030DB556"
         },
@@ -1324,7 +1324,7 @@
     "VpcCoreManagmentDMZSubnet2SubnetB133424E": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.70.0.64/26",
+        "CidrBlock": "10.70.2.0/23",
         "VpcId": {
           "Ref": "VpcCoreManagment030DB556"
         },
@@ -1408,7 +1408,7 @@
     "VpcCoreManagmentApplicationSubnet1Subnet1DE5C8C4": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.70.0.128/26",
+        "CidrBlock": "10.70.4.0/23",
         "VpcId": {
           "Ref": "VpcCoreManagment030DB556"
         },
@@ -1489,7 +1489,7 @@
     "VpcCoreManagmentApplicationSubnet2SubnetF1B8CE48": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "CidrBlock": "10.70.0.192/26",
+        "CidrBlock": "10.70.6.0/23",
         "VpcId": {
           "Ref": "VpcCoreManagment030DB556"
         },
