@@ -6,17 +6,26 @@ This is a strongly opinionated CDK architecture built for Startups looking to fo
 
 ## Install instructions
 
-If you just want to get the above working in your account ASAP, download the [pre-synthed CloudFormation Template](https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/mainline/cdk.out/AwsStartupBlueprintStack.template.json) and use the AWS CloudFormation web console to deploy it.
+There are two ways to deploy this. If you just want to get the above working in your account ASAP follow the **CloudFormation** instructions. 
 
-If you value the principles of infrastructure as code and want to manage/adapt/update the architecture over time using code, its best to clone this repository and manage the architecture as you would any CDK application.
+If you value the principles of infrastructure as code, want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
+
+### CloudFormation
+
+ Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/mainline/cdk.out/AwsStartupBlueprintStack.template.json) and use the [AWS CloudFormation web console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
+
+
+### CDK 
 
 ```bash
-git clone GITURLGOESHERE
+git clone https://github.com/aws-samples/aws-startup-blueprint.git
 npm run build 
 cdk bootstrap
 ```
 
-Once that completes, to deploy or update the blueprint's architecture, you just need to run 
+Feel free to make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). 
+
+When you are ready,  to deploy or update the blueprint's architecture in the future, you just need to run.
 
 ```bash 
 npm run build && cdk deploy
