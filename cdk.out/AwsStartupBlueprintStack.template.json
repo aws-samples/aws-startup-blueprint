@@ -1,5 +1,5 @@
 {
-  "Description": "The AWS Startup Blueprint is a strongly opinonated architecture for any Startup looking to start using AWS follwing best practices on day 1. (ib-7061756C75)",
+  "Description": "The AWS Startup Blueprint is a strongly opinionated architecture for any Startup looking to start using AWS follwing best practices on day 1. (ib-7061756C75)",
   "Resources": {
     "VpcCoreProductionD971AE3A": {
       "Type": "AWS::EC2::VPC",
@@ -2137,6 +2137,26 @@
         "aws:cdk:path": "AwsStartupBlueprintStack/ClientVpn/ClientVpnAccessLogStream/Resource"
       }
     },
+    "ClientVpnVpnUsersSG5BB5DCBE": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security group associated with VPN users accessing the network through the Client VPN Endpoint in the managment VPC.",
+        "GroupName": "VpnUsersSG",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VpcCoreManagment030DB556"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ClientVpn/VpnUsersSG/Resource"
+      }
+    },
     "ClientVpnclientVpnEndpoint53D29AAC": {
       "Type": "AWS::EC2::ClientVpnEndpoint",
       "Properties": {
@@ -2164,7 +2184,18 @@
           "Ref": "ClientVpnvpnCertificate550A99D6"
         },
         "Description": "Internal VPN Endpoint",
-        "SplitTunnel": true
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "ClientVpnVpnUsersSG5BB5DCBE",
+              "GroupId"
+            ]
+          }
+        ],
+        "SplitTunnel": true,
+        "VpcId": {
+          "Ref": "VpcCoreManagment030DB556"
+        }
       },
       "Metadata": {
         "aws:cdk:path": "AwsStartupBlueprintStack/ClientVpn/clientVpnEndpoint"
@@ -2196,25 +2227,6 @@
       },
       "Metadata": {
         "aws:cdk:path": "AwsStartupBlueprintStack/ClientVpn/1-clientVpnEndpointAssociation"
-      }
-    },
-    "ClientVpnVpnUsersSG5BB5DCBE": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "VPNUsersSG",
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "Description": "Allow all outbound traffic by default",
-            "IpProtocol": "-1"
-          }
-        ],
-        "VpcId": {
-          "Ref": "VpcCoreManagment030DB556"
-        }
-      },
-      "Metadata": {
-        "aws:cdk:path": "AwsStartupBlueprintStack/ClientVpn/VpnUsersSG/Resource"
       }
     },
     "ClientVpnProductionAuthorization8EEF0591": {

@@ -82,8 +82,15 @@ export class ClientVpn extends core.Construct {
       mutualAuthentication: {
           clientRootCertificateChainArn: vpnCertificate.ref
       }
-  }];
+    }];
     
+    const vpnUsersSecurityGroup = new ec2.SecurityGroup(this, 'VpnUsersSG', {
+      vpc: props.HomeVpc,
+      securityGroupName: 'VpnUsersSG',
+      description: 'Security group associated with VPN users accessing the network through the Client VPN Endpoint in the managment VPC.',
+      allowAllOutbound: true   
+    });
+
     const VpnEndpoint = new ec2.CfnClientVpnEndpoint(this, 'clientVpnEndpoint', {
         
         authenticationOptions: authOptions,
@@ -91,7 +98,9 @@ export class ClientVpn extends core.Construct {
         connectionLogOptions: connectionLogOptions,
         serverCertificateArn: vpnCertificate.ref, 
         description: "Internal VPN Endpoint",
-        splitTunnel: true, 
+        splitTunnel: true,
+        vpcId: props.HomeVpc.vpcId,
+        securityGroupIds: [vpnUsersSecurityGroup.securityGroupId] 
         //dnsServers: XXX,
     });
     
@@ -103,16 +112,13 @@ export class ClientVpn extends core.Construct {
     vpnSubnets.forEach((vpnSubnet, index) => {
       networkAssocations.push(new ec2.CfnClientVpnTargetNetworkAssociation(this, `${index}-clientVpnEndpointAssociation`, {
         clientVpnEndpointId: VpnEndpoint.ref,
-        subnetId: vpnSubnet
+        subnetId: vpnSubnet,
+        
       }));    
     });
 
     
-    const vpnUsersSecurityGroup = new ec2.SecurityGroup(this, 'VpnUsersSG', {
-        vpc: props.HomeVpc,
-        description: 'VPNUsersSG',
-        allowAllOutbound: true   
-    });
+
     
     new ec2.CfnClientVpnAuthorizationRule(this, 'ProductionAuthorization', {
         clientVpnEndpointId: VpnEndpoint.ref,
