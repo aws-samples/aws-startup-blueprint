@@ -26,19 +26,6 @@ export class Dns extends core.Construct {
     zone.addVpc(props.ProductionVpc);
     zone.addVpc(props.DevelopmentVpc)
 
-    const resolverSecurityGroup = new ec2.SecurityGroup(this, 'ResolverSecurityGroup', {
-        vpc: props.ManagmentVPC,
-        description: 'Route 53 Resolver Group. Allows resources in production and development vpcs to resolve internal Amazon DNS address across VPCs.',
-        allowAllOutbound: true   // Can be set to false
-    });
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.ManagmentVPC.vpcCidrBlock), ec2.Port.tcp(53), 'Allow inbound DNS queries from mgmt vpc tcp.');
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.ProductionVpc.vpcCidrBlock), ec2.Port.tcp(53), 'Allow inbound DNS queries from production vpc tcp.');
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.DevelopmentVpc.vpcCidrBlock), ec2.Port.tcp(53), 'Allow inbound DNS queries from development vpc tcp.');
-
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.ManagmentVPC.vpcCidrBlock), ec2.Port.udp(53), 'Allow inbound DNS queries from mgmt vpc udp.');
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.ProductionVpc.vpcCidrBlock), ec2.Port.udp(53), 'Allow inbound DNS queries from production vpc udp.');
-    resolverSecurityGroup.addIngressRule(ec2.Peer.ipv4(props.DevelopmentVpc.vpcCidrBlock), ec2.Port.udp(53), 'Allow inbound DNS queries from development vpc udp.');
-
 
   }
 }
