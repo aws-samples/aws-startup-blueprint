@@ -1,4 +1,6 @@
-package.Aws-startup-blueprints = {
+
+package.Biotech-blueprint = {
+    
     interfaces = (1.0);
 
     # Use NoOpBuild. See https://w.amazon.com/index.php/BrazilBuildSystem/NoOpBuild
