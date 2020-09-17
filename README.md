@@ -10,12 +10,12 @@ There are two ways to deploy this. If you just want to get the above working in 
 
 If you value the principles of infrastructure as code, want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
 
-### CloudFormation
+### Quick Install Option: CloudFormation
 
  Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/mainline/cdk.out/AwsStartupBlueprintStack.template.json) and use the [AWS CloudFormation web console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
 
 
-### CDK 
+### CDK Install Option
 
 ```bash
 git clone https://github.com/aws-samples/aws-startup-blueprint.git
