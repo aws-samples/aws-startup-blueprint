@@ -5,7 +5,6 @@ import { ConfigConformancePacks } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
-import { BlueprintServiceCatalog } from './aws-service-catalog'
 
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
@@ -32,8 +31,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
       DevelopmentVpc: blueprintVPCs.DevelopmentVpc,      
       TopLevelDomain: "corp"      
     });
-
-    new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
+    
 
   }
 
