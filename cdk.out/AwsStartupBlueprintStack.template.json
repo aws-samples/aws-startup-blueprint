@@ -2741,6 +2741,227 @@
       "Metadata": {
         "aws:cdk:path": "AwsStartupBlueprintStack/Dns/HostedZone/Resource"
       }
+    },
+    "ServiceCatalogInformaticsCatalogFB7D6D28": {
+      "Type": "AWS::ServiceCatalog::Portfolio",
+      "Properties": {
+        "DisplayName": "Biotech Blueprint Informatics Catalog",
+        "ProviderName": "AWS",
+        "Description": "Collection of bio and chem informatics tools easily deployed into the Biotech Blueprint."
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/InformaticsCatalog"
+      }
+    },
+    "ServiceCatalogChemAxonA4D4055E": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "ChemAxon Compound Registry",
+        "Owner": "ChemAxon",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://s3.amazonaws.com/aws-quickstart/quickstart-chemaxon-registry/templates/chemaxon-registry.template"
+            }
+          }
+        ],
+        "Description": "ChemAxon's Compound Registration is a system built on a set of web services, aiding users to register molecular structures into a compound database. The registration process spots unique compounds among a set of structures already contained within the database.",
+        "Distributor": "AWS",
+        "SupportDescription": "You need to subscribe to the ChemAxon marketplace AMI before you can deploy this software. https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631&sr=0-1&ref_=srh_res_product_title.",
+        "SupportEmail": "support@chemaxon.com",
+        "SupportUrl": "https://chemaxon.com/support"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/ChemAxon"
+      }
+    },
+    "ServiceCatalogChemAxonAssociationE2FBE502": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogChemAxonA4D4055E"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/ChemAxonAssociation"
+      }
+    },
+    "ServiceCatalogNextflow4A225046": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "Nextflow",
+        "Owner": "AWS",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://s3.amazonaws.com/aws-genomics-workflows/templates/aws-genomics-root-novpc.template.yaml"
+            }
+          }
+        ],
+        "Description": "Nextflow enables scalable and reproducible scientific workflows using software containers. It allows the adaptation of pipelines written in the most common scripting languages.",
+        "Distributor": "Comparative Bioinformatics group at the Barcelona Centre for Genomic Regulation (CRG).",
+        "SupportUrl": "https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/Nextflow"
+      }
+    },
+    "ServiceCatalogNextflowAssocationEB180D65": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogNextflow4A225046"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/NextflowAssocation"
+      }
+    },
+    "ServiceCatalogDotmaticsD12A330C": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "Dotmatics Suite",
+        "Owner": "Dotmatics",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://aws-quickstart.s3.amazonaws.com/quickstart-dotmatics/templates/dotmatics.template"
+            }
+          }
+        ],
+        "Description": "Dotmatics Suite running on AWS.  Please contact sales@dotmatics.com for licensing details.",
+        "Distributor": "Dotmatics",
+        "SupportDescription": "Support is provided through our usual channels – please visit our support pages or drop us an email.",
+        "SupportEmail": "support@dotmatics.com",
+        "SupportUrl": "https://aws-quickstart.s3.amazonaws.com/quickstart-dotmatics/doc/dotmatics-suite-on-the-aws-cloud.pdf"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/Dotmatics"
+      }
+    },
+    "ServiceCatalogDotmaticsAssociation01BB60DC": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogDotmaticsD12A330C"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/DotmaticsAssociation"
+      }
+    },
+    "ServiceCatalogHailNotebook42DA2599": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "Hail Notebook on AWS SageMaker",
+        "Owner": "AWS",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://aws-quickstart.s3.amazonaws.com/quickstart-hail/templates/hail-sagemaker.template.yaml"
+            }
+          }
+        ],
+        "Description": "Deploys an AWS SageMaker notebook that can integrate with with Hail 0.2 cluster on EMR.",
+        "Distributor": "Broad Institute",
+        "SupportUrl": "https://aws-quickstart.github.io/quickstart-hail/"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/HailNotebook"
+      }
+    },
+    "ServiceCatalogHailCluster03733E51": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "Hail Cluster on AWS EMR",
+        "Owner": "AWS",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://aws-quickstart.s3.amazonaws.com/quickstart-hail/templates/hail-core.template.yaml"
+            }
+          }
+        ],
+        "Description": "Deploys Hail 0.2, an open-source library for scalable genomic data exploration, on AWS EMR.",
+        "Distributor": "Broad Institute",
+        "SupportUrl": "https://aws-quickstart.github.io/quickstart-hail/"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/HailCluster"
+      }
+    },
+    "ServiceCatalogHailNotebookAssociation27E9CF65": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogHailNotebook42DA2599"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/HailNotebookAssociation"
+      }
+    },
+    "ServiceCatalogHailClusterAssociation08496B8F": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogHailCluster03733E51"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/HailClusterAssociation"
+      }
+    },
+    "ServiceCatalogTitianC2F69197": {
+      "Type": "AWS::ServiceCatalog::CloudFormationProduct",
+      "Properties": {
+        "Name": "Mosaic FreezerManagement",
+        "Owner": "Titian Software Limited",
+        "ProvisioningArtifactParameters": [
+          {
+            "Info": {
+              "LoadTemplateFromURL": "https://aws-quickstart.s3.amazonaws.com/quickstart-titian-mosaic/templates/titian-mosaic.template"
+            }
+          }
+        ],
+        "Description": "Mosaic FreezerManagement is a comprehensive and cost-effective software solution for managing and tracking all types of sample inventory, backed by a full audit trail. It provides a flexible interface to define and record properties for any type of sample or container, and manages your entire hierarchy of storage including freezers, shelves, cupboards, etc. Other features include an intuitive search interface, and expiry date tracking. IMPORTANT NOTE:  Please contact Titian at info@titian.co.uk for validation before you launch the template below, otherwise the template will fail.",
+        "Distributor": "Titian Software Limited",
+        "SupportDescription": "Titian supports a worldwide customer base – including customer sites in Europe, USA and Asia. Support may be provided by email, telephone or shared Desktop sessions",
+        "SupportEmail": "info@titian.co.uk",
+        "SupportUrl": "https://aws-quickstart.s3.amazonaws.com/quickstart-titian-mosaic/doc/titian-mosaic-freezermanagement-on-the-aws-cloud.pdf"
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/Titian"
+      }
+    },
+    "ServiceCatalogTitianAssociation3C1359F7": {
+      "Type": "AWS::ServiceCatalog::PortfolioProductAssociation",
+      "Properties": {
+        "PortfolioId": {
+          "Ref": "ServiceCatalogInformaticsCatalogFB7D6D28"
+        },
+        "ProductId": {
+          "Ref": "ServiceCatalogTitianC2F69197"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "AwsStartupBlueprintStack/ServiceCatalog/TitianAssociation"
+      }
     }
   }
 }
