@@ -8,16 +8,6 @@ import lambda = require("@aws-cdk/aws-lambda");
 
 import * as fs from 'fs';
 import { CfnAccessPoint } from "@aws-cdk/aws-s3";
-// import sm = require("@aws-cdk/aws-secretsmanager");
-// import kms = require("@aws-cdk/aws-kms");
-// import ram = require("@aws-cdk/aws-ram");
-
-// import fs = require('fs');
-// import { TransitRoute, TransitRouteProps } from '../lib/transitroutes-stack';
-
-// import certmgr = require('@aws-cdk/aws-certificatemanager');
-
-//import tg = require("@aws-cdk/aws-ec2.CfnTransitGatewayAttachment);
 
 
 export interface VpnProps extends core.StackProps {

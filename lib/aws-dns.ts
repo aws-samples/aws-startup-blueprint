@@ -2,7 +2,6 @@ import core = require("@aws-cdk/core");
 import s3 = require("@aws-cdk/aws-s3");
 import ec2 = require("@aws-cdk/aws-ec2");
 import route53 = require('@aws-cdk/aws-route53');
-import route53Resolver = require('@aws-cdk/aws-route53resolver');
 
 
 export interface DnsProps extends core.StackProps {
