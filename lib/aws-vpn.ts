@@ -16,6 +16,7 @@ export interface VpnProps extends core.StackProps {
   ProductionVpc: ec2.Vpc;
   ManagmentVPC: ec2.Vpc;
   DevelopmentVpc: ec2.Vpc;
+  DnsServer: string;
 }
 
 export class ClientVpn extends core.Construct {
@@ -81,8 +82,7 @@ export class ClientVpn extends core.Construct {
       allowAllOutbound: true   
     });
 
-    const VpnEndpoint = new ec2.CfnClientVpnEndpoint(this, 'clientVpnEndpoint', {
-        
+    const VpnEndpoint = new ec2.CfnClientVpnEndpoint(this, 'clientVpnEndpoint', {                   
         authenticationOptions: authOptions,
         clientCidrBlock: props.vpnClientAssignedAddrCidr, 
         connectionLogOptions: connectionLogOptions,
@@ -90,8 +90,8 @@ export class ClientVpn extends core.Construct {
         description: "Internal VPN Endpoint",
         splitTunnel: true,
         vpcId: props.HomeVpc.vpcId,
-        securityGroupIds: [vpnUsersSecurityGroup.securityGroupId] 
-        //dnsServers: XXX,
+        securityGroupIds: [vpnUsersSecurityGroup.securityGroupId],        
+        dnsServers: [props.DnsServer],
     });
     
     const publicSubnetSelection = { subnetType: ec2.SubnetType.PUBLIC };

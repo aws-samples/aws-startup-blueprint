@@ -18,6 +18,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     new ClientVpn(this, 'ClientVpn',{
       HomeVpc: blueprintVPCs.ManagmentVPC,      
       vpnClientAssignedAddrCidr: "10.71.0.0/16",
+      DnsServer: blueprintVPCs.MangementVpcDnsIp,
       ProductionVpc: blueprintVPCs.ProductionVpc,
       ManagmentVPC: blueprintVPCs.ManagmentVPC,
       DevelopmentVpc: blueprintVPCs.DevelopmentVpc
