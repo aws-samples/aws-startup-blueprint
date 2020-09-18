@@ -2184,6 +2184,9 @@
           "Ref": "ClientVpnvpnCertificate550A99D6"
         },
         "Description": "Internal VPN Endpoint",
+        "DnsServers": [
+          "10.70.0.2"
+        ],
         "SecurityGroupIds": [
           {
             "Fn::GetAtt": [

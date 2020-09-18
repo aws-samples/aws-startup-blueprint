@@ -8,16 +8,6 @@ import lambda = require("@aws-cdk/aws-lambda");
 
 import * as fs from 'fs';
 import { CfnAccessPoint } from "@aws-cdk/aws-s3";
-// import sm = require("@aws-cdk/aws-secretsmanager");
-// import kms = require("@aws-cdk/aws-kms");
-// import ram = require("@aws-cdk/aws-ram");
-
-// import fs = require('fs');
-// import { TransitRoute, TransitRouteProps } from '../lib/transitroutes-stack';
-
-// import certmgr = require('@aws-cdk/aws-certificatemanager');
-
-//import tg = require("@aws-cdk/aws-ec2.CfnTransitGatewayAttachment);
 
 
 export interface VpnProps extends core.StackProps {
@@ -26,6 +16,7 @@ export interface VpnProps extends core.StackProps {
   ProductionVpc: ec2.Vpc;
   ManagmentVPC: ec2.Vpc;
   DevelopmentVpc: ec2.Vpc;
+  DnsServer: string;
 }
 
 export class ClientVpn extends core.Construct {
@@ -91,8 +82,7 @@ export class ClientVpn extends core.Construct {
       allowAllOutbound: true   
     });
 
-    const VpnEndpoint = new ec2.CfnClientVpnEndpoint(this, 'clientVpnEndpoint', {
-        
+    const VpnEndpoint = new ec2.CfnClientVpnEndpoint(this, 'clientVpnEndpoint', {                   
         authenticationOptions: authOptions,
         clientCidrBlock: props.vpnClientAssignedAddrCidr, 
         connectionLogOptions: connectionLogOptions,
@@ -100,8 +90,8 @@ export class ClientVpn extends core.Construct {
         description: "Internal VPN Endpoint",
         splitTunnel: true,
         vpcId: props.HomeVpc.vpcId,
-        securityGroupIds: [vpnUsersSecurityGroup.securityGroupId] 
-        //dnsServers: XXX,
+        securityGroupIds: [vpnUsersSecurityGroup.securityGroupId],        
+        dnsServers: [props.DnsServer],
     });
     
     const publicSubnetSelection = { subnetType: ec2.SubnetType.PUBLIC };
