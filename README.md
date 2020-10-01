@@ -43,19 +43,7 @@ Now go to the AWS S3 web console and open the bucket prefixed `awsstartupbluepri
 
 At this point we have to edit make some tweaks to the `downloaded-client-config.ovpn` file so open it in a text editor:
 
-Find this line: 
-
-```
-remote cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
-```
-
-And update it to: 
-
-```
-remote corp.cvpn-endpoint-0randomdigitsf.prod.clientvpn.us-west-2.amazonaws.com 443
-```
-
-Finally, add the following lines to the bottom of the file:
+Add the following lines to the bottom of the file:
 
 ```
 <cert>
