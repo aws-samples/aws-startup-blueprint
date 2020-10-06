@@ -1,4 +1,4 @@
-# AWS Startup Blueprint
+# AWS Biotech Blueprint
 
 This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
 
