@@ -9,9 +9,9 @@ global:
     - us-west-2
   reporting: true
 tests:
-  quickstart-biotech-blueprintt1:
-    parameter_input: biotech-blueprint-params.t1.json
-    template_file: biotech-blueprint-master.template
+  quickstart-biotech-blueprint:
+    parameter_input: biotech-blueprint.t1.json
+    template_file: biotech-blueprint-taskcat.template
     regions:
     - us-east-1
     - us-west-2
