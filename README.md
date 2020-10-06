@@ -14,7 +14,8 @@ If you value the principles of infrastructure as code, want to cleanly manage/ad
 
 Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-biotech-blueprint/cdk/cdk.out/AwsBiotechBlueprint.template.json) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
 
-Coming soon[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
+Quick Create Link Coming Soon...
+[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
 
 
 ### CDK Install Option
