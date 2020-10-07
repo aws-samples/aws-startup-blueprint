@@ -14,6 +14,7 @@ export class BlueprintVpcs extends core.Construct {
   public readonly ProductionVpc: ec2.Vpc;
   public readonly ManagmentVPC: ec2.Vpc;
   public readonly DevelopmentVpc: ec2.Vpc;
+  public readonly MangementVpcDnsIp: string;
   
   constructor(scope: core.Construct, id: string, props: core.StackProps) {
     super(scope, id);
@@ -74,8 +75,16 @@ export class BlueprintVpcs extends core.Construct {
         }
     });
   
+
+    let managmentCidr = '10.70.0.0/16';
+
+    let baseRangeAndMask = managmentCidr.split('/');
+    let baseRangeOctets = baseRangeAndMask[0].split('.');
+    let baseOctetPlusTwo = Number(baseRangeOctets[3]) + 2;
+    this.MangementVpcDnsIp = `${baseRangeOctets[0]}.${baseRangeOctets[1]}.${baseRangeOctets[2]}.${baseOctetPlusTwo}`;
+
     this.ManagmentVPC = new ec2.Vpc(this, 'Managment', {
-        cidr: '10.70.0.0/16',          
+        cidr: managmentCidr,          
         maxAzs: 2,    
         natGateways: 1,
         subnetConfiguration: [

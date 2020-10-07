@@ -5,6 +5,7 @@ import { ConfigConformancePacks } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
+import { BlueprintServiceCatalog } from './aws-service-catalog'
 
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
@@ -17,6 +18,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     new ClientVpn(this, 'ClientVpn',{
       HomeVpc: blueprintVPCs.ManagmentVPC,      
       vpnClientAssignedAddrCidr: "10.71.0.0/16",
+      DnsServer: blueprintVPCs.MangementVpcDnsIp,
       ProductionVpc: blueprintVPCs.ProductionVpc,
       ManagmentVPC: blueprintVPCs.ManagmentVPC,
       DevelopmentVpc: blueprintVPCs.DevelopmentVpc
@@ -31,5 +33,8 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
       TopLevelDomain: "corp"      
     });
 
+    new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
+
   }
+
 }
