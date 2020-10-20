@@ -1,6 +1,6 @@
-project :  
+project : 
+  name: quickstart-aws-biotech-blueprint-cdk 
   owner: quickstart-eng@amazon.com
-  s3_bucket: blueprintesting22
   regions:
     - eu-west-1
     - us-east-1
@@ -10,5 +10,5 @@ tests:
     template: ./cdk.out/AwsBiotechBlueprint.template.json
     regions:
     - us-east-1
-    #- us-west-2
+    - us-west-2
     - eu-west-1
