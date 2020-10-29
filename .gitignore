@@ -13,3 +13,5 @@ cdk.out
 .cache
 .build
 
+# taskcat
+taskcat_outputs
