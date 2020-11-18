@@ -1,6 +1,8 @@
 # AWS Biotech Blueprint
 
-This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
+This Quick Start builds a hardened research enviornment for a biotech company on the AWS Cloud. It sets up a virtual data center by creating virtual private clouds (VPCs) and automatically configures this infrastructure for identity management, access control, encryption key management, network configuration, logging, alarms, partitioned environments (for example, to separate research, production, and management processes), and built-in compliance auditing.
+
+You can also use the Quick Start to automatically deploy the industry’s leading scientific research applications into this informatics infrastructure. For a list of add-on products, see the deployment guide.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
