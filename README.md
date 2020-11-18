@@ -8,9 +8,11 @@ You can also use the Quick Start to automatically deploy the industry’s leadin
 
 ## Install instructions
 
-There are two ways to deploy this. If you just want to get the above working in your account ASAP follow the **CloudFormation** instructions. 
+There are two ways to deploy this. 
 
-If you value the principles of infrastructure as code, want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
+Option 1) If you just want to get the above working in your account ASAP follow the **CloudFormation** instructions. 
+
+Option 2) If want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
 
 ### Quick Install Option: CloudFormation
 
