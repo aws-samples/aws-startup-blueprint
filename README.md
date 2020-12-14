@@ -1,6 +1,10 @@
 # AWS Biotech Blueprint
 
-This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
+This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+
+The Blueprint's core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+
+Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
