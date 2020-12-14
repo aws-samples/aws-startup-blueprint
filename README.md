@@ -16,7 +16,7 @@ If you just want to get going ASAP, follow the CloudFormation Deployment option 
 
 If you prefer using the awesome [AWS CDK](https://aws.amazon.com/cdk/), follow the CDK Deployment option (2).
 
-Both deployment options take about 15 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the raw CloudFormation markup in option 1.
+Both deployment options take about 7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the raw CloudFormation markup in option 1.
 
 ### Option 1) CloudFormation Only Deployment
 
