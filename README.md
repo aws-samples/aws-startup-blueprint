@@ -18,7 +18,7 @@ If you prefer using the awesome [AWS CDK](https://aws.amazon.com/cdk/), follow t
 
 Both deployment options take about 15 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the raw CloudFormation markup in option 1.
 
-### Quick Install Option: CloudFormation
+### Option 1) CloudFormation Only Deployment
 
 Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk/dev/cdk.out/AwsBiotechBlueprint.template.json?token=AI3FJF5EKHRJFBZA3ER7BNS7UQNE4) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
 
@@ -26,7 +26,7 @@ Quick Create Link Coming Soon...
 [![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
 
 
-### CDK Install Option
+### Option 2) AWS CDK Deployment
 
 ```bash
 git clone https://github.com/aws-samples/aws-startup-blueprint.git
