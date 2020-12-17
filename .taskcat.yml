@@ -7,7 +7,7 @@ project :
     - us-west-2
 tests:
   default:
-    template: ./cdk.out/AwsBiotechBlueprint.template.json
+    template: templates/AwsBiotechBlueprint.template.yaml
     regions:
     - us-east-1
     - us-west-2
