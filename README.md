@@ -1,20 +1,24 @@
 # AWS Biotech Blueprint
 
-This Quick Start builds a hardened research enviornment for a biotech company on the AWS Cloud. It sets up a virtual data center by creating virtual private clouds (VPCs) and automatically configures this infrastructure for identity management, access control, encryption key management, network configuration, logging, alarms, partitioned environments (for example, to separate research, production, and management processes), and built-in compliance auditing.
+This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
 
-You can also use the Quick Start to automatically deploy the industry’s leading scientific research applications into this informatics infrastructure. For a list of add-on products, see the deployment guide.
+The Blueprint's core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+
+Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
 ## Install instructions
 
-There are two ways to deploy this. 
+The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
 
-Option 1) If you just want to get the above working in your account ASAP follow the **CloudFormation** instructions. 
+If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
-Option 2) If want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
+If you prefer using the awesome [AWS CDK](https://aws.amazon.com/cdk/), follow the CDK Deployment option (2).
 
-### Quick Install Option: CloudFormation
+Both deployment options take about 7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the raw CloudFormation markup in option 1.
+
+### Option 1) CloudFormation Only Deployment
 
 Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk/dev/cdk.out/AwsBiotechBlueprint.template.json?token=AI3FJF5EKHRJFBZA3ER7BNS7UQNE4) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
 
@@ -22,7 +26,7 @@ Quick Create Link Coming Soon...
 [![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
 
 
-### CDK Install Option
+### Option 2) AWS CDK Deployment
 
 ```bash
 git clone https://github.com/aws-samples/aws-startup-blueprint.git

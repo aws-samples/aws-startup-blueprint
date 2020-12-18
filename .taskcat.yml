@@ -1,27 +1,14 @@
-<<<<<<< HEAD
-project :
-  name: quickstart-aws-biotech-blueprint-cdk
-  owner: quickstart-eng@amazon.com
-  # s3_bucket: blueprintesting22
-=======
 project : 
   name: quickstart-aws-biotech-blueprint-cdk 
   owner: quickstart-eng@amazon.com
->>>>>>> 1109a4c5f0853de6041b881789da63be11b32bde
   regions:
     - eu-west-1
     - us-east-1
     - us-west-2
 tests:
   default:
-    template: ./cdk.out/AwsBiotechBlueprint.template.json
+    template: templates/AwsBiotechBlueprint.template.yaml
     regions:
-<<<<<<< HEAD
-      - us-east-1
-      #- us-west-2
-      - eu-west-1
-=======
     - us-east-1
     - us-west-2
     - eu-west-1
->>>>>>> 1109a4c5f0853de6041b881789da63be11b32bde
