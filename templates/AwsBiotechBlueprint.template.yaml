@@ -1,4 +1,7 @@
 Description: The AWS Biotech Blueprint is a strongly opinionated architecture for any Startup looking to start using AWS follwing best practices on day 1. (qs-1of009lua)
+Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Launch into a new VPC"
 Resources:
   VpcCoreProductionD971AE3A:
     Type: AWS::EC2::VPC
