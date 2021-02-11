@@ -2,7 +2,6 @@
 
 This Quick Start provides two deployment options:
 
-* *Deploy {partner-product-short-name} into a new VPC*. This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, bastion hosts, and other infrastructure components. It then deploys {partner-product-short-name} into this new VPC.
-* *Deploy {partner-product-short-name} into an existing VPC*. This option provisions {partner-product-short-name} in your existing AWS infrastructure.
+* *CloudFormation Only Deployment*. This option uses CloudFormation directly to deploy the {partner-product-short-name} into your AWS account immediately. Use this option if you are unfamiliar with the AWS Cloud Development Kit and just want to get going ASAP.
+* *CDK Deployment*. This option uses the AWS Cloud Development Kit to deploy the {partner-product-short-name}. If you  want to cleanly manage/adapt/update the architecture over time, or you already aware of what the [AWS CDK](https://aws.amazon.com/cdk/) is, use this deployment option.
 
-The Quick Start provides separate templates for these options. It also lets you configure Classless Inter-Domain Routing (CIDR) blocks, instance types, and {partner-product-short-name} settings, as discussed later in this guide.

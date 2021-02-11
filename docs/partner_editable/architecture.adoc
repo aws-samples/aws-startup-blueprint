@@ -1,27 +1,38 @@
-Deploying this Quick Start for a new virtual private cloud (VPC) with
-default parameters builds the following {partner-product-short-name} environment in the
-AWS Cloud.
+The Biotech Blueprint Quick Start helps you build a preclinical research enviornment using cloud-based infrastructure on the AWS Cloud, based on industry best practices.  
+
+Deploying this Quick Start will build a core landing zone in aws,  configured for identity management, access control, encryption, VPN,  network isolation, logging, alarms, partitioned environments, and built-in compliance auditing.  
+
+After you deploy the core Quick Start, you can install prepackaged informatics tools from leading biotech software vendors and open source tools using AWS Service Catalog.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-image::../images/architecture_diagram.png[Architecture,width=100%,height=100%]
+[link=bb-diagram.png]
+image::bb-diagram.png[Architecture,width=100%,height=100%]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
-* A highly available architecture that spans two Availability Zones.*
-* A VPC configured with public and private subnets, according to AWS
-best practices, to provide you with your own virtual network on AWS.*
-* In the public subnets:
-** Managed network address translation (NAT) gateways to allow outbound
-internet access for resources in the private subnets.*
-** A Linux bastion host in an Auto Scaling group to allow inbound Secure
-Shell (SSH) access to EC2 instances in public and private subnets.*
-* In the private subnets:
-** <item>.
-** <item>.
-// Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram. End each bullet with a period.
-* <describe any additional components>.
+* A highly available architecture that spans two Availability Zones.
+* A Production, Managment, and Research VPC configured with public, private, and isolated subnets, according to AWS
+best practices, to provide you with your own virtual networks on AWS.
 
-[.small]#*The template that deploys the Quick Start into an existing VPC skips the components marked by asterisks and prompts you for your existing VPC configuration.#
+* Secure Networking
+** Managed AWS Client VPN that allows for secure connectivity into your VPCs
+** Peering connections from the Managment VPC to allow  secure shell or remote desktop access to servers in private subnets in the Production or Research VPCs.
+
+* AWS Config Packs - Automatic alerting when resources may have been deployed insecurely. 
+** Control Tower Detective Guard Rails
+** IAM Best Practices
+** NIST CSF Best Practices
+** S3 Best Practices
+
+* Internal DNS - Your own private DNS for employees/developers. No need to remember IP addresses!
+* *OPTIONAL* Biotech Blueprint Informatics Catalog - Easily deploy any of the following tools into the Blueprint's landing zone. 
+** ChemAxon - Compound Registry
+** Nextflow - Nextflow enables scalable and reproducible scientific workflows using software containers. It allows the adaptation of pipelines written in the most common scripting languages.
+** Dotmatics Suite
+** Hail 0.2 - An open-source library for scalable genomic data exploration, on AWS EMR.
+** Titian Mosaic FreezerManagment 
+
+
