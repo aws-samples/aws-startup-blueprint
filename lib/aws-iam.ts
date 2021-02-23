@@ -77,7 +77,7 @@ const policyDocument = {
 };
 
 const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
-const newManagedPolicy = new ManagedPolicy(stack, 'DiGavPermissionBoundaryPolicy', {
+const newManagedPolicy = new iam.ManagedPolicy(AwsStartupBlueprintStack, 'DiGavPermissionBoundaryPolicy', {
     document: customPolicyDocument
 });
 
@@ -85,7 +85,7 @@ export class PermissionBoundary extends cdk.Construct {
 	constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
     super(scope, id);
     
-    iam.PermissionsBoundary.of(stack).apply(newManagedPolicy)
+    iam.PermissionsBoundary.of(AwsStartupBlueprintStack).apply(newManagedPolicy)
     }
 
 }
