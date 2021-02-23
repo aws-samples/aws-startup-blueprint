@@ -83,6 +83,6 @@ export class PermissionBoundary extends cdk.Construct {
     super(scope, id);
     
     iam.PermissionsBoundary.of(stack).apply(customPolicyDocument)
-
+    }
 
 }
