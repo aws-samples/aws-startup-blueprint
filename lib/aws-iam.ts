@@ -1,3 +1,10 @@
+/**
+Permission Boundaries do not appear to work as documented https://docs.aws.amazon.com/cdk/api/latest/docs/aws-iam-readme.html#permissions-boundaries, at this in this sample.  
+
+I found https://github.com/aws/aws-cdk/issues/3242 but I am not sure how to apply that here, as we're creating the policy and that references an ARN
+
+*/
+
 import * as cdk from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
 
@@ -81,11 +88,11 @@ const newManagedPolicy = new iam.ManagedPolicy(AwsStartupBlueprintStack, 'DiGavP
     document: customPolicyDocument
 });
 
-export class PermissionBoundary extends cdk.Stack {
+/**export class PermissionBoundary extends cdk.Stack {
 	constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
     super(scope, id);
     
     iam.PermissionsBoundary.of(AwsStartupBlueprintStack).apply(newManagedPolicy)
     }
 
-}
+}*/
