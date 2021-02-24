@@ -36,9 +36,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
 
     new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
 
-    const newManagedPolicy = new iam.ManagedPolicy(AwsStartupBlueprintStack, 'DiGavPermissionBoundaryPolicy', {
-      document: customPolicyDocument
-      });
+    new PermissionBoundary(this 'PermissionBoundary', {});
 
   }
 
