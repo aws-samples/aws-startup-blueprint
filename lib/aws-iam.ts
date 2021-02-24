@@ -95,6 +95,6 @@ export class PermissionBoundary extends cdk.Stack {
     const customPolicyDocument = iam.PolicyDocument.fromJson(policyDocument);
     
     //iam.PermissionsBoundary.of(AwsStartupBlueprintStack).apply(newManagedPolicy)
-    //}
+    }
 
 }
