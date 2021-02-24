@@ -36,7 +36,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
 
     new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
 
-    new PermissionBoundary(this 'PermissionBoundary', {});
+    new PermissionBoundary(this, 'PermissionBoundary', {});
 
   }
 
