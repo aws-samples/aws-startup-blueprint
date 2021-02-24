@@ -5,6 +5,7 @@ import log = require('@aws-cdk/aws-logs');
 import iam = require("@aws-cdk/aws-iam");
 import cfn = require("@aws-cdk/aws-cloudformation");
 import lambda = require("@aws-cdk/aws-lambda");
+import { PermissionBoundary } from './aws-iam'; 
 
 import * as fs from 'fs';
 import { CfnAccessPoint } from "@aws-cdk/aws-s3";
