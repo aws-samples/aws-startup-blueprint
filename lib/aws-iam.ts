@@ -92,7 +92,9 @@ export class PermissionBoundary extends cdk.Construct {
     document: customPolicyDocument
     });
 
-    const sampleRole = new iam.Role(this, 'DiGav-Sample-Role', {});
+    const sampleRole = new iam.Role(this, 'DiGav-Sample-Role', {
+        assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
+    });
     sampleRole.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'));
     sampleRole.addPermissionsBoundary(iam.ManagedPolicy.fromAwsManagedPolicyName(newManagedPolicy));
 
