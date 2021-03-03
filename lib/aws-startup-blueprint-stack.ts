@@ -6,7 +6,7 @@ import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
 import { BlueprintServiceCatalog } from './aws-service-catalog'
-import { PermissionBoundary } from './aws-iam'
+import { RegionRestriction } from './aws-regions'
 
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
@@ -36,7 +36,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
 
     new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
 
-    new PermissionBoundary(this, 'PermissionBoundary', {});
+    new RegionRestriction(this, 'RegionRestriction', {});
 
   }
 
