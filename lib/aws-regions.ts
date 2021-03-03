@@ -1,4 +1,4 @@
-import core = require("@aws-cdk/core");
+import cdk = require("@aws-cdk/core");
 import log = require('@aws-cdk/aws-logs');
 import iam = require("@aws-cdk/aws-iam");
 import lambda = require("@aws-cdk/aws-lambda");
@@ -26,7 +26,7 @@ export class RegionRestriction extends cdk.Construct {
         }));
     }
 
-    const regionsFnProvider = new customresources.Provider(this 'RegionFnCustomResource', {
+    const regionsFnProvider = new customresources.Provider(this, 'RegionFnCustomResource', {
         onEventHandler: regionsFn,
     });
 
@@ -34,3 +34,4 @@ export class RegionRestriction extends cdk.Construct {
         serviceToken: regionsFn.functionArn,
         properties: {},
     });
+}
