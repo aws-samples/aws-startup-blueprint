@@ -29,7 +29,7 @@ Quick Create Link Coming Soon...
 ### Option 2) AWS CDK Deployment
 
 ```bash
-git clone https://github.com/aws-samples/aws-startup-blueprint.git
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk
 npm run build 
 cdk bootstrap
 ```
