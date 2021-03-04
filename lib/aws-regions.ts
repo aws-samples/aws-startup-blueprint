@@ -29,7 +29,7 @@ export class RegionRestriction extends cdk.Construct {
             onEventHandler: regionsFn,
         });
 
-        const CustomResource = new CustomResource(this, 'regionCustomResource', {
+        const customResource = new CustomResource(this, 'regionCustomResource', {
             serviceToken: regionsFn.functionArn,
             properties: {},
         });
