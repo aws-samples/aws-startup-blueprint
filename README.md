@@ -30,6 +30,8 @@ Quick Create Link Coming Soon...
 
 ```bash
 git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
 npm run build 
 cdk bootstrap
 ```
