@@ -16,7 +16,6 @@ export class RegionRestriction extends cdk.Construct {
 
         if (regionsFn.role) {
             regionsFn.role.addToPrincipalPolicy(new iam.PolicyStatement({
-                effect: Effect.ALLOW,
                 actions: ['iam.CreateRole', 'iam.CreatePolicy', 'iam.AddRoleToInstanceProfile', 'iam.AttachRolePolicy', 'iam.CreateInstanceProfile', 
                 'iam.CreatePolicyVersion', 'iam.DeleteInstanceProfile', 'iam.DeletePolicy', 'iam.DeletePolicyVersion', 'iam.DeleteRole', 'iam.DeleteRolePermissionsBoundary', 
                 'iam.DeleteRolePolicy', 'iam.DetachRolePolkicy', 'iam.Get*', 'iam.List*', 'iam.RemoveRoleFromInstanceProfile', 'iam.PutRolePermissionBoundary', 'iam.PutRolePolicy',
