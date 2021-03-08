@@ -36,6 +36,8 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
 
     new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
 
+    //TODO - Create custom resource to check if Organizations is allowed, and if not Create Organization, Enable SCP.
+    //TODO - Second custom resource to create and attach SCP Policy, with a OnDepends on the first custom resource
     new RegionRestriction(this, 'RegionRestriction', {});
 
   }
