@@ -14,16 +14,7 @@ def create_endpoint(event, context):
         response = org.describe_organization()
         print("Account is member of an existing Organization.")
 
-        organizationDescription = org.describe_organization()
-        enabledPolicyTypes = organizationDescription['Organization']['AvailablePolicyTypes'][0]['Type']
-        if "SERVICE_CONTROL_POLICY" in enabledPolicyTypes:
-            print ("Service Control Policies are enabled")
-            return {
-                'statusCode': 200,
-                'body': json.dumps('Organization exists and SCP policy type is enabled.')
-            }
-        else:
-            # Enable SCP
+        try:
             getRootId = org.list_roots()
             rootId = getRootId['Roots'][0]['Id']
 
@@ -31,8 +22,14 @@ def create_endpoint(event, context):
                 RootId=rootId,
                 PolicyType='SERVICE_CONTROL_POLICY'
             )
-            print(enableSCP)
-
+            print("SCP has been enabled")
+            return {
+                'statusCode': 200,
+                'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+            }
+        
+        except:
+            print("SCP policies are already enabled")
             return {
                 'statusCode': 200,
                 'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
@@ -48,30 +45,20 @@ def create_endpoint(event, context):
         print("Organization created.")
         print(createOrganization)
 
-        # Check if SCP is an enabled policy type
-        organizationDescription = org.describe_organization()
-        enabledPolicyTypes = organizationDescription['Organization']['AvailablePolicyTypes'][0]['Type']
-        if "SERVICE_CONTROL_POLICY" in enabledPolicyTypes:
-            print ("Service Control Policies are enabled")
-            return {
-                'statusCode': 200,
-                'body': json.dumps('Organization exists and SCP policy type is enabled.')
-            }
-        else:
-            # Enable SCP
-            getRootId = org.list_roots()
-            rootId = getRootId['Roots'][0]['Id']
+        # Enable SCP
+        getRootId = org.list_roots()
+        rootId = getRootId['Roots'][0]['Id']
 
-            enableSCP = org.enable_policy_type(
-                RootId=rootId,
-                PolicyType='SERVICE_CONTROL_POLICY'
-            )
-            print(enableSCP)
+        enableSCP = org.enable_policy_type(
+            RootId=rootId,
+            PolicyType='SERVICE_CONTROL_POLICY'
+        )
+        print("SCP has been enabled")
 
-            return {
-                'statusCode': 200,
-                'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
-            }
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+        }
 
 # Define action for the template deletion
 def delete_endpoint(event, context):
