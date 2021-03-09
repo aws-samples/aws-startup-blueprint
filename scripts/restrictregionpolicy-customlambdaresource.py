@@ -66,7 +66,7 @@ def delete_endpoint(event, context):
             cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
             return
 
-def lambda_handler(event, context):
+def main(event, context):
     print("Received event: " + json.dumps(event, indent=2))
   
     logger.info(event)
