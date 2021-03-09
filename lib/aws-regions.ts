@@ -72,9 +72,11 @@ export class RegionRestriction extends cdk.Construct {
                     runtime: lambda.Runtime.PYTHON_3_7,
                 })
             ),
-            properties: {}
+            properties: {
+                text: ensureSCPCustomResource.getResponseField('Items.0.body')
+            }
         });
 
-        createSCPCustomResource.addDependsOn(ensureSCPCustomResource)
+        //createSCPCustomResource.addDependsOn(ensureSCPCustomResource);
     }
 }
