@@ -2,6 +2,7 @@ import boto3
 import botocore
 import json
 import logging
+import cfnresponse
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 org = boto3.client('organizations')
@@ -31,6 +32,10 @@ def create_endpoint(event, context):
     TargetId=accountNumber,
     )
     print(response)
+    responseData['response'] = response
+    responseData['statusMessage'] = 'SCP Created and Attached'
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+    return
     
 def delete_endpoint(event, context):
     
@@ -56,6 +61,10 @@ def delete_endpoint(event, context):
                 PolicyId=policyId
             )
             print("DiGav Sample Policy Deleted")
+            responseData['response'] = deletePolicy
+            responseData['statusMessage'] = 'SCP Deleted'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+            return
 
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))

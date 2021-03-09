@@ -2,12 +2,15 @@ import boto3
 import botocore
 import json
 import logging
+import cfnresponse
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 org = boto3.client('organizations')
 
 # Define action for the creation of a template
 def create_endpoint(event, context):
+
+    responseData = {}
 
     # Check if the account is part of an Organization.  Only accounts within an Organization can receive a SCP
     try:
@@ -23,13 +26,24 @@ def create_endpoint(event, context):
                 PolicyType='SERVICE_CONTROL_POLICY'
             )
             print("SCP has been enabled")
+
+            responseData['response'] = enableSCP
+            responseData['statusMessage'] = 'SCP Enabled'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
             return {
                 'statusCode': 200,
                 'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
             }
+            
         
         except:
             print("SCP policies are already enabled")
+
+            responseData['response'] = "Success"
+            responseData['statusMessage'] = 'SCP Enabled'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
             return {
                 'statusCode': 200,
                 'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
@@ -55,6 +69,10 @@ def create_endpoint(event, context):
         )
         print("SCP has been enabled")
 
+        responseData['response'] = enableSCP
+        responseData['statusMessage'] = 'SCP Enabled'
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
         return {
             'statusCode': 200,
             'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
@@ -62,6 +80,11 @@ def create_endpoint(event, context):
 
 # Define action for the template deletion
 def delete_endpoint(event, context):
+    
+    responseData['response'] = "Success"
+    responseData['statusMessage'] = "Organization will not be deleted"
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+    
     return {
             'statusCode': 200,
             'body': json.dumps('Organization will not be deleted.')
