@@ -1,4 +1,5 @@
 import cdk = require("@aws-cdk/core");
+import { CustomResource } from '@aws-cdk/core';
 import log = require('@aws-cdk/aws-logs');
 import iam = require("@aws-cdk/aws-iam");
 import lambda = require("@aws-cdk/aws-lambda");
@@ -37,8 +38,8 @@ export class RegionRestriction extends cdk.Construct {
             })
         );
   
-        const ensureSCPCustomResource = new cr.CustomResource(this, "ensureSCPCustomResource", {
-            provider: cr.CustomResourceProvider.lambda(
+        const ensureSCPCustomResource = new CustomResource(this, "ensureSCPCustomResource", {
+            provider: cr.Provider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
                     uuid: "48b87370-ab28-4702-aa5a-2515b2a7d782",
@@ -57,8 +58,8 @@ export class RegionRestriction extends cdk.Construct {
             }
         });
         
-        const createSCPCustomResource = new cr.CustomResource(this, "createSCPCustomResource", {
-            provider: cr.CustomResourceProvider.lambda(
+        const createSCPCustomResource = new CustomResource(this, "createSCPCustomResource", {
+            provider: cr.Provider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
                     uuid: "f44eb9d4-dc51-4dce-a382-4e862add9db7",
