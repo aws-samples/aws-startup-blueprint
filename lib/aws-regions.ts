@@ -41,6 +41,7 @@ export class RegionRestriction extends cdk.Construct {
             provider: cfn.CustomResourceProvider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
+                    uuid: "48b87370-ab28-4702-aa5a-2515b2a7d782",
                     code: new lambda.InlineCode(
                         fs.readFileSync("scripts/enableorgscp-customlambdaresource.py", {
                             encoding: "utf-8",
@@ -60,6 +61,7 @@ export class RegionRestriction extends cdk.Construct {
             provider: cfn.CustomResourceProvider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
+                    uuid: "f44eb9d4-dc51-4dce-a382-4e862add9db7",
                     code: new lambda.InlineCode(
                         fs.readFileSync("scripts/restrictregionpolicy-customlambdaresource.py", {
                             encoding: "utf-8",
