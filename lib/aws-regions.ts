@@ -74,6 +74,6 @@ export class RegionRestriction extends cdk.Construct {
             properties: {}
         });
 
-        createSCPCustomResource.addDependsOn(ensureSCPCustomResource);
+        createSCPCustomResource.node.addDependsOn(ensureSCPCustomResource);
     }
 }
