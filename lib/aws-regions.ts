@@ -37,8 +37,8 @@ export class RegionRestriction extends cdk.Construct {
             })
         );
   
-        const ensureSCPCustomResource = new customresources.CustomResource(this, "ensureSCPCustomResource", {
-            provider: customresources.CustomResourceProvider.lambda(
+        const ensureSCPCustomResource = new cfn.CustomResource(this, "ensureSCPCustomResource", {
+            provider: cfn.CustomResourceProvider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
                     uuid: "48b87370-ab28-4702-aa5a-2515b2a7d782",
@@ -57,8 +57,8 @@ export class RegionRestriction extends cdk.Construct {
             }
         });
         
-        const createSCPCustomResource = new customresources.CustomResource(this, "createSCPCustomResource", {
-            provider: customresources.CustomResourceProvider.lambda(
+        const createSCPCustomResource = new cfn.CustomResource(this, "createSCPCustomResource", {
+            provider: cfn.CustomResourceProvider.lambda(
                 new lambda.SingletonFunction(this, "Singleton", {
                     role: SCPCustomResourceRole,
                     uuid: "f44eb9d4-dc51-4dce-a382-4e862add9db7",
