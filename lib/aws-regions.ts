@@ -38,7 +38,7 @@ export class RegionRestriction extends cdk.Construct {
   
         const ensureSCPCustomResource = new cfn.CustomResource(this, "ensureSCPCustomResource", {
             provider: cfn.CustomResourceProvider.lambda(
-                new lambda.SingletonFunction(this, "Singleton", {
+                new lambda.SingletonFunction(this, "ensureSCPSingleton", {
                     role: SCPCustomResourceRole,
                     uuid: "48b87370-ab28-4702-aa5a-2515b2a7d782",
                     code: new lambda.InlineCode(
@@ -58,7 +58,7 @@ export class RegionRestriction extends cdk.Construct {
         
         const createSCPCustomResource = new cfn.CustomResource(this, "createSCPCustomResource", {
             provider: cfn.CustomResourceProvider.lambda(
-                new lambda.SingletonFunction(this, "Singleton", {
+                new lambda.SingletonFunction(this, "createSCPSingleton", {
                     role: SCPCustomResourceRole,
                     uuid: "f44eb9d4-dc51-4dce-a382-4e862add9db7",
                     code: new lambda.InlineCode(
