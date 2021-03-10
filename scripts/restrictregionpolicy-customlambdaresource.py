@@ -15,7 +15,7 @@ policyName = "DiGav-Region-Restriction-Policy"
 # Define action for the creation of a template
 def create_endpoint(event, context):
 
-    policyContent = event['ResourceProperties']['policyContentInput']
+    policyContent = event['ResourceProperties']['PolicyContentInput']
 
     # Create the SCP
     response = org.create_policy(
