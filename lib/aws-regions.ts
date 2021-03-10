@@ -31,7 +31,7 @@ export class RegionRestriction extends cdk.Construct {
         SCPCustomResourceRole.addToPolicy(
             new iam.PolicyStatement({
             resources: ['*'],
-            actions: ["organizations:Create*", "organizations:Describe*", "organizations:ListRoots", "organizations:EnablePolicyType","iam:CreateServiceLinkedRole"],
+            actions: ["organizations:Create*", "organizations:Describe*", "organizations:ListRoots", "organizations:ListPolicies", "organizations:EnablePolicyType","iam:CreateServiceLinkedRole"],
             effect: iam.Effect.ALLOW,
             })
         );
