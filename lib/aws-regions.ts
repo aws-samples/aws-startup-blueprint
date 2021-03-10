@@ -51,9 +51,7 @@ export class RegionRestriction extends cdk.Construct {
                     runtime: lambda.Runtime.PYTHON_3_7,
                 })
             ),
-            properties: {
-                policyContentInput: scpPolicy,
-            }
+            properties: {}
         });
         
         const createSCPCustomResource = new cfn.CustomResource(this, "createSCPCustomResource", {
@@ -71,7 +69,9 @@ export class RegionRestriction extends cdk.Construct {
                     runtime: lambda.Runtime.PYTHON_3_7,
                 })
             ),
-            properties: {}
+            properties: {
+                policyContentInput: scpPolicy,
+            }
         });
 
         createSCPCustomResource.node.addDependency(ensureSCPCustomResource);
