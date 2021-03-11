@@ -12,9 +12,10 @@ accountNumber = boto3.client('sts').get_caller_identity().get('Account')
 policyName = "DiGav-Region-Restriction-Policy"
 
 # Define action for the creation of a template
-def create_endpoint(event, context):
+def create_scp(event, context):
 
     policyContent = event['ResourceProperties']['policyContentInput']
+    policyName = event['ResourceProperties']['policyNameInput']
 
     # Create the SCP
     response = org.create_policy(
@@ -27,45 +28,43 @@ def create_endpoint(event, context):
     
     # Attach the SCP
     response = org.attach_policy(
-    PolicyId=policyId,
-    TargetId=accountNumber,
+        PolicyId=policyId,
+        TargetId=accountNumber,
     )
     print(response)
     
-def delete_endpoint(event, context):
     
-    # Delete SCP
-    policy = org.list_policies(
-        Filter='SERVICE_CONTROL_POLICY'
+    return { 'PhysicalResourceId': policyId }
+    
+def delete_scp(event, context):
+    
+    policyId = event["PhysicalResourceId"]
+    
+    detachPolicy = org.detach_policy(
+        PolicyId=policyId,
+        TargetId=accountNumber,
     )
-    for p in policy['Policies']:
-        policyNames = p['Name']
-        if policyNames == policyName:
-            policyId = p['Id']
-            print(policyId)
+    print(detachPolicy)
 
-            # Detach policy in current account
-            detachPolicy = org.detach_policy(
-                PolicyId=policyId,
-                TargetId=accountNumber,
-            )
-            print(detachPolicy)
+    # # Delete policy
+    deletePolicy = org.delete_policy(
+        PolicyId=policyId
+    )
+    print("SCP Policy Deleted")
+    return {}
 
-            # # Delete policy
-            deletePolicy = org.delete_policy(
-                PolicyId=policyId
-            )
-            print("DiGav Sample Policy Deleted")
-
-def lambda_handler(event, context):
+def main(event, context):
     print("Received event: " + json.dumps(event, indent=2))
   
     logger.info(event)
-  
+    
     if event['RequestType'] == 'Delete':
-        delete_endpoint(event, context)
+        return delete_scp(event, context)
     elif event['RequestType'] == 'Create':
-        create_endpoint(event, context)
+        return create_scp(event, context)
+    elif event['RequestType'] == 'Update':
+        delete_scp(event, context)
+        return create_scp(event, context)        
     #print("Completed successfully")
 
 

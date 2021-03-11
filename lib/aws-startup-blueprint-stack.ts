@@ -36,8 +36,11 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
 
     new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
 
-    new RegionRestriction(this, 'RegionRestriction', {});
-
+    const apply_EU_RegionRestriction = this.node.tryGetContext('apply_EU_RegionRestriction');
+    if(apply_EU_RegionRestriction == "true") {
+      new EURegionRestriction(this, 'RegionRestriction', {});  
+    }
+    
   }
 
 }
