@@ -158,7 +158,7 @@ export class EURegionRestriction extends cdk.Construct {
         });
 
         const customPolicyDocument = fs.readFileSync("scripts/DiGavIAM.json", {
-            encodeing: "utf-8",
+            encoding: "utf-8",
         });
         const customManagedPolicy = new iam.ManagedPolicy(this, "DiGavPermissionBoundary", {
             document: customPolicyDocument
