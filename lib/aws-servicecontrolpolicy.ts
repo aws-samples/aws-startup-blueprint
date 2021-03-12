@@ -161,7 +161,7 @@ export class EURegionRestriction extends cdk.Construct {
             encoding: "utf-8",
         });
         const customPolicyDocument = iam.PolicyDocument.fromJson(customPolicyContent);
-        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGavPermissionBoundary", {
+        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGav-Permissions-Boundary-Policy", {
             document: customPolicyDocument
         });
 
@@ -169,7 +169,7 @@ export class EURegionRestriction extends cdk.Construct {
             assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
         });
 
-        //iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
+        iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
         
     }
 }
