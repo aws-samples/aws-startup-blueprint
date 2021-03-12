@@ -2,7 +2,6 @@ import cdk = require("@aws-cdk/core");
 import log = require('@aws-cdk/aws-logs');
 import iam = require("@aws-cdk/aws-iam");
 import lambda = require("@aws-cdk/aws-lambda");
-import cfn = require("@aws-cdk/aws-cloudformation");
 import cr = require("@aws-cdk/custom-resources")
 import fs = require("fs");
 
@@ -71,7 +70,6 @@ export class ScpEnabledPromise extends cdk.Construct {
         });
         
         serviceLinkRolePolicy.attachToRole(SCPCustomResourceRole);
-        
         
         this.ScpPromiseRole = SCPCustomResourceRole;
         
@@ -144,8 +142,6 @@ export class ServiceControlPolicy extends cdk.Construct {
 	}
 }
 
-
-
 export class EURegionRestriction extends cdk.Construct {
 	constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
         
@@ -160,6 +156,19 @@ export class EURegionRestriction extends cdk.Construct {
                 encoding: "utf-8",
             })
         });
+
+        const customPolicyDocument = fs.readFileSync("scripts/DiGavIAM.json", {
+            encodeing: "utf-8",
+        });
+        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGavPermissionBoundary", {
+            document: customPolicyDocument
+        });
+
+        const sampleRole = new iam.Role(this, "DiGav-Sample-Role", {
+
+        });
+
+        iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
         
     }
 }
