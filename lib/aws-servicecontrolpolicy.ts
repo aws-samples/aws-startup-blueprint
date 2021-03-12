@@ -165,7 +165,7 @@ export class EURegionRestriction extends cdk.Construct {
         });
 
         const sampleRole = new iam.Role(this, "DiGav-Sample-Role", {
-
+            assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
         });
 
         iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
