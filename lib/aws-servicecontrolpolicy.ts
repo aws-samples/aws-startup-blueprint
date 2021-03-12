@@ -157,19 +157,19 @@ export class EURegionRestriction extends cdk.Construct {
             })
         });
 
-        const customPolicyContent = fs.readFileSync("scripts/DiGavIAM.json", {
-            encoding: "utf-8",
-        });
-        const customPolicyDocument = iam.PolicyDocument.fromJson(customPolicyContent);
-        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGavPermissionBoundary", {
-            document: customPolicyDocument
-        });
+        // const customPolicyContent = fs.readFileSync("scripts/DiGavIAM.json", {
+        //     encoding: "utf-8",
+        // });
+        // const customPolicyDocument = iam.PolicyDocument.fromJson(customPolicyContent);
+        // const customManagedPolicy = new iam.ManagedPolicy(this, "DiGavPermissionBoundary", {
+        //     document: customPolicyDocument
+        // });
 
         const sampleRole = new iam.Role(this, "DiGav-Sample-Role", {
             assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
         });
 
-        iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
+        //iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
         
     }
 }
