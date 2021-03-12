@@ -9,7 +9,7 @@ import { BlueprintServiceCatalog } from './aws-service-catalog'
 import { EURegionRestriction } from './aws-servicecontrolpolicy'
 
 
-export class AwsStartupBlueprintStack extends cdk.Stack {
+export class AwsDiGAVBlueprintStack extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
