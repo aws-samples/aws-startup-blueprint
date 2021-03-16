@@ -6,10 +6,10 @@ import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
 import { BlueprintServiceCatalog } from './aws-service-catalog'
-import { EURegionRestriction } from './aws-servicecontrolpolicy'
+import { EURegionRestriction } from './aws-region-restriction'
 
 
-export class AwsDiGAVBlueprintStack extends cdk.Stack {
+export class AwsStartupBlueprintStack extends cdk.Stack {
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);

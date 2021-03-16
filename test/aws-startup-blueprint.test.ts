@@ -5,7 +5,7 @@ import * as AwsStartupBlueprint from '../lib/aws-startup-blueprint-stack';
 test('Empty Stack', () => {
     const app = new cdk.App();
     // WHEN
-    const stack = new AwsStartupBlueprint.AwsDiGAVBlueprintStack(app, 'MyTestStack');
+    const stack = new AwsStartupBlueprint.AwsStartupBlueprintStack(app, 'MyTestStack');
     // THEN
     expectCDK(stack).to(matchTemplate({
       "Resources": {}

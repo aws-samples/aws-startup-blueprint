@@ -141,35 +141,3 @@ export class ServiceControlPolicy extends cdk.Construct {
         
 	}
 }
-
-export class EURegionRestriction extends cdk.Construct {
-	constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
-        
-        super(scope, id); 
-
-        const enabledSCP = new ScpEnabledPromise(this, 'scpPromise', {});
-        
-        new ServiceControlPolicy(this, 'euRegionRestriction', {
-            ScpsEnabledPromise: enabledSCP,
-            PolicyName: "DiGAV_EU_RegionRestriction",
-            Policy: fs.readFileSync("scripts/DiGavSCP.json", {
-                encoding: "utf-8",
-            })
-        });
-
-        const customPolicyContent = fs.readFileSync("scripts/DiGavIAM.json", {
-            encoding: "utf-8",
-        });
-        const customPolicyDocument = iam.PolicyDocument.fromJson(customPolicyContent);
-        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGav-Permissions-Boundary-Policy", {
-            document: customPolicyDocument
-        });
-
-        const sampleRole = new iam.Role(this, "DiGav-Sample-Role", {
-            assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
-        });
-
-        iam.PermissionsBoundary.of(sampleRole).apply(customManagedPolicy);
-        
-    }
-}

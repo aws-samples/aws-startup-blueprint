@@ -101,7 +101,11 @@ export class ConfigConformancePacks extends cdk.Construct {
 
     const configRecorder = new cfg.CfnConfigurationRecorder(this, 'ConfigRecorder', {
       name: "BlueprintConfigRecorder",
-      roleArn: configRole.roleArn
+      roleArn: configRole.roleArn,
+      recordingGroup: {
+        allSupported: true,
+        includeGlobalResourceTypes: true
+      }
     });
 
 
