@@ -174,8 +174,3 @@ mainSteps:
         });
     }
 }
-
-      InputPayload:
-        image_id: '{{ imageId }}'
-        tag_value: '{{ tagValue }}'
-        instance_type: '{{ instanceType }}'
