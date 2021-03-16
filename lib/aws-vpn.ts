@@ -3,7 +3,7 @@ import s3 = require("@aws-cdk/aws-s3");
 import ec2 = require("@aws-cdk/aws-ec2");
 import log = require('@aws-cdk/aws-logs');
 import iam = require("@aws-cdk/aws-iam");
-import cfn = require("@aws-cdk/aws-cloudformation");
+import cr = require("@aws-cdk/custom-resources")
 import lambda = require("@aws-cdk/aws-lambda");
 
 import * as fs from 'fs';
@@ -40,8 +40,9 @@ export class ClientVpn extends core.Construct {
 
     vpnBucket.grantReadWrite(vpnCertCustomResourceRole);
     
-    const vpnCertificate = new cfn.CustomResource(this, 'vpnCertificate', {
-        provider: cfn.CustomResourceProvider.lambda(new lambda.SingletonFunction(this, 'Singleton', {
+    
+    const vpnCertificateProvider = new cr.Provider(this, "vpnCertificateProvider", {
+        onEventHandler: new lambda.SingletonFunction(this, "vpnCertificateSingleton", {
             role: vpnCertCustomResourceRole, 
             uuid: "CreateVpnCertificateLambda",
             code: new lambda.InlineCode(fs.readFileSync('scripts/vpn-endpoint-security-resource-handler.min.py', { encoding: 'utf-8' })),
@@ -49,11 +50,19 @@ export class ClientVpn extends core.Construct {
             timeout: core.Duration.seconds(300),
             runtime: lambda.Runtime.PYTHON_3_7,
             memorySize: 1024
-        })),
+        })
+    });
+
+    const vpnCertificate = new core.CustomResource(this, 'vpnCertificate', { 
+        serviceToken: vpnCertificateProvider.serviceToken,
         properties: {
           VpnConfigBucket: `s3://${vpnBucket.bucketName}/`
         }
     });
+
+    
+    
+    
 
     const vpnAccessLogGroup = new log.LogGroup(this, 'ClientVpnAccessLogGroup', {
       retention: log.RetentionDays.SIX_MONTHS

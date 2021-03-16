@@ -4,8 +4,6 @@ import sys
 import boto3
 import logging
 import json
-import cfnresponse
-from botocore.vendored import requests
 import traceback
 ec2=boto3.client('ec2')
 ssm=boto3.client('ssm')
@@ -33,18 +31,20 @@ def deleteCert(event, context, isUpdate=False):
     acm.delete_certificate(CertificateArn=certificateID)
 
     if(isUpdate == False):
-      cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, certificateID)
+      return { 'PhysicalResourceId': certificateID, 'responseData': responseData  }
 
   except Exception as e:
       logger.error(e)
       errorMessage = e.args[0]
       response_data = {'ErrorMessage': errorMessage}
-      cfnresponse.send(event, context, cfnresponse.FAILED, responseData)
+      return False
   
 
 def createCert(event, context):
   
   try: 
+
+      logger.info("Starting to create certificate")
 
       vpnConfigBucket = event['ResourceProperties']['VpnConfigBucket']
 
@@ -72,6 +72,8 @@ def createCert(event, context):
           PrivateKey=get_bytes_from_file('/tmp/vpndetails/server.key'),
           CertificateChain=get_bytes_from_file('/tmp/vpndetails/ca.crt')
       )
+      
+      logger.info(serverCertResponse)
 
       downloadAndCopyConfigKeysAndCert = ['aws s3 cp /tmp/vpndetails/ca.crt {0}ca.crt'.format(vpnConfigBucket),
                                           'aws s3 cp /tmp/vpndetails/server.crt {0}server.crt'.format(vpnConfigBucket),
@@ -82,12 +84,15 @@ def createCert(event, context):
       runCommandSet(downloadAndCopyConfigKeysAndCert);
 
 
-      cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, serverCertResponse['CertificateArn'])
+      return {
+        'responseData': responseData,
+        'PhysicalResourceId': serverCertResponse['CertificateArn'],
+      } 
       
   except Exception as e:
       logger.error(e)
       response_data = {'ErrorMessage': e}
-      cfnresponse.send(event, context, cfnresponse.FAILED, responseData)
+      return response_data
   					
 def runCommandSet(commands, workDir='/tmp/'):
               
@@ -118,9 +123,9 @@ def main(event, context):
   runCommandSet(installDepCommands)
 
   if event['RequestType'] == 'Delete':
-    deleteCert(event, context)
+    return deleteCert(event, context)
   elif event['RequestType'] == 'Create':
-    createCert(event, context)
+    return createCert(event, context)
   elif event['RequestType'] == 'Update':
     deleteCert(event, context, True)
-    createCert(event, context)    
+    return createCert(event, context)    
