@@ -6,6 +6,10 @@ The Blueprint's core landing zone builds out a secure home for your workloads in
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
+## Disclaimer
+
+Language about how this Blueprint is for examples only, it does not ensure DiGAV compliance.  Customers are responsible for ensuring their environments meet the necessary requirements.
+
 ## Region Restriction
 
 The region restriction is enforced through one of two ways depending on your AWS configuration.
@@ -21,6 +25,10 @@ If your account is not a member of an Organization, one will be created as part 
 The policy is enforced through the use of an [AWS Config custom rule](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html).  This rule will evaluate all IAM principals and mark them as non-compliant if the policy is not attached as a permission boundary.  When new IAM principals are created it will also automate the attachment of the boundary.
 
 *Note*:  The boundary policy includes a policy statement that if a principal who has the boundary attached creates a new principal the boundary must be attached at the time of creation or an access denied error will occur.
+
+### Other Region Requirements
+
+The Blueprint uses AWS permission tools to restrict access to the AWS regions within the EEA.  However, it is the customers responsibility to ensure that the proper restrictions are in place to prevent access from employees or other users who may not be connecting from an EEA country in accordance with the DiGAV regulations.
 
 ## Install instructions
 
