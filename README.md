@@ -1,16 +1,30 @@
-# AWS Biotech Blueprint
+# AWS DiGAV Blueprint
 
-This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+This Quick Start is for customers who may need to comply with the Regulation on the Requirements and the Process for the Examination of the Eligibility of Digital Health Applications for Reimbursement by the State Health Schemes or Digitale Gesundheitsanwendungen-Verordnung (referred to as DiGAV) „DiGAV“).
 
-The Blueprint's core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+The Blueprint's core landing zone builds out a secure home for your workloads in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  The key feature of this Blueprint is the automated enforcement of a policy that restricts access to AWS regions that fall within the European Economic Area (EEA).  As of March 2021 that includes: Frankfurt, Paris, Ireland, Milan, & Stockholm.
 
-Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
+## Region Restriction
+
+The region restriction is enforced through one of two ways depending on your AWS configuration.
+
+### Organization Service Control Policy
+
+If your AWS account is a member of an Organization, the Blueprint will create and attach a Service Control Policy (SCP) that limits access within the account to the regions listed.  This SCP is located [here](/scripts/DiGAVSCP.json) and can be modified to fit your needs.  For example, it can be made to be more restrictive than the 5 default regions.  The SCP also includes a conditional statement that allows for a specific IAM role to be excluded from the policy if necessary.
+
+### Identity and Access Management Permissions Boundary Policy
+
+If your account is not a member of an Organization, one will be created as part of this Blueprint.  There is no additional cost for creating an Organization, but AWS recommends using Organizations to help organize and manage accounts.  This configuration will allow for improvement options when customers scale beyond the first account.  The account where this Blueprint is executed will become the root account for that new Organization.  However, since Service Control Policies cannot be applied at the root account this Blueprint will also create an Identity and Access Management (IAM) policy that can be used as a [Permissions Boundary](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html).  The permissions boundary policy sets the maximum level of permissions available to users, including the regions that can be used.  The policy is located [here](/scripts/DiGAVIAM.json) and can be modified to fit your needs.  The default policy includes elements that prevent modification of the policy itself when it is applied, which will prevent IAM principals from circumventing the restriction.
+
+The policy is enforced through the use of an [AWS Config custom rule](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html).  This rule will evaluate all IAM principals and mark them as non-compliant if the policy is not attached as a permission boundary.  When new IAM principals are created it will also automate the attachment of the boundary.
+
+*Note*:  The boundary policy includes a policy statement that if a principal who has the boundary attached creates a new principal the boundary must be attached at the time of creation or an access denied error will occur.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
 ## Install instructions
 
-The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
+The DiGAV Blueprint is built with the AWS CDK which allows for two deployment options. 
 
 If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
@@ -20,17 +34,13 @@ Both deployment options take about 7 minutes to complete and create the exact sa
 
 ### Option 1) CloudFormation Only Deployment
 
-Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk/dev/cdk.out/AwsBiotechBlueprint.template.json?token=AI3FJF5EKHRJFBZA3ER7BNS7UQNE4) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
-
-Quick Create Link Coming Soon...
-[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
-
+Download the pre-synthed CloudFormation Template (right click, Save As) *NEED LINK* and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
 
 ### Option 2) AWS CDK Deployment
 
 ```bash
-git clone https://github.com/aws-samples/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
+git clone *NEED REPO LINK*
+cd *NEED FOLDER NAME*
 npm install
 npm run build 
 cdk bootstrap
@@ -38,7 +48,7 @@ cdk bootstrap
 
 Feel free to make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). 
 
-When you are ready,  to deploy or update the blueprint's architecture in the future, you just need to run.
+When you are ready, to deploy or update the blueprint's architecture in the future, you just need to run.
 
 ```bash 
 npm run build && cdk deploy
