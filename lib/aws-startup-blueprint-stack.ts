@@ -23,7 +23,9 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
       DevelopmentVpc: blueprintVPCs.DevelopmentVpc
     });
 
-    new ConfigConformancePacks(this, 'ConfigPacks', {});
+    new ConfigConformancePacks(this, 'ConfigPacks', {
+      skipCreatingRecorderAndDeliveryChannel: false
+    });
 
     new Dns(this,'Dns', {
       ManagmentVPC: blueprintVPCs.ManagmentVPC,
