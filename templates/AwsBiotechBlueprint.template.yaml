@@ -1,4 +1,4 @@
-Description: The AWS Biotech Blueprint is a strongly opinionated architecture for any Startup looking to start using AWS follwing best practices on day 1. (qs-1of009lua)
+Description: AWS Biotech Blueprint CDK is an AWS Quick Start that helps Biotech companies deploy core AWS Infrastructure as well as CloudFormation templates for common ISV solutions. (qs-1of009lua) (ib-1of009lua)
 Resources:
   VpcCoreProductionD971AE3A:
     Type: AWS::EC2::VPC
@@ -1264,12 +1264,87 @@ Resources:
     DeletionPolicy: Retain
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/ClientVpn/VpnConfigBucket/Resource
+  ClientVpnvpnCertificateProviderframeworkonEventServiceRole60471AD0:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/ClientVpn/vpnCertificateProvider/framework-onEvent/ServiceRole/Resource
+  ClientVpnvpnCertificateProviderframeworkonEventServiceRoleDefaultPolicyE25CE498:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - SingletonLambdaCreateVpnCertificateLambda14FF3DCC
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: ClientVpnvpnCertificateProviderframeworkonEventServiceRoleDefaultPolicyE25CE498
+      Roles:
+        - Ref: ClientVpnvpnCertificateProviderframeworkonEventServiceRole60471AD0
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/ClientVpn/vpnCertificateProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource
+  ClientVpnvpnCertificateProviderframeworkonEvent3C19EA05:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+      Role:
+        Fn::GetAtt:
+          - ClientVpnvpnCertificateProviderframeworkonEventServiceRole60471AD0
+          - Arn
+      Description: AWS CDK resource provider framework - onEvent (AwsBiotechBlueprint/ClientVpn/vpnCertificateProvider)
+      Environment:
+        Variables:
+          USER_ON_EVENT_FUNCTION_ARN:
+            Fn::GetAtt:
+              - SingletonLambdaCreateVpnCertificateLambda14FF3DCC
+              - Arn
+      Handler: framework.onEvent
+      Runtime: nodejs14.x
+      Timeout: 900
+    DependsOn:
+      - ClientVpnvpnCertificateProviderframeworkonEventServiceRoleDefaultPolicyE25CE498
+      - ClientVpnvpnCertificateProviderframeworkonEventServiceRole60471AD0
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/ClientVpn/vpnCertificateProvider/framework-onEvent/Resource
+      aws:asset:path: asset.c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c
+      aws:asset:property: Code
   ClientVpnvpnCertificate550A99D6:
     Type: AWS::CloudFormation::CustomResource
     Properties:
       ServiceToken:
         Fn::GetAtt:
-          - SingletonLambdaCreateVpnCertificateLambda14FF3DCC
+          - ClientVpnvpnCertificateProviderframeworkonEvent3C19EA05
           - Arn
       VpnConfigBucket:
         Fn::Join:
@@ -1466,78 +1541,65 @@ Resources:
     Properties:
       Code:
         ZipFile: >-
-          Q=True
+          S=True
 
-          P='/tmp/'
+          R='/tmp/'
 
-          O='ErrorMessage'
+          Q='ErrorMessage'
 
-          N='VpnConfigBucket'
+          P='responseData'
 
-          M='ResourceProperties'
+          O='VpnConfigBucket'
 
-          L=False
+          N='ResourceProperties'
 
-          K=Exception
+          M=Exception
 
-          import subprocess as D
+          L='PhysicalResourceId'
 
-          import os
+          K=False
 
-          import sys
+          import subprocess as D,os,sys,boto3 as B,logging as G,json,traceback
 
-          import boto3 as E
+          T=B.client('ec2')
 
-          import logging as G
+          U=B.client('ssm')
 
-          import json
+          H=B.client('acm')
 
-          import cfnresponse
+          A=G.getLogger()
 
-          from botocore.vendored import requests
+          A.setLevel(G.INFO)
 
-          import traceback
+          E={}
 
-          R=E.client('ec2')
-
-          S=E.client('ssm')
-
-          H=E.client('acm')
-
-          B=G.getLogger()
-
-          B.setLevel(G.INFO)
-
-          A={}
-
-          def I(event,context,isUpdate=L):
-          	F=context;E=event
+          def I(event,context,isUpdate=K):
+          	D=event
           	try:
-          		A['Complete']='True';G=E['PhysicalResourceId'];D=E[M][N];J=['aws s3 rm {0}ca.crt'.format(D),'aws s3 rm {0}server.crt'.format(D),'aws s3 rm {0}server.key'.format(D),'aws s3 rm {0}client1.domain.tld.crt'.format(D),'aws s3 rm {0}client1.domain.tld.key'.format(D)];Q=C(J);H.delete_certificate(CertificateArn=G)
-          		if isUpdate==L:cfnresponse.send(E,F,cfnresponse.SUCCESS,A,G)
-          	except K as I:B.error(I);P=I.args[0];R={O:P};cfnresponse.send(E,F,cfnresponse.FAILED,A)
+          		E['Complete']='True';F=D[L];B=D[N][O];I=['aws s3 rm {0}ca.crt'.format(B),'aws s3 rm {0}server.crt'.format(B),'aws s3 rm {0}server.key'.format(B),'aws s3 rm {0}client1.domain.tld.crt'.format(B),'aws s3 rm {0}client1.domain.tld.key'.format(B)];R=C(I);H.delete_certificate(CertificateArn=F)
+          		if isUpdate==K:return{L:F,P:E}
+          	except M as G:A.error(G);J=G.args[0];S={Q:J};return K
           def J(event,context):
-          	G=context;E=event
-          	try:D=E[M][N];J=['curl -L https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.6/EasyRSA-unix-v3.0.6.tgz -O','mkdir /tmp/easyrsa','mkdir /tmp/vpndetails','tar -xvzf /tmp/EasyRSA-unix-v3.0.6.tgz -C /tmp/easyrsa','ls /tmp/easyrsa'];C(J);L=['/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa init-pki','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-ca nopass','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-server-full server nopass','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-client-full client1.domain.tld nopass','cp /tmp/pki/ca.crt /tmp/vpndetails/ca.crt','cp /tmp/pki/issued/server.crt /tmp/vpndetails/server.crt','cp /tmp/pki/private/server.key /tmp/vpndetails/server.key','cp /tmp/pki/issued/client1.domain.tld.crt /tmp/vpndetails/client1.domain.tld.crt','cp /tmp/pki/private/client1.domain.tld.key /tmp/vpndetails/client1.domain.tld.key'];C(L,'/tmp/easy-rsa/EasyRSA-v3.0.6');P=H.import_certificate(Certificate=F('/tmp/vpndetails/server.crt'),PrivateKey=F('/tmp/vpndetails/server.key'),CertificateChain=F('/tmp/vpndetails/ca.crt'));Q=['aws s3 cp /tmp/vpndetails/ca.crt {0}ca.crt'.format(D),'aws s3 cp /tmp/vpndetails/server.crt {0}server.crt'.format(D),'aws s3 cp /tmp/vpndetails/server.key {0}server.key'.format(D),'aws s3 cp /tmp/vpndetails/client1.domain.tld.crt {0}client1.domain.tld.crt'.format(D),'aws s3 cp /tmp/vpndetails/client1.domain.tld.key {0}client1.domain.tld.key'.format(D)];C(Q);cfnresponse.send(E,G,cfnresponse.SUCCESS,A,P['CertificateArn'])
-          	except K as I:B.error(I);R={O:I};cfnresponse.send(E,G,cfnresponse.FAILED,A)
-          def C(commands,workDir=P):
-          	I='PATH';A=os.environ.copy();A[I]='/tmp/bin:'+A[I];A['PYTHONPATH']='/tmp/:';A['EASYRSA_BATCH']='1';C=[]
-          	for E in commands:G=D.Popen([E],env=A,cwd=P,shell=Q,stdout=D.PIPE,stderr=D.PIPE);F,H=G.communicate();B.info(E);B.info(F);B.info(H);C.append(F)
+          	try:A.info('Starting to create certificate');B=event[N][O];I=['curl -L https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.6/EasyRSA-unix-v3.0.6.tgz -O','mkdir /tmp/easyrsa','mkdir /tmp/vpndetails','tar -xvzf /tmp/EasyRSA-unix-v3.0.6.tgz -C /tmp/easyrsa','ls /tmp/easyrsa'];C(I);J=['/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa init-pki','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-ca nopass','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-server-full server nopass','/tmp/easyrsa/EasyRSA-v3.0.6/easyrsa build-client-full client1.domain.tld nopass','cp /tmp/pki/ca.crt /tmp/vpndetails/ca.crt','cp /tmp/pki/issued/server.crt /tmp/vpndetails/server.crt','cp /tmp/pki/private/server.key /tmp/vpndetails/server.key','cp /tmp/pki/issued/client1.domain.tld.crt /tmp/vpndetails/client1.domain.tld.crt','cp /tmp/pki/private/client1.domain.tld.key /tmp/vpndetails/client1.domain.tld.key'];C(J,'/tmp/easy-rsa/EasyRSA-v3.0.6');D=H.import_certificate(Certificate=F('/tmp/vpndetails/server.crt'),PrivateKey=F('/tmp/vpndetails/server.key'),CertificateChain=F('/tmp/vpndetails/ca.crt'));A.info(D);K=['aws s3 cp /tmp/vpndetails/ca.crt {0}ca.crt'.format(B),'aws s3 cp /tmp/vpndetails/server.crt {0}server.crt'.format(B),'aws s3 cp /tmp/vpndetails/server.key {0}server.key'.format(B),'aws s3 cp /tmp/vpndetails/client1.domain.tld.crt {0}client1.domain.tld.crt'.format(B),'aws s3 cp /tmp/vpndetails/client1.domain.tld.key {0}client1.domain.tld.key'.format(B)];C(K);return{P:E,L:D['CertificateArn']}
+          	except M as G:A.error(G);R={Q:G};return R
+          def C(commands,workDir=R):
+          	I='PATH';B=os.environ.copy();B[I]='/tmp/bin:'+B[I];B['PYTHONPATH']='/tmp/:';B['EASYRSA_BATCH']='1';C=[]
+          	for E in commands:G=D.Popen([E],env=B,cwd=R,shell=S,stdout=D.PIPE,stderr=D.PIPE);F,H=G.communicate();A.info(E);A.info(F);A.info(H);C.append(F)
           	return C
           def F(filename):return open(filename,'rb').read()
 
           def main(event,context):
-          	E='RequestType';D=context;A=event;B.info(A);F=['pip3 install awscli --upgrade --no-cache-dir --ignore-installed --target=/tmp/'];C(F)
-          	if A[E]=='Delete':I(A,D)
-          	elif A[E]=='Create':J(A,D)
-          	elif A[E]=='Update':I(A,D,Q);J(A,D)
-      Handler: index.main
+          	E='RequestType';D=context;B=event;A.info(B);F=['pip3 install awscli --upgrade --no-cache-dir --ignore-installed --target=/tmp/'];C(F)
+          	if B[E]=='Delete':return I(B,D)
+          	elif B[E]=='Create':return J(B,D)
+          	elif B[E]=='Update':I(B,D,S);return J(B,D)
       Role:
         Fn::GetAtt:
           - ClientVpnVpnCertificateLambdaCustomResourceRole042AF384
           - Arn
-      Runtime: python3.7
+      Handler: index.main
       MemorySize: 1024
+      Runtime: python3.7
       Timeout: 300
     DependsOn:
       - ClientVpnVpnCertificateLambdaCustomResourceRoleDefaultPolicyBC6B56F1
@@ -1667,6 +1729,9 @@ Resources:
           - ConfigPacksConfigRecorderRole443C2431
           - Arn
       Name: BlueprintConfigRecorder
+      RecordingGroup:
+        AllSupported: true
+        IncludeGlobalResourceTypes: true
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigRecorder
   ConfigPacksControlTowerDetectiveGuardRailsConformancePack7CE4F243:
@@ -2131,95 +2196,1179 @@ Resources:
         Ref: ConfigPacksConfigBucket2FDEAE68
       DeliveryS3KeyPrefix: nist-csf-bestpractices
       TemplateBody: >-
-        ###############################################################################################
+        ##################################################################################
 
         #
 
         #   Conformance Pack:
 
-        #     Operational Best Practices for Amazon S3
+        #     Operational Best Practices for NIST CSF
 
         #
 
-        #    This pack contains AWS Config rules based on the best practice guidelines for Amazon S3.
+        #   This conformance pack helps verify compliance with NIST CSF requirements.
+
+        #                                                                                 
+
+        #   This Conformance Pack has been designed for compatibility with the majority of AWS 
+
+        #   regions and to not require setting of any Parameters. Additional managed rules that 
+
+        #   require parameters to be set for your environment and/or for your specific region can 
+
+        #   be found at https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html
 
         #
 
-        ###############################################################################################
+        #   See Parameters section for names and descriptions of required parameters. 
+
+        #
+
+        ##################################################################################
 
 
+        Parameters:
+          AccessKeysRotatedParamMaxAccessKeyAge:
+            Default: '90'
+            Type: String
+          AcmCertificateExpirationCheckParamDaysToExpiration:
+            Default: '90'
+            Type: String
+          GuarddutyNonArchivedFindingsParamDaysHighSev:
+            Default: '1'
+            Type: String
+          GuarddutyNonArchivedFindingsParamDaysLowSev:
+            Default: '30'
+            Type: String
+          GuarddutyNonArchivedFindingsParamDaysMediumSev:
+            Default: '7'
+            Type: String
+          IamPasswordPolicyParamMaxPasswordAge:
+            Default: '90'
+            Type: String
+          IamPasswordPolicyParamMinimumPasswordLength:
+            Default: '14'
+            Type: String
+          IamPasswordPolicyParamPasswordReusePrevention:
+            Default: '24'
+            Type: String
+          IamPasswordPolicyParamRequireLowercaseCharacters:
+            Default: 'TRUE'
+            Type: String
+          IamPasswordPolicyParamRequireNumbers:
+            Default: 'TRUE'
+            Type: String
+          IamPasswordPolicyParamRequireSymbols:
+            Default: 'TRUE'
+            Type: String
+          IamPasswordPolicyParamRequireUppercaseCharacters:
+            Default: 'TRUE'
+            Type: String
+          IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge:
+            Default: '90'
+            Type: String
+          RestrictedIncomingTrafficParamBlockedPort1:
+            Default: '20'
+            Type: String
+          RestrictedIncomingTrafficParamBlockedPort2:
+            Default: '21'
+            Type: String
+          RestrictedIncomingTrafficParamBlockedPort3:
+            Default: '3389'
+            Type: String
+          RestrictedIncomingTrafficParamBlockedPort4:
+            Default: '3306'
+            Type: String
+          RestrictedIncomingTrafficParamBlockedPort5:
+            Default: '4333'
+            Type: String
+          S3AccountLevelPublicAccessBlocksParamBlockPublicAcls:
+            Default: 'True'
+            Type: String
+          S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy:
+            Default: 'True'
+            Type: String
+          S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls:
+            Default: 'True'
+            Type: String
+          S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets:
+            Default: 'True'
+            Type: String
         Resources:
-            S3BucketPublicReadProhibited:
-              Type: AWS::Config::ConfigRule
-              Properties:
-                ConfigRuleName: S3BucketPublicReadProhibited
-                Description: >- 
-                  Checks that your Amazon S3 buckets do not allow public read access.
-                  The rule checks the Block Public Access settings, the bucket policy, and the
-                  bucket access control list (ACL).
-                Scope:
-                  ComplianceResourceTypes:
-                  - "AWS::S3::Bucket"
-                Source:
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED
-                MaximumExecutionFrequency: Six_Hours
-            S3BucketPublicWriteProhibited: 
-              Type: "AWS::Config::ConfigRule"
-              Properties: 
-                ConfigRuleName: S3BucketPublicWriteProhibited
-                Description: "Checks that your Amazon S3 buckets do not allow public write access. The rule checks the Block Public Access settings, the bucket policy, and the bucket access control list (ACL)."
-                Scope: 
-                  ComplianceResourceTypes: 
-                  - "AWS::S3::Bucket"
-                Source: 
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED
-                MaximumExecutionFrequency: Six_Hours
-            S3BucketReplicationEnabled: 
-              Type: "AWS::Config::ConfigRule"
-              Properties: 
-                ConfigRuleName: S3BucketReplicationEnabled
-                Description: "Checks whether the Amazon S3 buckets have cross-region replication enabled."
-                Scope: 
-                  ComplianceResourceTypes: 
-                  - "AWS::S3::Bucket"
-                Source: 
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_REPLICATION_ENABLED
-            S3BucketSSLRequestsOnly: 
-              Type: "AWS::Config::ConfigRule"
-              Properties: 
-                ConfigRuleName: S3BucketSSLRequestsOnly
-                Description: "Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL)."
-                Scope: 
-                  ComplianceResourceTypes: 
-                  - "AWS::S3::Bucket"
-                Source: 
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_SSL_REQUESTS_ONLY
-            ServerSideReplicationEnabled: 
-              Type: "AWS::Config::ConfigRule"
-              Properties: 
-                ConfigRuleName: ServerSideReplicationEnabled
-                Description: "Checks that your Amazon S3 bucket either has S3 default encryption enabled or that the S3 bucket policy explicitly denies put-object requests without server side encryption."
-                Scope: 
-                  ComplianceResourceTypes: 
-                  - "AWS::S3::Bucket"
-                Source: 
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
-            S3BucketLoggingEnabled: 
-              Type: "AWS::Config::ConfigRule"
-              Properties: 
-                ConfigRuleName: S3BucketLoggingEnabled
-                Description: "Checks whether logging is enabled for your S3 buckets."
-                Scope: 
-                  ComplianceResourceTypes: 
-                  - "AWS::S3::Bucket"
-                Source: 
-                  Owner: AWS
-                  SourceIdentifier: S3_BUCKET_LOGGING_ENABLED
+          AccessKeysRotated:
+            Properties:
+              ConfigRuleName: access-keys-rotated
+              InputParameters:
+                maxAccessKeyAge:
+                  Fn::If:
+                  - accessKeysRotatedParamMaxAccessKeyAge
+                  - Ref: AccessKeysRotatedParamMaxAccessKeyAge
+                  - Ref: AWS::NoValue
+              Source:
+                Owner: AWS
+                SourceIdentifier: ACCESS_KEYS_ROTATED
+            Type: AWS::Config::ConfigRule
+          AcmCertificateExpirationCheck:
+            Properties:
+              ConfigRuleName: acm-certificate-expiration-check
+              InputParameters:
+                daysToExpiration:
+                  Fn::If:
+                  - acmCertificateExpirationCheckParamDaysToExpiration
+                  - Ref: AcmCertificateExpirationCheckParamDaysToExpiration
+                  - Ref: AWS::NoValue
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ACM::Certificate
+              Source:
+                Owner: AWS
+                SourceIdentifier: ACM_CERTIFICATE_EXPIRATION_CHECK
+            Type: AWS::Config::ConfigRule
+          AlbHttpToHttpsRedirectionCheck:
+            Properties:
+              ConfigRuleName: alb-http-to-https-redirection-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: ALB_HTTP_TO_HTTPS_REDIRECTION_CHECK
+            Type: AWS::Config::ConfigRule
+          ApiGwCacheEnabledAndEncrypted:
+            Properties:
+              ConfigRuleName: api-gw-cache-enabled-and-encrypted
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ApiGateway::Stage
+              Source:
+                Owner: AWS
+                SourceIdentifier: API_GW_CACHE_ENABLED_AND_ENCRYPTED
+            Type: AWS::Config::ConfigRule
+          ApiGwExecutionLoggingEnabled:
+            Properties:
+              ConfigRuleName: api-gw-execution-logging-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ApiGateway::Stage
+                - AWS::ApiGatewayV2::Stage
+              Source:
+                Owner: AWS
+                SourceIdentifier: API_GW_EXECUTION_LOGGING_ENABLED
+            Type: AWS::Config::ConfigRule
+          AutoscalingGroupElbHealthcheckRequired:
+            Properties:
+              ConfigRuleName: autoscaling-group-elb-healthcheck-required
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::AutoScaling::AutoScalingGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: AUTOSCALING_GROUP_ELB_HEALTHCHECK_REQUIRED
+            Type: AWS::Config::ConfigRule
+          CloudTrailCloudWatchLogsEnabled:
+            Properties:
+              ConfigRuleName: cloud-trail-cloud-watch-logs-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED
+            Type: AWS::Config::ConfigRule
+          CloudTrailEnabled:
+            Properties:
+              ConfigRuleName: cloudtrail-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUD_TRAIL_ENABLED
+            Type: AWS::Config::ConfigRule
+          CloudTrailEncryptionEnabled:
+            Properties:
+              ConfigRuleName: cloud-trail-encryption-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUD_TRAIL_ENCRYPTION_ENABLED
+            Type: AWS::Config::ConfigRule
+          CloudTrailLogFileValidationEnabled:
+            Properties:
+              ConfigRuleName: cloud-trail-log-file-validation-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUD_TRAIL_LOG_FILE_VALIDATION_ENABLED
+            Type: AWS::Config::ConfigRule
+          CloudtrailS3DataeventsEnabled:
+            Properties:
+              ConfigRuleName: cloudtrail-s3-dataevents-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUDTRAIL_S3_DATAEVENTS_ENABLED
+            Type: AWS::Config::ConfigRule
+          CloudwatchAlarmActionCheck:
+            Properties:
+              ConfigRuleName: cloudwatch-alarm-action-check
+              InputParameters:
+                alarmActionRequired: 'TRUE'
+                insufficientDataActionRequired: 'TRUE'
+                okActionRequired: 'FALSE'
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::CloudWatch::Alarm
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUDWATCH_ALARM_ACTION_CHECK
+            Type: AWS::Config::ConfigRule
+          CloudwatchLogGroupEncrypted:
+            Properties:
+              ConfigRuleName: cloudwatch-log-group-encrypted
+              Source:
+                Owner: AWS
+                SourceIdentifier: CLOUDWATCH_LOG_GROUP_ENCRYPTED
+            Type: AWS::Config::ConfigRule
+          CodebuildProjectEnvvarAwscredCheck:
+            Properties:
+              ConfigRuleName: codebuild-project-envvar-awscred-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::CodeBuild::Project
+              Source:
+                Owner: AWS
+                SourceIdentifier: CODEBUILD_PROJECT_ENVVAR_AWSCRED_CHECK
+            Type: AWS::Config::ConfigRule
+          CodebuildProjectSourceRepoUrlCheck:
+            Properties:
+              ConfigRuleName: codebuild-project-source-repo-url-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::CodeBuild::Project
+              Source:
+                Owner: AWS
+                SourceIdentifier: CODEBUILD_PROJECT_SOURCE_REPO_URL_CHECK
+            Type: AWS::Config::ConfigRule
+          DbInstanceBackupEnabled:
+            Properties:
+              ConfigRuleName: db-instance-backup-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBInstance
+              Source:
+                Owner: AWS
+                SourceIdentifier: DB_INSTANCE_BACKUP_ENABLED
+            Type: AWS::Config::ConfigRule
+          DmsReplicationNotPublic:
+            Properties:
+              ConfigRuleName: dms-replication-not-public
+              Scope:
+                ComplianceResourceTypes: []
+              Source:
+                Owner: AWS
+                SourceIdentifier: DMS_REPLICATION_NOT_PUBLIC
+            Type: AWS::Config::ConfigRule
+          DynamodbAutoscalingEnabled:
+            Properties:
+              ConfigRuleName: dynamodb-autoscaling-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::DynamoDB::Table
+              Source:
+                Owner: AWS
+                SourceIdentifier: DYNAMODB_AUTOSCALING_ENABLED
+            Type: AWS::Config::ConfigRule
+          DynamodbPitrEnabled:
+            Properties:
+              ConfigRuleName: dynamodb-pitr-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::DynamoDB::Table
+              Source:
+                Owner: AWS
+                SourceIdentifier: DYNAMODB_PITR_ENABLED
+            Type: AWS::Config::ConfigRule
+          DynamodbThroughputLimitCheck:
+            Properties:
+              ConfigRuleName: dynamodb-throughput-limit-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: DYNAMODB_THROUGHPUT_LIMIT_CHECK
+            Type: AWS::Config::ConfigRule
+          EbsOptimizedInstance:
+            Properties:
+              ConfigRuleName: ebs-optimized-instance
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Instance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EBS_OPTIMIZED_INSTANCE
+            Type: AWS::Config::ConfigRule
+          EbsSnapshotPublicRestorableCheck:
+            Properties:
+              ConfigRuleName: ebs-snapshot-public-restorable-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: EBS_SNAPSHOT_PUBLIC_RESTORABLE_CHECK
+            Type: AWS::Config::ConfigRule
+          Ec2InstanceDetailedMonitoringEnabled:
+            Properties:
+              ConfigRuleName: ec2-instance-detailed-monitoring-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Instance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_INSTANCE_DETAILED_MONITORING_ENABLED
+            Type: AWS::Config::ConfigRule
+          Ec2InstanceManagedBySsm:
+            Properties:
+              ConfigRuleName: ec2-instance-managed-by-systems-manager
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Instance
+                - AWS::SSM::ManagedInstanceInventory
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_INSTANCE_MANAGED_BY_SSM
+            Type: AWS::Config::ConfigRule
+          Ec2InstanceNoPublicIp:
+            Properties:
+              ConfigRuleName: ec2-instance-no-public-ip
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Instance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_INSTANCE_NO_PUBLIC_IP
+            Type: AWS::Config::ConfigRule
+          Ec2ManagedinstanceAssociationComplianceStatusCheck:
+            Properties:
+              ConfigRuleName: ec2-managedinstance-association-compliance-status-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::SSM::AssociationCompliance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_MANAGEDINSTANCE_ASSOCIATION_COMPLIANCE_STATUS_CHECK
+            Type: AWS::Config::ConfigRule
+          Ec2ManagedinstancePatchComplianceStatusCheck:
+            Properties:
+              ConfigRuleName: ec2-managedinstance-patch-compliance-status-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::SSM::PatchCompliance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_MANAGEDINSTANCE_PATCH_COMPLIANCE_STATUS_CHECK
+            Type: AWS::Config::ConfigRule
+          Ec2SecurityGroupAttachedToEni:
+            Properties:
+              ConfigRuleName: ec2-security-group-attached-to-eni
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::SecurityGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_SECURITY_GROUP_ATTACHED_TO_ENI
+            Type: AWS::Config::ConfigRule
+          Ec2StoppedInstance:
+            Properties:
+              ConfigRuleName: ec2-stopped-instance
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_STOPPED_INSTANCE
+            Type: AWS::Config::ConfigRule
+          Ec2VolumeInuseCheck:
+            Properties:
+              ConfigRuleName: ec2-volume-inuse-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Volume
+              Source:
+                Owner: AWS
+                SourceIdentifier: EC2_VOLUME_INUSE_CHECK
+            Type: AWS::Config::ConfigRule
+          EfsEncryptedCheck:
+            Properties:
+              ConfigRuleName: efs-encrypted-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: EFS_ENCRYPTED_CHECK
+            Type: AWS::Config::ConfigRule
+          EipAttached:
+            Properties:
+              ConfigRuleName: eip-attached
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::EIP
+              Source:
+                Owner: AWS
+                SourceIdentifier: EIP_ATTACHED
+            Type: AWS::Config::ConfigRule
+          ElasticacheRedisClusterAutomaticBackupCheck:
+            Properties:
+              ConfigRuleName: elasticache-redis-cluster-automatic-backup-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELASTICACHE_REDIS_CLUSTER_AUTOMATIC_BACKUP_CHECK
+            Type: AWS::Config::ConfigRule
+          ElasticsearchEncryptedAtRest:
+            Properties:
+              ConfigRuleName: elasticsearch-encrypted-at-rest
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELASTICSEARCH_ENCRYPTED_AT_REST
+            Type: AWS::Config::ConfigRule
+          ElasticsearchInVpcOnly:
+            Properties:
+              ConfigRuleName: elasticsearch-in-vpc-only
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELASTICSEARCH_IN_VPC_ONLY
+            Type: AWS::Config::ConfigRule
+          ElbAcmCertificateRequired:
+            Properties:
+              ConfigRuleName: elb-acm-certificate-required
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ElasticLoadBalancing::LoadBalancer
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELB_ACM_CERTIFICATE_REQUIRED
+            Type: AWS::Config::ConfigRule
+          ElbDeletionProtectionEnabled:
+            Properties:
+              ConfigRuleName: elb-deletion-protection-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ElasticLoadBalancingV2::LoadBalancer
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELB_DELETION_PROTECTION_ENABLED
+            Type: AWS::Config::ConfigRule
+          ElbLoggingEnabled:
+            Properties:
+              ConfigRuleName: elb-logging-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::ElasticLoadBalancing::LoadBalancer
+                - AWS::ElasticLoadBalancingV2::LoadBalancer
+              Source:
+                Owner: AWS
+                SourceIdentifier: ELB_LOGGING_ENABLED
+            Type: AWS::Config::ConfigRule
+          EmrKerberosEnabled:
+            Properties:
+              ConfigRuleName: emr-kerberos-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: EMR_KERBEROS_ENABLED
+            Type: AWS::Config::ConfigRule
+          EmrMasterNoPublicIp:
+            Properties:
+              ConfigRuleName: emr-master-no-public-ip
+              Scope:
+                ComplianceResourceTypes: []
+              Source:
+                Owner: AWS
+                SourceIdentifier: EMR_MASTER_NO_PUBLIC_IP
+            Type: AWS::Config::ConfigRule
+          EncryptedVolumes:
+            Properties:
+              ConfigRuleName: encrypted-volumes
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Volume
+              Source:
+                Owner: AWS
+                SourceIdentifier: ENCRYPTED_VOLUMES
+            Type: AWS::Config::ConfigRule
+          GuarddutyEnabledCentralized:
+            Properties:
+              ConfigRuleName: guardduty-enabled-centralized
+              Source:
+                Owner: AWS
+                SourceIdentifier: GUARDDUTY_ENABLED_CENTRALIZED
+            Type: AWS::Config::ConfigRule
+          GuarddutyNonArchivedFindings:
+            Properties:
+              ConfigRuleName: guardduty-non-archived-findings
+              InputParameters:
+                daysHighSev:
+                  Fn::If:
+                  - guarddutyNonArchivedFindingsParamDaysHighSev
+                  - Ref: GuarddutyNonArchivedFindingsParamDaysHighSev
+                  - Ref: AWS::NoValue
+                daysLowSev:
+                  Fn::If:
+                  - guarddutyNonArchivedFindingsParamDaysLowSev
+                  - Ref: GuarddutyNonArchivedFindingsParamDaysLowSev
+                  - Ref: AWS::NoValue
+                daysMediumSev:
+                  Fn::If:
+                  - guarddutyNonArchivedFindingsParamDaysMediumSev
+                  - Ref: GuarddutyNonArchivedFindingsParamDaysMediumSev
+                  - Ref: AWS::NoValue
+              Source:
+                Owner: AWS
+                SourceIdentifier: GUARDDUTY_NON_ARCHIVED_FINDINGS
+            Type: AWS::Config::ConfigRule
+          IamGroupHasUsersCheck:
+            Properties:
+              ConfigRuleName: iam-group-has-users-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::IAM::Group
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_GROUP_HAS_USERS_CHECK
+            Type: AWS::Config::ConfigRule
+          IamPasswordPolicy:
+            Properties:
+              ConfigRuleName: iam-password-policy
+              InputParameters:
+                MaxPasswordAge:
+                  Fn::If:
+                  - iamPasswordPolicyParamMaxPasswordAge
+                  - Ref: IamPasswordPolicyParamMaxPasswordAge
+                  - Ref: AWS::NoValue
+                MinimumPasswordLength:
+                  Fn::If:
+                  - iamPasswordPolicyParamMinimumPasswordLength
+                  - Ref: IamPasswordPolicyParamMinimumPasswordLength
+                  - Ref: AWS::NoValue
+                PasswordReusePrevention:
+                  Fn::If:
+                  - iamPasswordPolicyParamPasswordReusePrevention
+                  - Ref: IamPasswordPolicyParamPasswordReusePrevention
+                  - Ref: AWS::NoValue
+                RequireLowercaseCharacters:
+                  Fn::If:
+                  - iamPasswordPolicyParamRequireLowercaseCharacters
+                  - Ref: IamPasswordPolicyParamRequireLowercaseCharacters
+                  - Ref: AWS::NoValue
+                RequireNumbers:
+                  Fn::If:
+                  - iamPasswordPolicyParamRequireNumbers
+                  - Ref: IamPasswordPolicyParamRequireNumbers
+                  - Ref: AWS::NoValue
+                RequireSymbols:
+                  Fn::If:
+                  - iamPasswordPolicyParamRequireSymbols
+                  - Ref: IamPasswordPolicyParamRequireSymbols
+                  - Ref: AWS::NoValue
+                RequireUppercaseCharacters:
+                  Fn::If:
+                  - iamPasswordPolicyParamRequireUppercaseCharacters
+                  - Ref: IamPasswordPolicyParamRequireUppercaseCharacters
+                  - Ref: AWS::NoValue
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_PASSWORD_POLICY
+            Type: AWS::Config::ConfigRule
+          IamPolicyNoStatementsWithAdminAccess:
+            Properties:
+              ConfigRuleName: iam-policy-no-statements-with-admin-access
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::IAM::Policy
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS
+            Type: AWS::Config::ConfigRule
+          IamRootAccessKeyCheck:
+            Properties:
+              ConfigRuleName: iam-root-access-key-check
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_ROOT_ACCESS_KEY_CHECK
+            Type: AWS::Config::ConfigRule
+          IamUserGroupMembershipCheck:
+            Properties:
+              ConfigRuleName: iam-user-group-membership-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::IAM::User
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_USER_GROUP_MEMBERSHIP_CHECK
+            Type: AWS::Config::ConfigRule
+          IamUserMfaEnabled:
+            Properties:
+              ConfigRuleName: iam-user-mfa-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_USER_MFA_ENABLED
+            Type: AWS::Config::ConfigRule
+          IamUserNoPoliciesCheck:
+            Properties:
+              ConfigRuleName: iam-user-no-policies-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::IAM::User
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_USER_NO_POLICIES_CHECK
+            Type: AWS::Config::ConfigRule
+          IamUserUnusedCredentialsCheck:
+            Properties:
+              ConfigRuleName: iam-user-unused-credentials-check
+              InputParameters:
+                maxCredentialUsageAge:
+                  Fn::If:
+                  - iamUserUnusedCredentialsCheckParamMaxCredentialUsageAge
+                  - Ref: IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge
+                  - Ref: AWS::NoValue
+              Source:
+                Owner: AWS
+                SourceIdentifier: IAM_USER_UNUSED_CREDENTIALS_CHECK
+            Type: AWS::Config::ConfigRule
+          IncomingSshDisabled:
+            Properties:
+              ConfigRuleName: restricted-ssh
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::SecurityGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: INCOMING_SSH_DISABLED
+            Type: AWS::Config::ConfigRule
+          InstancesInVpc:
+            Properties:
+              ConfigRuleName: ec2-instances-in-vpc
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::Instance
+              Source:
+                Owner: AWS
+                SourceIdentifier: INSTANCES_IN_VPC
+            Type: AWS::Config::ConfigRule
+          InternetGatewayAuthorizedVpcOnly:
+            Properties:
+              ConfigRuleName: internet-gateway-authorized-vpc-only
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::InternetGateway
+              Source:
+                Owner: AWS
+                SourceIdentifier: INTERNET_GATEWAY_AUTHORIZED_VPC_ONLY
+            Type: AWS::Config::ConfigRule
+          KmsCmkNotScheduledForDeletion:
+            Properties:
+              ConfigRuleName: kms-cmk-not-scheduled-for-deletion
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::KMS::Key
+              Source:
+                Owner: AWS
+                SourceIdentifier: KMS_CMK_NOT_SCHEDULED_FOR_DELETION
+            Type: AWS::Config::ConfigRule
+          LambdaConcurrencyCheck:
+            Properties:
+              ConfigRuleName: lambda-concurrency-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Lambda::Function
+              Source:
+                Owner: AWS
+                SourceIdentifier: LAMBDA_CONCURRENCY_CHECK
+            Type: AWS::Config::ConfigRule
+          LambdaDlqCheck:
+            Properties:
+              ConfigRuleName: lambda-dlq-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Lambda::Function
+              Source:
+                Owner: AWS
+                SourceIdentifier: LAMBDA_DLQ_CHECK
+            Type: AWS::Config::ConfigRule
+          LambdaFunctionPublicAccessProhibited:
+            Properties:
+              ConfigRuleName: lambda-function-public-access-prohibited
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Lambda::Function
+              Source:
+                Owner: AWS
+                SourceIdentifier: LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED
+            Type: AWS::Config::ConfigRule
+          LambdaInsideVpc:
+            Properties:
+              ConfigRuleName: lambda-inside-vpc
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Lambda::Function
+              Source:
+                Owner: AWS
+                SourceIdentifier: LAMBDA_INSIDE_VPC
+            Type: AWS::Config::ConfigRule
+          MfaEnabledForIamConsoleAccess:
+            Properties:
+              ConfigRuleName: mfa-enabled-for-iam-console-access
+              Source:
+                Owner: AWS
+                SourceIdentifier: MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS
+            Type: AWS::Config::ConfigRule
+          MultiRegionCloudTrailEnabled:
+            Properties:
+              ConfigRuleName: multi-region-cloudtrail-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: MULTI_REGION_CLOUD_TRAIL_ENABLED
+            Type: AWS::Config::ConfigRule
+          RdsEnhancedMonitoringEnabled:
+            Properties:
+              ConfigRuleName: rds-enhanced-monitoring-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBInstance
+              Source:
+                Owner: AWS
+                SourceIdentifier: RDS_ENHANCED_MONITORING_ENABLED
+            Type: AWS::Config::ConfigRule
+          RdsInstancePublicAccessCheck:
+            Properties:
+              ConfigRuleName: rds-instance-public-access-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBInstance
+              Source:
+                Owner: AWS
+                SourceIdentifier: RDS_INSTANCE_PUBLIC_ACCESS_CHECK
+            Type: AWS::Config::ConfigRule
+          RdsMultiAzSupport:
+            Properties:
+              ConfigRuleName: rds-multi-az-support
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBInstance
+              Source:
+                Owner: AWS
+                SourceIdentifier: RDS_MULTI_AZ_SUPPORT
+            Type: AWS::Config::ConfigRule
+          RdsSnapshotsPublicProhibited:
+            Properties:
+              ConfigRuleName: rds-snapshots-public-prohibited
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBSnapshot
+                - AWS::RDS::DBClusterSnapshot
+              Source:
+                Owner: AWS
+                SourceIdentifier: RDS_SNAPSHOTS_PUBLIC_PROHIBITED
+            Type: AWS::Config::ConfigRule
+          RdsStorageEncrypted:
+            Properties:
+              ConfigRuleName: rds-storage-encrypted
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::RDS::DBInstance
+              Source:
+                Owner: AWS
+                SourceIdentifier: RDS_STORAGE_ENCRYPTED
+            Type: AWS::Config::ConfigRule
+          RedshiftClusterConfigurationCheck:
+            Properties:
+              ConfigRuleName: redshift-cluster-configuration-check
+              InputParameters:
+                clusterDbEncrypted: 'TRUE'
+                loggingEnabled: 'TRUE'
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Redshift::Cluster
+              Source:
+                Owner: AWS
+                SourceIdentifier: REDSHIFT_CLUSTER_CONFIGURATION_CHECK
+            Type: AWS::Config::ConfigRule
+          RedshiftClusterPublicAccessCheck:
+            Properties:
+              ConfigRuleName: redshift-cluster-public-access-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Redshift::Cluster
+              Source:
+                Owner: AWS
+                SourceIdentifier: REDSHIFT_CLUSTER_PUBLIC_ACCESS_CHECK
+            Type: AWS::Config::ConfigRule
+          RedshiftRequireTlsSsl:
+            Properties:
+              ConfigRuleName: redshift-require-tls-ssl
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::Redshift::Cluster
+              Source:
+                Owner: AWS
+                SourceIdentifier: REDSHIFT_REQUIRE_TLS_SSL
+            Type: AWS::Config::ConfigRule
+          RestrictedIncomingTraffic:
+            Properties:
+              ConfigRuleName: restricted-common-ports
+              InputParameters:
+                blockedPort1:
+                  Fn::If:
+                  - restrictedIncomingTrafficParamBlockedPort1
+                  - Ref: RestrictedIncomingTrafficParamBlockedPort1
+                  - Ref: AWS::NoValue
+                blockedPort2:
+                  Fn::If:
+                  - restrictedIncomingTrafficParamBlockedPort2
+                  - Ref: RestrictedIncomingTrafficParamBlockedPort2
+                  - Ref: AWS::NoValue
+                blockedPort3:
+                  Fn::If:
+                  - restrictedIncomingTrafficParamBlockedPort3
+                  - Ref: RestrictedIncomingTrafficParamBlockedPort3
+                  - Ref: AWS::NoValue
+                blockedPort4:
+                  Fn::If:
+                  - restrictedIncomingTrafficParamBlockedPort4
+                  - Ref: RestrictedIncomingTrafficParamBlockedPort4
+                  - Ref: AWS::NoValue
+                blockedPort5:
+                  Fn::If:
+                  - restrictedIncomingTrafficParamBlockedPort5
+                  - Ref: RestrictedIncomingTrafficParamBlockedPort5
+                  - Ref: AWS::NoValue
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::SecurityGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: RESTRICTED_INCOMING_TRAFFIC
+            Type: AWS::Config::ConfigRule
+          RootAccountHardwareMfaEnabled:
+            Properties:
+              ConfigRuleName: root-account-hardware-mfa-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: ROOT_ACCOUNT_HARDWARE_MFA_ENABLED
+            Type: AWS::Config::ConfigRule
+          RootAccountMfaEnabled:
+            Properties:
+              ConfigRuleName: root-account-mfa-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: ROOT_ACCOUNT_MFA_ENABLED
+            Type: AWS::Config::ConfigRule
+          S3AccountLevelPublicAccessBlocks:
+            Properties:
+              ConfigRuleName: s3-account-level-public-access-blocks
+              InputParameters:
+                BlockPublicAcls:
+                  Fn::If:
+                  - s3AccountLevelPublicAccessBlocksParamBlockPublicAcls
+                  - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicAcls
+                  - Ref: AWS::NoValue
+                BlockPublicPolicy:
+                  Fn::If:
+                  - s3AccountLevelPublicAccessBlocksParamBlockPublicPolicy
+                  - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy
+                  - Ref: AWS::NoValue
+                IgnorePublicAcls:
+                  Fn::If:
+                  - s3AccountLevelPublicAccessBlocksParamIgnorePublicAcls
+                  - Ref: S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls
+                  - Ref: AWS::NoValue
+                RestrictPublicBuckets:
+                  Fn::If:
+                  - s3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets
+                  - Ref: S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets
+                  - Ref: AWS::NoValue
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::AccountPublicAccessBlock
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_ACCOUNT_LEVEL_PUBLIC_ACCESS_BLOCKS
+            Type: AWS::Config::ConfigRule
+          S3BucketDefaultLockEnabled:
+            Properties:
+              ConfigRuleName: s3-bucket-default-lock-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_DEFAULT_LOCK_ENABLED
+            Type: AWS::Config::ConfigRule
+          S3BucketLoggingEnabled:
+            Properties:
+              ConfigRuleName: s3-bucket-logging-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_LOGGING_ENABLED
+            Type: AWS::Config::ConfigRule
+          S3BucketPolicyGranteeCheck:
+            Properties:
+              ConfigRuleName: s3-bucket-policy-grantee-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_POLICY_GRANTEE_CHECK
+            Type: AWS::Config::ConfigRule
+          S3BucketPublicReadProhibited:
+            Properties:
+              ConfigRuleName: s3-bucket-public-read-prohibited
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED
+            Type: AWS::Config::ConfigRule
+          S3BucketPublicWriteProhibited:
+            Properties:
+              ConfigRuleName: s3-bucket-public-write-prohibited
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+            Type: AWS::Config::ConfigRule
+          S3BucketReplicationEnabled:
+            Properties:
+              ConfigRuleName: s3-bucket-replication-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_REPLICATION_ENABLED
+            Type: AWS::Config::ConfigRule
+          S3BucketServerSideEncryptionEnabled:
+            Properties:
+              ConfigRuleName: s3-bucket-server-side-encryption-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
+            Type: AWS::Config::ConfigRule
+          S3BucketSslRequestsOnly:
+            Properties:
+              ConfigRuleName: s3-bucket-ssl-requests-only
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_SSL_REQUESTS_ONLY
+            Type: AWS::Config::ConfigRule
+          S3BucketVersioningEnabled:
+            Properties:
+              ConfigRuleName: s3-bucket-versioning-enabled
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::S3::Bucket
+              Source:
+                Owner: AWS
+                SourceIdentifier: S3_BUCKET_VERSIONING_ENABLED
+            Type: AWS::Config::ConfigRule
+          SagemakerEndpointConfigurationKmsKeyConfigured:
+            Properties:
+              ConfigRuleName: sagemaker-endpoint-configuration-kms-key-configured
+              Source:
+                Owner: AWS
+                SourceIdentifier: SAGEMAKER_ENDPOINT_CONFIGURATION_KMS_KEY_CONFIGURED
+            Type: AWS::Config::ConfigRule
+          SagemakerNotebookInstanceKmsKeyConfigured:
+            Properties:
+              ConfigRuleName: sagemaker-notebook-instance-kms-key-configured
+              Source:
+                Owner: AWS
+                SourceIdentifier: SAGEMAKER_NOTEBOOK_INSTANCE_KMS_KEY_CONFIGURED
+            Type: AWS::Config::ConfigRule
+          SagemakerNotebookNoDirectInternetAccess:
+            Properties:
+              ConfigRuleName: sagemaker-notebook-no-direct-internet-access
+              Source:
+                Owner: AWS
+                SourceIdentifier: SAGEMAKER_NOTEBOOK_NO_DIRECT_INTERNET_ACCESS
+            Type: AWS::Config::ConfigRule
+          SecretsmanagerRotationEnabledCheck:
+            Properties:
+              ConfigRuleName: secretsmanager-rotation-enabled-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::SecretsManager::Secret
+              Source:
+                Owner: AWS
+                SourceIdentifier: SECRETSMANAGER_ROTATION_ENABLED_CHECK
+            Type: AWS::Config::ConfigRule
+          SecretsmanagerScheduledRotationSuccessCheck:
+            Properties:
+              ConfigRuleName: secretsmanager-scheduled-rotation-success-check
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::SecretsManager::Secret
+              Source:
+                Owner: AWS
+                SourceIdentifier: SECRETSMANAGER_SCHEDULED_ROTATION_SUCCESS_CHECK
+            Type: AWS::Config::ConfigRule
+          SecurityhubEnabled:
+            Properties:
+              ConfigRuleName: securityhub-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: SECURITYHUB_ENABLED
+            Type: AWS::Config::ConfigRule
+          SnsEncryptedKms:
+            Properties:
+              ConfigRuleName: sns-encrypted-kms
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::SNS::Topic
+              Source:
+                Owner: AWS
+                SourceIdentifier: SNS_ENCRYPTED_KMS
+            Type: AWS::Config::ConfigRule
+          VpcDefaultSecurityGroupClosed:
+            Properties:
+              ConfigRuleName: vpc-default-security-group-closed
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::SecurityGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: VPC_DEFAULT_SECURITY_GROUP_CLOSED
+            Type: AWS::Config::ConfigRule
+          VpcFlowLogsEnabled:
+            Properties:
+              ConfigRuleName: vpc-flow-logs-enabled
+              Source:
+                Owner: AWS
+                SourceIdentifier: VPC_FLOW_LOGS_ENABLED
+            Type: AWS::Config::ConfigRule
+          VpcSgOpenOnlyToAuthorizedPorts:
+            Properties:
+              ConfigRuleName: vpc-sg-open-only-to-authorized-ports
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::SecurityGroup
+              Source:
+                Owner: AWS
+                SourceIdentifier: VPC_SG_OPEN_ONLY_TO_AUTHORIZED_PORTS
+            Type: AWS::Config::ConfigRule
+          VpcVpn2TunnelsUp:
+            Properties:
+              ConfigRuleName: vpc-vpn-2-tunnels-up
+              Scope:
+                ComplianceResourceTypes:
+                - AWS::EC2::VPNConnection
+              Source:
+                Owner: AWS
+                SourceIdentifier: VPC_VPN_2_TUNNELS_UP
+            Type: AWS::Config::ConfigRule
+        Conditions:
+          accessKeysRotatedParamMaxAccessKeyAge:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: AccessKeysRotatedParamMaxAccessKeyAge
+          acmCertificateExpirationCheckParamDaysToExpiration:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: AcmCertificateExpirationCheckParamDaysToExpiration
+          guarddutyNonArchivedFindingsParamDaysHighSev:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: GuarddutyNonArchivedFindingsParamDaysHighSev
+          guarddutyNonArchivedFindingsParamDaysLowSev:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: GuarddutyNonArchivedFindingsParamDaysLowSev
+          guarddutyNonArchivedFindingsParamDaysMediumSev:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: GuarddutyNonArchivedFindingsParamDaysMediumSev
+          iamPasswordPolicyParamMaxPasswordAge:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamMaxPasswordAge
+          iamPasswordPolicyParamMinimumPasswordLength:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamMinimumPasswordLength
+          iamPasswordPolicyParamPasswordReusePrevention:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamPasswordReusePrevention
+          iamPasswordPolicyParamRequireLowercaseCharacters:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamRequireLowercaseCharacters
+          iamPasswordPolicyParamRequireNumbers:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamRequireNumbers
+          iamPasswordPolicyParamRequireSymbols:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamRequireSymbols
+          iamPasswordPolicyParamRequireUppercaseCharacters:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamPasswordPolicyParamRequireUppercaseCharacters
+          iamUserUnusedCredentialsCheckParamMaxCredentialUsageAge:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge
+          restrictedIncomingTrafficParamBlockedPort1:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: RestrictedIncomingTrafficParamBlockedPort1
+          restrictedIncomingTrafficParamBlockedPort2:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: RestrictedIncomingTrafficParamBlockedPort2
+          restrictedIncomingTrafficParamBlockedPort3:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: RestrictedIncomingTrafficParamBlockedPort3
+          restrictedIncomingTrafficParamBlockedPort4:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: RestrictedIncomingTrafficParamBlockedPort4
+          restrictedIncomingTrafficParamBlockedPort5:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: RestrictedIncomingTrafficParamBlockedPort5
+          s3AccountLevelPublicAccessBlocksParamBlockPublicAcls:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicAcls
+          s3AccountLevelPublicAccessBlocksParamBlockPublicPolicy:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy
+          s3AccountLevelPublicAccessBlocksParamIgnorePublicAcls:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls
+          s3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets:
+            Fn::Not:
+            - Fn::Equals:
+              - ''
+              - Ref: S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets
     DependsOn:
       - ConfigPacksConfigRecorder41CB4109
     Metadata:
@@ -2243,163 +3392,30 @@ Resources:
             Ref: AWS::Region
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/Dns/HostedZone/Resource
-  ServiceCatalogInformaticsCatalogFB7D6D28:
-    Type: AWS::ServiceCatalog::Portfolio
-    Properties:
-      DisplayName: Biotech Blueprint Informatics Catalog
-      ProviderName: AWS
-      Description: Collection of bio and chem informatics tools easily deployed into the Biotech Blueprint.
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/InformaticsCatalog
-  ServiceCatalogChemAxonA4D4055E:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: ChemAxon Compound Registry
-      Owner: ChemAxon
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://s3.amazonaws.com/aws-quickstart/quickstart-chemaxon-registry/templates/chemaxon-registry.template
-      Description: ChemAxon's Compound Registration is a system built on a set of web services, aiding users to register molecular structures into a compound database. The registration process spots unique compounds among a set of structures already contained within the database.
-      Distributor: AWS
-      SupportDescription: You need to subscribe to the ChemAxon marketplace AMI before you can deploy this software. https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631&sr=0-1&ref_=srh_res_product_title.
-      SupportEmail: support@chemaxon.com
-      SupportUrl: https://chemaxon.com/support
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/ChemAxon
-  ServiceCatalogChemAxonAssociationE2FBE502:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogChemAxonA4D4055E
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/ChemAxonAssociation
-  ServiceCatalogNextflow4A225046:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: Nextflow
-      Owner: AWS
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://s3.amazonaws.com/aws-genomics-workflows/templates/aws-genomics-root-novpc.template.yaml
-      Description: Nextflow enables scalable and reproducible scientific workflows using software containers. It allows the adaptation of pipelines written in the most common scripting languages.
-      Distributor: Comparative Bioinformatics group at the Barcelona Centre for Genomic Regulation (CRG).
-      SupportUrl: https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/Nextflow
-  ServiceCatalogNextflowAssocationEB180D65:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogNextflow4A225046
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/NextflowAssocation
-  ServiceCatalogDotmaticsD12A330C:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: Dotmatics Suite
-      Owner: Dotmatics
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://aws-quickstart.s3.amazonaws.com/quickstart-dotmatics/templates/dotmatics.template
-      Description: Dotmatics Suite running on AWS.  Please contact sales@dotmatics.com for licensing details.
-      Distributor: Dotmatics
-      SupportDescription: Support is provided through our usual channels – please visit our support pages or drop us an email.
-      SupportEmail: support@dotmatics.com
-      SupportUrl: https://aws-quickstart.s3.amazonaws.com/quickstart-dotmatics/doc/dotmatics-suite-on-the-aws-cloud.pdf
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/Dotmatics
-  ServiceCatalogDotmaticsAssociation01BB60DC:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogDotmaticsD12A330C
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/DotmaticsAssociation
-  ServiceCatalogHailNotebook42DA2599:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: Hail Notebook on AWS SageMaker
-      Owner: AWS
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://aws-quickstart.s3.amazonaws.com/quickstart-hail/templates/hail-sagemaker.template.yaml
-      Description: Deploys an AWS SageMaker notebook that can integrate with with Hail 0.2 cluster on EMR.
-      Distributor: Broad Institute
-      SupportUrl: https://aws-quickstart.github.io/quickstart-hail/
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/HailNotebook
-  ServiceCatalogHailCluster03733E51:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: Hail Cluster on AWS EMR
-      Owner: AWS
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://aws-quickstart.s3.amazonaws.com/quickstart-hail/templates/hail-core.template.yaml
-      Description: Deploys Hail 0.2, an open-source library for scalable genomic data exploration, on AWS EMR.
-      Distributor: Broad Institute
-      SupportUrl: https://aws-quickstart.github.io/quickstart-hail/
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/HailCluster
-  ServiceCatalogHailNotebookAssociation27E9CF65:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogHailNotebook42DA2599
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/HailNotebookAssociation
-  ServiceCatalogHailClusterAssociation08496B8F:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogHailCluster03733E51
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/HailClusterAssociation
-  ServiceCatalogTitianC2F69197:
-    Type: AWS::ServiceCatalog::CloudFormationProduct
-    Properties:
-      Name: Mosaic FreezerManagement
-      Owner: Titian Software Limited
-      ProvisioningArtifactParameters:
-        - Info:
-            LoadTemplateFromURL: https://aws-quickstart.s3.amazonaws.com/quickstart-titian-mosaic/templates/titian-mosaic.template
-      Description: "Mosaic FreezerManagement is a comprehensive and cost-effective software solution for managing and tracking all types of sample inventory, backed by a full audit trail. It provides a flexible interface to define and record properties for any type of sample or container, and manages your entire hierarchy of storage including freezers, shelves, cupboards, etc. Other features include an intuitive search interface, and expiry date tracking. IMPORTANT NOTE:  Please contact Titian at info@titian.co.uk for validation before you launch the template below, otherwise the template will fail."
-      Distributor: Titian Software Limited
-      SupportDescription: Titian supports a worldwide customer base – including customer sites in Europe, USA and Asia. Support may be provided by email, telephone or shared Desktop sessions
-      SupportEmail: info@titian.co.uk
-      SupportUrl: https://aws-quickstart.s3.amazonaws.com/quickstart-titian-mosaic/doc/titian-mosaic-freezermanagement-on-the-aws-cloud.pdf
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/Titian
-  ServiceCatalogTitianAssociation3C1359F7:
-    Type: AWS::ServiceCatalog::PortfolioProductAssociation
-    Properties:
-      PortfolioId:
-        Ref: ServiceCatalogInformaticsCatalogFB7D6D28
-      ProductId:
-        Ref: ServiceCatalogTitianC2F69197
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ServiceCatalog/TitianAssociation
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.74.0,@aws-cdk/assets=1.78.0,@aws-cdk/aws-applicationautoscaling=1.78.0,@aws-cdk/aws-autoscaling-common=1.78.0,@aws-cdk/aws-cloudformation=1.78.0,@aws-cdk/aws-cloudwatch=1.78.0,@aws-cdk/aws-codeguruprofiler=1.78.0,@aws-cdk/aws-config=1.78.0,@aws-cdk/aws-ec2=1.78.0,@aws-cdk/aws-ecr=1.78.0,@aws-cdk/aws-ecr-assets=1.78.0,@aws-cdk/aws-events=1.78.0,@aws-cdk/aws-iam=1.78.0,@aws-cdk/aws-kms=1.78.0,@aws-cdk/aws-lambda=1.78.0,@aws-cdk/aws-logs=1.78.0,@aws-cdk/aws-route53=1.78.0,@aws-cdk/aws-s3=1.78.0,@aws-cdk/aws-s3-assets=1.78.0,@aws-cdk/aws-servicecatalog=1.78.0,@aws-cdk/aws-sqs=1.78.0,@aws-cdk/aws-ssm=1.78.0,@aws-cdk/cloud-assembly-schema=1.78.0,@aws-cdk/core=1.78.0,@aws-cdk/cx-api=1.78.0,@aws-cdk/region-info=1.78.0,jsii-runtime=node.js/v14.4.0
+      Analytics: v2:deflate64:H4sIAAAAAAAAA11STW/bMAz9Lb0ratN1h92WeV1XYCgMp8hhN0VmHDW2GFBUgszwfx9tuXaQkx4fKX48vKX+9qSXd9/NOSxsebhvLRLods3GHlSGPjBFy6qAgJEsqFUIwJKtnK9UFgNjM+Wynb/GuSHTAAP1gbQqHTv0nepHtWAfdbs52j63yTOVx23t7DpuPXDPzajAyPButjXM/MzJPmid6TtPxT14fs37583wi2E4m4vKyZ0Ezo1fvewm+LMgbTJGKxYF9g14ViMjyz778ojO81h6E+YAJKrIpR7ssNAabCTHlxfCeBy2vyWy2smIzdFf95rId0MV8BvwGelwc+lUtIq8R3L/hkwRk0xTdhCkU840ui0wJYc3R9F7ODqhToUvuv0R7SGpM6L0zMXXcadq02xLI3aRu2tg9L+iT6dPQP584n7EwvQGCnrwkaqxCrr9g9UkyIQFrJnANCObgk5Z9DtX6VbYn1C7E9Al2xuRvB5tJtlISQwQM5eT/3ZIjfEWcrF2p6gX5qucPPriNwaG8i/6QaI56mTkYPMFjd4OOic8OWncKY8l6I9wf1o+6Mcn/XD3EZxbUPTsGtBFev8DoQ/eHmQDAAA=
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/CDKMetadata/Default
     Condition: CDKMetadataAvailable
+Parameters:
+  AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43:
+    Type: String
+    Description: S3 bucket for asset "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c"
+  AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7:
+    Type: String
+    Description: S3 key for asset version "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c"
+  AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cArtifactHash627DAAA7:
+    Type: String
+    Description: Artifact hash for asset "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c"
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:
       - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - af-south-1
           - Fn::Equals:
               - Ref: AWS::Region
               - ap-east-1
@@ -2427,13 +3443,16 @@ Conditions:
           - Fn::Equals:
               - Ref: AWS::Region
               - cn-northwest-1
-          - Fn::Equals:
-              - Ref: AWS::Region
-              - eu-central-1
       - Fn::Or:
           - Fn::Equals:
               - Ref: AWS::Region
+              - eu-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
               - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-south-1
           - Fn::Equals:
               - Ref: AWS::Region
               - eu-west-1
@@ -2455,6 +3474,7 @@ Conditions:
           - Fn::Equals:
               - Ref: AWS::Region
               - us-east-2
+      - Fn::Or:
           - Fn::Equals:
               - Ref: AWS::Region
               - us-west-1
