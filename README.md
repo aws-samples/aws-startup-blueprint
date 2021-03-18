@@ -70,6 +70,7 @@ npm run build && cdk deploy
 In order for you to route into the private subnets in the VPCs, you need to connect to the VPN. The blueprint has deployed a client vpn endpoint in the Management vpc that will NAT traffic over peering connections into the Production and Development vpcs. We are using the Management VPC as a hub VPC for networking into other VPCs. The Development and Production environments are designed to NOT be able to communicate with each other.
 
 ![VPN Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/VPNRoutingDiagram.png)
+*Client VPN connectivity details*
 
 Once the deployment is complete, go to the AWS VPC web console, and scroll down to the "Client VPN Endpoints" section. Select the Client VPN Endpoint listed and click the "Download Client Configuration" button. Your browser will download a `downloaded-client-config.ovpn` file.
 
@@ -126,8 +127,8 @@ In short, when you are deploying a VPC aware resource into AWS (ALB, EC2, RDS, e
 
 Here is what a conventional n-tier application might look like in the Blueprint architecture.
 
-![SaaS Example Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagramSAAS.png)
-
+![SaaS Example Diagram](https://d1i29iyx07ydzp.cloudfront.net/digav/DiGAVBluePrint-n-tierapp.png)
+*Example diagram of an application running in the Blueprint*
 
 ## Security
 
