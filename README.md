@@ -4,13 +4,14 @@ This Quick Start is for customers who may need to comply with the Regulation on 
 
 The Blueprint's core landing zone builds out a secure home for your workloads in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  The key feature of this Blueprint is the automated enforcement of a policy that restricts access to AWS regions that fall within the European Economic Area (EEA).  As of March 2021 that includes: Frankfurt, Paris, Ireland, Milan, & Stockholm.
 
-![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
+![Blueprint Diagram](https://d1i29iyx07ydzp.cloudfront.net/digav/DiGAVBluePrint.png)
 
 ## Disclaimer
 
 Language about how this Blueprint is for examples only, it does not ensure DiGAV compliance.  Customers are responsible for ensuring their environments meet the necessary requirements.
 
 ## Region Restriction
+![Region Diagram](https://d1i29iyx07ydzp.cloudfront.net/digav/DiGAVBluePrint-Region.png)
 
 The region restriction is enforced through one of two ways depending on your AWS configuration.
 
