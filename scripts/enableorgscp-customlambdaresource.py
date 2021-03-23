@@ -2,6 +2,7 @@ import boto3
 import botocore
 import json
 import logging
+import cfnresponse
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 org = boto3.client('organizations')
@@ -9,39 +10,14 @@ org = boto3.client('organizations')
 # Define action for the creation of a template
 def create_endpoint(event, context):
 
+    responseData = {}
+
     # Check if the account is part of an Organization.  Only accounts within an Organization can receive a SCP
     try:
         response = org.describe_organization()
         logger.info("Account is member of an existing Organization.")
 
-    except:
-        print("Not part of an Organization.  Organization will be created.")
-        
-        try: 
-            try: 
-                # Create the Organization based on the current account
-                createOrganization = org.create_organization(
-                    FeatureSet='ALL'
-                )
-                
-                logger.info("Organization created.")
-                logger.info(createOrganization)
-                
-            except org.exceptions.AlreadyInOrganizationException as err:
-                logger.info("Already in an org.")
-                
-            try: 
-                org.enable_all_features()
-                logger.info("Features enabled.")
-            except org.exceptions.HandshakeConstraintViolationException as err:
-                logger.info("Features already enabled.")
-                
-        except Exception as err:
-            return err
-
-    finally:
-        
-        try: 
+        try:
             getRootId = org.list_roots()
             rootId = getRootId['Roots'][0]['Id']
     
@@ -49,22 +25,70 @@ def create_endpoint(event, context):
                 RootId=rootId,
                 PolicyType='SERVICE_CONTROL_POLICY'
             )
-            print(enableSCP)
-    
+            print("SCP has been enabled")
+
+            responseData['response'] = enableSCP
+            responseData['statusMessage'] = 'SCP Enabled'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
             return {
                 'statusCode': 200,
                 'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
             }
-        except org.exceptions.PolicyTypeAlreadyEnabledException as err:
+            
+        
+        except:
+            print("SCP policies are already enabled")
+
+            responseData['response'] = "Success"
+            responseData['statusMessage'] = 'SCP Enabled'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
             return {
                 'statusCode': 200,
-                'body': json.dumps('Organization exists & SCP Policy Type is already enabled.')
+                'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
             }
-        except Exception as err: 
-            print(err)
-            return err
-        
-            
+
+    except:
+        print("Not part of an Organization.  Organization will be created.")
+
+        # Create the Organization based on the current account
+        createOrganization = org.create_organization(
+            FeatureSet='ALL'
+        )
+        print("Organization created.")
+        print(createOrganization)
+
+        # Enable SCP
+        getRootId = org.list_roots()
+        rootId = getRootId['Roots'][0]['Id']
+
+        enableSCP = org.enable_policy_type(
+            RootId=rootId,
+            PolicyType='SERVICE_CONTROL_POLICY'
+        )
+        print("SCP has been enabled")
+
+        responseData['response'] = enableSCP
+        responseData['statusMessage'] = 'SCP Enabled'
+        cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+        }
+
+# Define action for the template deletion
+def delete_endpoint(event, context):
+    
+    responseData['response'] = "Success"
+    responseData['statusMessage'] = "Organization will not be deleted"
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+    
+    return {
+            'statusCode': 200,
+            'body': json.dumps('Organization will not be deleted.')
+        }
 
 def main(event, context):
     print("Received event: " + json.dumps(event, indent=2))

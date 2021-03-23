@@ -2,6 +2,7 @@ import boto3
 import botocore
 import json
 import logging
+import cfnresponse
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 org = boto3.client('organizations')
@@ -14,8 +15,7 @@ policyName = "DiGav-Region-Restriction-Policy"
 # Define action for the creation of a template
 def create_scp(event, context):
 
-    policyContent = event['ResourceProperties']['policyContentInput']
-    policyName = event['ResourceProperties']['policyNameInput']
+    policyContent = event['ResourceProperties']['PolicyContentInput']
 
     # Create the SCP
     response = org.create_policy(
@@ -32,6 +32,10 @@ def create_scp(event, context):
         TargetId=accountNumber,
     )
     print(response)
+    responseData['response'] = response
+    responseData['statusMessage'] = 'SCP Created and Attached'
+    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+    return
     
     
     return { 'PhysicalResourceId': policyId }
@@ -46,12 +50,15 @@ def delete_scp(event, context):
     )
     print(detachPolicy)
 
-    # # Delete policy
-    deletePolicy = org.delete_policy(
-        PolicyId=policyId
-    )
-    print("SCP Policy Deleted")
-    return {}
+            # # Delete policy
+            deletePolicy = org.delete_policy(
+                PolicyId=policyId
+            )
+            print("DiGav Sample Policy Deleted")
+            responseData['response'] = deletePolicy
+            responseData['statusMessage'] = 'SCP Deleted'
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
+            return
 
 def main(event, context):
     print("Received event: " + json.dumps(event, indent=2))
