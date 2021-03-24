@@ -5,6 +5,8 @@ import { ConfigConformancePacks } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
+import { BlueprintServiceCatalog } from './aws-service-catalog'
+import { EURegionRestriction } from './aws-region-restriction'
 
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
@@ -35,6 +37,11 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     });
     
 
+    const apply_EU_RegionRestriction = this.node.tryGetContext('apply_EU_RegionRestriction');
+    if(apply_EU_RegionRestriction == "true") {
+      new EURegionRestriction(this, 'RegionRestriction', {});  
+    }
+    
   }
 
 }

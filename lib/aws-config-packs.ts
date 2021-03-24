@@ -135,7 +135,24 @@ export class ConfigConformancePacks extends cdk.Construct {
       
     }
 
-    
+    const configRole = new iam.Role(this, 'ConfigRecorderRole', {
+      assumedBy: new iam.ServicePrincipal('config.amazonaws.com'),
+      inlinePolicies: {
+        configRecorderS3Access: iam.PolicyDocument.fromJson(recorderPolicyDoc)
+      },
+      managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSConfigRole')]
+    });    
+
+    const configRecorder = new cfg.CfnConfigurationRecorder(this, 'ConfigRecorder', {
+      name: "BlueprintConfigRecorder",
+      roleArn: configRole.roleArn,
+      recordingGroup: {
+        allSupported: true,
+        includeGlobalResourceTypes: true
+      }
+    });
+
+
     const controlTowerDetectiveGuardRailsConformancePack = new cfg.CfnConformancePack(this, 'ControlTowerDetectiveGuardRailsConformancePack', {
       conformancePackName: "AWS-Control-Tower-Detective-Guardrails-Conformance-Pack",
       deliveryS3Bucket: deliveryBucketName,
