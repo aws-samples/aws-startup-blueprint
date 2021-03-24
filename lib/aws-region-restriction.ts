@@ -77,6 +77,8 @@ export class EURegionRestriction extends cdk.Construct {
           ruleScope: config.RuleScope.fromResources([config.ResourceType.IAM_ROLE, config.ResourceType.IAM_USER]), // restrict to all CloudFormation stacks and S3 buckets
         });
         
+        enforceRegionalPermissionBoundary.node.addDependency(enforceRegionalPermissionBoundaryLambda);
+        
         const permissionBoundaryMissingRemediationConfig = new config.CfnRemediationConfiguration(this, 'permissionBoundaryMissingRemediationConfig', {
         	configRuleName: enforceRegionalPermissionBoundary.configRuleName,
         	targetId: boundaryMissingRemediationDoc.ref,

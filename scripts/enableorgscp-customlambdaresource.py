@@ -81,9 +81,6 @@ def create_endpoint(event, context):
 # Define action for the template deletion
 def delete_endpoint(event, context):
     
-    responseData['response'] = "Success"
-    responseData['statusMessage'] = "Organization will not be deleted"
-    cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
     
     return {
             'statusCode': 200,
