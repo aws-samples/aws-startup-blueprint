@@ -1,3 +1,7 @@
+taskcat_outputs/
+
+.vscode
+
 *.js
 !jest.config.js
 *.d.ts
@@ -10,3 +14,7 @@ cdk.out
 # Parcel build directories
 .cache
 .build
+
+# taskcat
+taskcat_outputs
+lambda_functions/packages/

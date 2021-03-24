@@ -1,24 +1,37 @@
-# AWS Startup Blueprint
+# AWS Biotech Blueprint
 
-This is a strongly opinionated CDK architecture built for Startups looking to follow AWS best practices on Day 1. 
+This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+
+The Blueprint's core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+
+Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
 ## Install instructions
 
-There are two ways to deploy this. If you just want to get the above working in your account ASAP follow the **CloudFormation** instructions. 
+The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
 
-If you value the principles of infrastructure as code, want to cleanly manage/adapt/update the architecture over time using code, or you already aware of how awesome the [AWS CDK](https://aws.amazon.com/cdk/) is, follow the **CDK** instructions.
+If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
-### Quick Install Option: CloudFormation
+If you prefer using the awesome [AWS CDK](https://aws.amazon.com/cdk/), follow the CDK Deployment option (2).
 
- Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/mainline/cdk.out/AwsStartupBlueprintStack.template.json) and use the [AWS CloudFormation web console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
+Both deployment options take about 7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the raw CloudFormation markup in option 1.
+
+### Option 1) CloudFormation Only Deployment
+
+Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk/dev/cdk.out/AwsBiotechBlueprint.template.json?token=AI3FJF5EKHRJFBZA3ER7BNS7UQNE4) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
+
+Quick Create Link Coming Soon...
+[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
 
 
-### CDK Install Option
+### Option 2) AWS CDK Deployment
 
 ```bash
-git clone https://github.com/aws-samples/aws-startup-blueprint.git
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
 npm run build 
 cdk bootstrap
 ```
@@ -41,7 +54,7 @@ Once the deployment is complete, go to the AWS VPC web console, and scroll down 
 
 Now go to the AWS S3 web console and open the bucket prefixed `awsstartupblueprintstack-clientvpnvpnconfigbucket*`. You will see 5 files listed. Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on. For now, you just need `client1.domain.tld.key` and `client1.domain.tld.crt`.
 
-At this point we have to edit make some tweaks to the `downloaded-client-config.ovpn` file so open it in a text editor:
+At this point we have to make some tweaks to the `downloaded-client-config.ovpn` file so open it in a text editor:
 
 Add the following lines to the bottom of the file:
 
@@ -69,7 +82,7 @@ If the resource you want to deploy is for Production or Development purposes, ma
 
 You want to use the Management VPC only for resources that more operational in nature, like a DevOps tool, active directory, security appliance, etc. For example, the Blueprint deploys the Client VPN Endpoint into the Management VPC.
 
-All three VPCs have similar classes of subnets. Public, Private, and Isolated. When you are deploying a resource, if the resource needs to be publically addressable by the internet at large, you need to specify the Public subnet. Ideally, this should only ever be things like AWS application load balancers (ALB). If you are deploying a resource like application server that should never be directly internet facing (but perhaps sits behind an ALB) that still needs outbound internet access, use the Private subnet. If you are deploying a sensitive resource like a database that should only be addressable to your internal networks and needs no outbound internet access, use the isolated subnets. 
+All three VPCs have similar classes of subnets. Public, Private, and Isolated. When you are deploying a resource, if the resource needs to be publically addressable by the internet at large, you need to specify the public subnet. Ideally, this should only ever be things like AWS application load balancers (ALB). If you are deploying an application server, that should never be directly internet facing (but perhaps sits behind an ALB), that still needs outbound internet access, then use a private subnet. If you are deploying a sensitive resource like a database that should only be addressable to your internal networks and needs no outbound internet access, use the isolated subnets. 
 
 **Why are there two subnets of the same class in each VPC?** This is an important requirement for high availability on AWS. Each subnet of the same class is in a different availability zone, which is to say a physically distinct data center. In the event of an availability zone outage, having another subnet in another availability zone allows your service or AWS services to cleanly failover. For example AWS auto scaling, RDS multi-az, and the Client VPN Endpoint all take advantage of multi-az capability for clean failover in the event of a physical disaster. Outside of the subnets being in different AZ, subnets of the same class are identical from a networking perspective, it really does not matter which one you choose.
 
@@ -101,6 +114,11 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
+This library is licensed under the Apache 2.0 License. See the LICENSE file.
+
+## Notices
+This document is provided for informational purposes only. It represents AWS’s current product offerings and practices as of the date of issue of this document, which are subject to change without notice. Customers are responsible for making their own independent assessment of the information in this document and any use of AWS’s products or services, each of which is provided “as is” without warranty of any kind, whether expressed or implied. This document does not create any warranties, representations, contractual commitments, conditions, or assurances from AWS, its affiliates, suppliers, or licensors. The responsibilities and liabilities of AWS to its customers are controlled by AWS agreements, and this document is not part of, nor does it modify, any agreement between AWS and its customers.
+
+The software included with this paper is licensed under the Apache License, version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at http://aws.amazon.com/apache2.0/ or in the accompanying "license" file. This code is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied. See the License for specific language governing permissions and limitations.
 
 
