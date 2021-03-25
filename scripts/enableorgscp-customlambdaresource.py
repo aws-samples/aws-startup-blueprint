@@ -32,8 +32,7 @@ def create_endpoint(event, context):
             cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
 
             return {
-                'statusCode': 200,
-                'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+                'body': 'Organization exists & SCP Policy Type is enabled.'
             }
             
         
@@ -45,8 +44,7 @@ def create_endpoint(event, context):
             cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
 
             return {
-                'statusCode': 200,
-                'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+                'body': 'Organization exists & SCP Policy Type is enabled.'
             }
 
     except:
@@ -74,8 +72,7 @@ def create_endpoint(event, context):
         cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)
 
         return {
-            'statusCode': 200,
-            'body': json.dumps('Organization exists & SCP Policy Type is enabled.')
+            'body': 'Organization exists & SCP Policy Type is enabled.'
         }
 
 # Define action for the template deletion
@@ -83,8 +80,7 @@ def delete_endpoint(event, context):
     
     
     return {
-            'statusCode': 200,
-            'body': json.dumps('Organization will not be deleted.')
+            'body': 'Organization will not be deleted.'
         }
 
 def main(event, context):
