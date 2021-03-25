@@ -62,15 +62,9 @@
             "Resource": "*",
             "Condition": {
                 "StringEquals": {
-                    "aws:RequestedRegion": [
-                        "eu-central-1",
-                        "eu-west-1",
-                        "eu-west-3", 
-                        "eu-south-1", 
-                        "eu-north-1"
-                        ]
-                    }
+                    "aws:RequestedRegion": [ ]
                 }
+            }
         }
     ]
 }

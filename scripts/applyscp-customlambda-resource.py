@@ -9,7 +9,7 @@ iam = boto3.client('iam')
 
 # Set Global Variables
 accountNumber = boto3.client('sts').get_caller_identity().get('Account')
-policyName = "DiGav-Region-Restriction-Policy"
+policyName = "Region-Restriction-Policy"
 
 # Define action for the creation of a template
 def create_scp(event, context):

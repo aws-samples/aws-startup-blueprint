@@ -10,33 +10,42 @@ import fs = require("fs");
 import { ScpEnabledPromise, ServiceControlPolicy } from './aws-servicecontrolpolicy'
 
 
-export class EURegionRestriction extends cdk.Construct {
+export interface RegionRestrictionProps extends cdk.StackProps {
+  AllowedRegions: string[];
+}
+
+export class RegionRestriction extends cdk.Construct {
     
-    
-    
-	constructor(scope: cdk.Construct, id: string, props: cdk.StackProps) {
+	constructor(scope: cdk.Construct, id: string, props: RegionRestrictionProps) {
         
         super(scope, id); 
 
+        const serviceControlPolicyContent = JSON.parse(fs.readFileSync("scripts/policy-regionrestrictions-servicecontrolpolicy.json", {
+            encoding: "utf-8",
+        })); 
+        
+        const permissionBoundaryPolicyContent = JSON.parse(fs.readFileSync("scripts/policy-regionrestrictions-permissionboudary.json", {
+            encoding: "utf-8",
+        })); 
+
+        serviceControlPolicyContent['Statement'][0]['Condition']['StringNotEquals']['aws:RequestedRegion'] = props.AllowedRegions;
+        permissionBoundaryPolicyContent['Statement'][3]['Condition']['StringEquals']['aws:RequestedRegion'] = props.AllowedRegions;
+
+
         const enabledSCP = new ScpEnabledPromise(this, 'scpPromise', {});
         
-        new ServiceControlPolicy(this, 'euRegionRestriction', {
+        new ServiceControlPolicy(this, 'regionRestriction', {
             ScpsEnabledPromise: enabledSCP,
-            PolicyName: "DiGAV_EU_RegionRestriction",
-            Policy: fs.readFileSync("scripts/DiGavSCP.json", {
-                encoding: "utf-8",
-            })
+            PolicyName: "RegionRestriction",
+            Policy: JSON.stringify(serviceControlPolicyContent)
         });
 
-        const customPolicyContent = JSON.parse(fs.readFileSync("scripts/DiGavIAM.json", {
-            encoding: "utf-8",
-        }));
-        const customPolicyDocument = iam.PolicyDocument.fromJson(customPolicyContent);
-        const customManagedPolicy = new iam.ManagedPolicy(this, "DiGav-Permissions-Boundary-Policy", {
+        const customPolicyDocument = iam.PolicyDocument.fromJson(permissionBoundaryPolicyContent);
+        const customManagedPolicy = new iam.ManagedPolicy(this, "Region-Restriction-Permissions-Boundary-Policy", {
             document: customPolicyDocument
         });
 
-        const sampleRole = new iam.Role(this, "DiGav-Sample-Role", {
+        const sampleRole = new iam.Role(this, "RegionRestricted-Sample-Role", {
             assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com'),
         });
 
