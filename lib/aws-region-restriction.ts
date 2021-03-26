@@ -60,6 +60,8 @@ export class RegionRestriction extends cdk.Construct {
         enforceRegionConfigLambdaRole.addManagedPolicy( iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"));
         enforceRegionConfigLambdaRole.addManagedPolicy( iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSConfigRulesExecutionRole"));
         
+            
+        
 
         const enforceRegionalPermissionBoundaryLambda = new lambda.SingletonFunction(this, "scpEnabledPromiseSingleton", {
             role: enforceRegionConfigLambdaRole,
@@ -77,6 +79,10 @@ export class RegionRestriction extends cdk.Construct {
         const boundaryMissingRemediationDoc = this.createBoundaryRemediationAutomationDoc();
         
 
+        const configServicePrincipal = new iam.ServicePrincipal('config.amazonaws.com');
+        
+        enforceRegionalPermissionBoundaryLambda.grantInvoke(configServicePrincipal);
+
         const enforceRegionalPermissionBoundary = new config.CustomRule(this, 'enforceRegionalPermissionBoundary', {
           lambdaFunction: enforceRegionalPermissionBoundaryLambda,
           configurationChanges: true,
@@ -86,7 +92,7 @@ export class RegionRestriction extends cdk.Construct {
           ruleScope: config.RuleScope.fromResources([config.ResourceType.IAM_ROLE, config.ResourceType.IAM_USER]), // restrict to all CloudFormation stacks and S3 buckets
         });
         
-        enforceRegionalPermissionBoundary.node.addDependency(enforceRegionalPermissionBoundaryLambda);
+        
         
         const permissionBoundaryMissingRemediationConfig = new config.CfnRemediationConfiguration(this, 'permissionBoundaryMissingRemediationConfig', {
         	configRuleName: enforceRegionalPermissionBoundary.configRuleName,
