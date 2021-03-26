@@ -92,7 +92,7 @@ Resources:
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/CDKMetadata/Default
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAA11STW/bMAz9Lb0ratN1h92WeV1XYCgMp8hhN0VmHDW2GFBUgszwfx9tuXaQkx4fKX48vKX+9qSXd9/NOSxsebhvLRLods3GHlSGPjBFy6qAgJEsqFUIwJKtnK9UFgNjM+Wynb/GuSHTAAP1gbQqHTv0nepHtWAfdbs52j63yTOVx23t7DpuPXDPzajAyPButjXM/MzJPmid6TtPxT14fs37583wi2E4m4vKyZ0Ezo1fvewm+LMgbTJGKxYF9g14ViMjyz778ojO81h6E+YAJKrIpR7ssNAabCTHlxfCeBy2vyWy2smIzdFf95rId0MV8BvwGelwc+lUtIq8R3L/hkwRk0xTdhCkU840ui0wJYc3R9F7ODqhToUvuv0R7SGpM6L0zMXXcadq02xLI3aRu2tg9L+iT6dPQP584n7EwvQGCnrwkaqxCrr9g9UkyIQFrJnANCObgk5Z9DtX6VbYn1C7E9Al2xuRvB5tJtlISQwQM5eT/3ZIjfEWcrF2p6gX5qucPPriNwaG8i/6QaI56mTkYPMFjd4OOic8OWncKY8l6I9wf1o+6Mcn/XD3EZxbUPTsGtBFev8DoQ/eHmQDAAA=
+      Analytics: v2:deflate64:H4sIAAAAAAAAA11Ty27bMBD8ltxpJs7j0FtdNU0CtIEgBz70RlNrmbHINfiw4Qr69y5JWXJ84uwsuRyORnP+7YnPb76Lo5vJenfbSbTAu6UXcscKNM7bID2rwGGwEtjCOfDUbZRpWBGcRz32io25xKWwQoMHGwsaVSuv0PQsXtWBvOfdai9jb1UWrAzrVsllWBvwkZtQhcHDh1i3MPETR3pQKhEnj5sjeH4r4/Iu/IvwcBQnVlp1IDgNfjOkjfB5Q1YyVAtPDmw1GM8GhsQ+m3qPyvhh61VZAlhyhV5qQCZBS5DBKn96sRj2Sf01UbSKrljtzeWskfwQtgH/Dv6Idnf10nHTIvgtWvUvdaqQbRq7yZCeKaF5V2FuprVE8js9ekB/hBEN1BP/heiZe+DdjyB32bwB5WU6c1n3rBV6XQtKE9nSgkfzK5jszAjozCUuwWrlXMqJe5iJmDbHU+hYi43j3W9sRvdGTGDpLQg9sLnomUSzUQ3viP0JrTqAPRVbQd+nHTJJ3WCzc0DJr8ewbtBqYSSU6T/IOT97m46dqwo01PmzfJnXMxutfyLXhuS9ovNQ/0WTzk0VvdRpHiWiDDFxpDtdOLPD3+R4afGgSF3PDNbAP93tYX7H7x/53c2nU2pmg/FKA6/y+h+dlIm81gMAAA==
     Type: AWS::CDK::Metadata
   ClientVpn0clientVpnEndpointAssociation8160B577:
     Metadata:
@@ -1291,6 +1291,573 @@ Resources:
         VPCRegion:
           Ref: AWS::Region
     Type: AWS::Route53::HostedZone
+  RegionRestrictionRegionRestrictedSampleRoleDB44D497:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/RegionRestricted-Sample-Role/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+              Fn::Join:
+              - ''
+              - - ec2.
+                - Ref: AWS::URLSuffix
+        Version: '2012-10-17'
+      PermissionsBoundary:
+        Ref: RegionRestrictionRegionRestrictionPermissionsBoundaryPolicy42A40F1F
+    Type: AWS::IAM::Role
+  RegionRestrictionRegionRestrictionPermissionsBoundaryPolicy42A40F1F:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/Region-Restriction-Permissions-Boundary-Policy/Resource
+    Properties:
+      Description: ''
+      Path: /
+      PolicyDocument:
+        Statement:
+        - Action:
+          - iam:CreateRole
+          - iam:DeleteRolePolicy
+          - iam:AttachRolePolicy
+          - iam:DetachRolePolicy
+          - iam:PutRolePolicy
+          - iam:PutRolePermissionsBoundary
+          - iam:CreateUser
+          - iam:DeleteUserPolicy
+          - iam:AttachUserPolicy
+          - iam:DetachUserPolicy
+          - iam:PutUserPolicy
+          - iam:PutUserPermissionsBoundary
+          Condition:
+            StringLike:
+              iam:PermissionsBoundary: arn:aws:iam::*:policy/boundary-policy
+          Effect: Allow
+          Resource: '*'
+          Sid: EnforceBoundary
+        - Action:
+          - iam:*PolicyVersion
+          - iam:DeletePolicy
+          - iam:SetDefaultPolicyVersion
+          Effect: Deny
+          Resource: arn:aws:iam::*:policy/boundary-policy
+          Sid: DenyBoundaryPolicyEdit
+        - Action: iam:Delete*PermissionsBoundary
+          Effect: Deny
+          Resource: '*'
+          Sid: NoBoundaryUserDelete
+        - Condition:
+            StringEquals:
+              aws:RequestedRegion:
+              - us-east-1
+              - us-east-2
+              - us-west-1
+              - us-west-2
+          Effect: Allow
+          NotAction:
+          - iam:CreateRole
+          - iam:DeleteRolePolicy
+          - iam:AttachRolePolicy
+          - iam:DetachRolePolicy
+          - iam:PutRolePolicy
+          - iam:PutRolePermissionsBoundary
+          - iam:CreateUser
+          - iam:DeleteUserPolicy
+          - iam:AttachUserPolicy
+          - iam:DetachUserPolicy
+          - iam:PutUserPolicy
+          - iam:PutUserPermissionsBoundary
+          Resource: '*'
+          Sid: AllowNotIAMTasks
+        Version: '2012-10-17'
+    Type: AWS::IAM::ManagedPolicy
+  RegionRestrictionenforceBoundaryAutomationRole20F78FF2:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/enforceBoundaryAutomationRole/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: ssm.amazonaws.com
+        Version: '2012-10-17'
+    Type: AWS::IAM::Role
+  RegionRestrictionenforceBoundaryAutomationRoleDefaultPolicyF77F6424:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/enforceBoundaryAutomationRole/DefaultPolicy/Resource
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action:
+          - iam:PutRolePermissionsBoundary
+          - iam:PutUserPermissionsBoundary
+          - config:GetResourceConfigHistory
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      PolicyName: RegionRestrictionenforceBoundaryAutomationRoleDefaultPolicyF77F6424
+      Roles:
+      - Ref: RegionRestrictionenforceBoundaryAutomationRole20F78FF2
+    Type: AWS::IAM::Policy
+  RegionRestrictionenforceRegionConfigLambdaRole53D3D76E:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/enforceRegionConfigLambdaRole/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - Fn::Join:
+        - ''
+        - - 'arn:'
+          - Ref: AWS::Partition
+          - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - Fn::Join:
+        - ''
+        - - 'arn:'
+          - Ref: AWS::Partition
+          - :iam::aws:policy/service-role/AWSConfigRulesExecutionRole
+    Type: AWS::IAM::Role
+  RegionRestrictionenforceRegionalPermissionBoundary405B2AF8:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/enforceRegionalPermissionBoundary/Resource
+    Properties:
+      InputParameters:
+        desiredBoundaryPolicyArn:
+          Ref: RegionRestrictionRegionRestrictionPermissionsBoundaryPolicy42A40F1F
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::IAM::Role
+        - AWS::IAM::User
+      Source:
+        Owner: CUSTOM_LAMBDA
+        SourceDetails:
+        - EventSource: aws.config
+          MessageType: ConfigurationItemChangeNotification
+        - EventSource: aws.config
+          MessageType: OversizedConfigurationItemChangeNotification
+        SourceIdentifier:
+          Fn::GetAtt:
+          - SingletonLambdaenforceRegionalPermissionBoundaryLambda5331A8F9
+          - Arn
+    Type: AWS::Config::ConfigRule
+  RegionRestrictionpermissionBoundaryMissingRemediationConfigA2CB411C:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/permissionBoundaryMissingRemediationConfig
+    Properties:
+      Automatic: false
+      ConfigRuleName:
+        Ref: RegionRestrictionenforceRegionalPermissionBoundary405B2AF8
+      Parameters:
+        offendingIamPrincipal:
+          ResourceValue:
+            Value: RESOURCE_ID
+        permissionBoundaryPolicyArn:
+          StaticValue:
+            Values:
+            - Ref: RegionRestrictionRegionRestrictionPermissionsBoundaryPolicy42A40F1F
+      TargetId:
+        Ref: RegionRestrictionremediateBoundaryDoc55870F04
+      TargetType: SSM_DOCUMENT
+    Type: AWS::Config::RemediationConfiguration
+  RegionRestrictionregionRestrictionServiceControlPolicy048F74CD:
+    DeletionPolicy: Delete
+    DependsOn:
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleDefaultPolicy7FCCD194
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+    - RegionRestrictionscpPromisescpEnabledPromise98664A9F
+    - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEvent6CBC8A20
+    - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleDefaultPolicy2C2D3634
+    - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleE7EFB923
+    - RegionRestrictionscpPromiseserviceLinkRolePolicy4E3207AC
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/regionRestriction/ServiceControlPolicy/Default
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEvent34440983
+        - Arn
+      policyContentInput: '{"Version":"2012-10-17","Statement":[{"Sid":"DenyAllOutsideEU","Effect":"Deny","NotAction":["a4b:*","acm:*","aws-marketplace-management:*","aws-marketplace:*","aws-portal:*","awsbillingconsole:*","budgets:*","ce:*","chime:*","cloudfront:*","config:*","cur:*","directconnect:*","ec2:DescribeRegions","ec2:DescribeTransitGateways","ec2:DescribeVpnGateways","fms:*","globalaccelerator:*","health:*","iam:*","importexport:*","kms:*","mobileanalytics:*","networkmanager:*","organizations:*","pricing:*","route53:*","route53domains:*","s3:GetAccountPublic*","s3:ListAllMyBuckets","s3:PutAccountPublic*","shield:*","sts:*","support:*","trustedadvisor:*","waf-regional:*","waf:*","wafv2:*","wellarchitected:*"],"Resource":"*","Condition":{"StringNotEquals":{"aws:RequestedRegion":["us-east-1","us-east-2","us-west-1","us-west-2"]},"ArnNotLike":{"aws:PrincipalARN":["arn:aws:iam::*:role/Admin-OneClick"]}}}]}'
+      policyNameInput: RegionRestriction
+    Type: AWS::CloudFormation::CustomResource
+    UpdateReplacePolicy: Delete
+  RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEvent34440983:
+    DependsOn:
+    - RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleDefaultPolicy9D12BC55
+    - RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleF5EE7867
+    Metadata:
+      aws:asset:path: asset.c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c
+      aws:asset:property: Code
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/regionRestriction/applyScpCustomResourceProvider/framework-onEvent/Resource
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+        S3Key:
+          Fn::Join:
+          - ''
+          - - Fn::Select:
+              - 0
+              - Fn::Split:
+                - '||'
+                - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+            - Fn::Select:
+              - 1
+              - Fn::Split:
+                - '||'
+                - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+      Description: AWS CDK resource provider framework - onEvent (AwsBiotechBlueprint/RegionRestriction/regionRestriction/applyScpCustomResourceProvider)
+      Environment:
+        Variables:
+          USER_ON_EVENT_FUNCTION_ARN:
+            Fn::GetAtt:
+            - SingletonLambda123bhab284702aa5a2234235351d7829940F873
+            - Arn
+      Handler: framework.onEvent
+      Role:
+        Fn::GetAtt:
+        - RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleF5EE7867
+        - Arn
+      Runtime: nodejs14.x
+      Timeout: 900
+    Type: AWS::Lambda::Function
+  RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleDefaultPolicy9D12BC55:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/regionRestriction/applyScpCustomResourceProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action: lambda:InvokeFunction
+          Effect: Allow
+          Resource:
+            Fn::GetAtt:
+            - SingletonLambda123bhab284702aa5a2234235351d7829940F873
+            - Arn
+        Version: '2012-10-17'
+      PolicyName: RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleDefaultPolicy9D12BC55
+      Roles:
+      - Ref: RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleF5EE7867
+    Type: AWS::IAM::Policy
+  RegionRestrictionregionRestrictionapplyScpCustomResourceProviderframeworkonEventServiceRoleF5EE7867:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/regionRestriction/applyScpCustomResourceProvider/framework-onEvent/ServiceRole/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - Fn::Join:
+        - ''
+        - - 'arn:'
+          - Ref: AWS::Partition
+          - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Type: AWS::IAM::Role
+  RegionRestrictionremediateBoundaryDoc55870F04:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/remediateBoundaryDoc
+    Properties:
+      Content:
+        assumeRole:
+          Fn::GetAtt:
+          - RegionRestrictionenforceBoundaryAutomationRole20F78FF2
+          - Arn
+        description: Used by AWS config to remediate roles and users which dont have
+          a permission boundary.
+        mainSteps:
+        - action: aws:executeScript
+          inputs:
+            Handler: script_handler
+            InputPayload:
+              offendingIamPrincipal: '{{ offendingIamPrincipal }}'
+              permissionBoundaryPolicyArn: '{{ permissionBoundaryPolicyArn }}'
+            Runtime: python3.6
+            Script: "import boto3\n\ndef script_handler(events, context):\n    print(events)\n\
+              \    print(context)\n\n    iam = boto3.client('iam')\n    config = boto3.client('config')\n\
+              \    \n    principalType = '';\n    \n    try: \n        principalHistory\
+              \ = config.get_resource_config_history(resourceType='AWS::IAM::User',\
+              \ resourceId=events['offendingIamPrincipal'])\n        principalIsUser\
+              \ = 'AWS::IAM::User'\n    \n    except config.exceptions.ResourceNotDiscoveredException\
+              \ as err:\n        principalHistory = config.get_resource_config_history(resourceType='AWS::IAM::Role',\
+              \ resourceId=events['offendingIamPrincipal'])\n        principalIsUser\
+              \ = 'AWS::IAM::Role'\n        \n\n    if(principalIsUser == 'AWS::IAM::User'):\n\
+              \        response = iam.put_user_permissions_boundary(\n           \
+              \ UserName=principalHistory['configurationItems'][0]['resourceName'],\n\
+              \            PermissionsBoundary=events['permissionBoundaryPolicyArn']\n\
+              \        )\n        return response\n    \n    if(principalIsUser ==\
+              \ 'AWS::IAM::Role'):\n        response = iam.put_role_permissions_boundary(\n\
+              \            RoleName=principalHistory['configurationItems'][0]['resourceName'],\n\
+              \            PermissionsBoundary=events['permissionBoundaryPolicyArn']\n\
+              \        )\n        return response\n    \n    raise Exception(\"Uknown\
+              \ principal type.\")"
+          name: Apply_permission_boundary
+        parameters:
+          offendingIamPrincipal:
+            type: String
+          permissionBoundaryPolicyArn:
+            type: String
+        schemaVersion: '0.3'
+      DocumentType: Automation
+    Type: AWS::SSM::Document
+  RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/SCPCustomResourceRole/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - Fn::Join:
+        - ''
+        - - 'arn:'
+          - Ref: AWS::Partition
+          - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Type: AWS::IAM::Role
+  RegionRestrictionscpPromiseSCPCustomResourceRoleDefaultPolicy7FCCD194:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/SCPCustomResourceRole/DefaultPolicy/Resource
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action:
+          - organizations:Create*
+          - organizations:Describe*
+          - organizations:ListRoots
+          - organizations:EnablePolicyType
+          - organizations:EnableAllFeatures
+          Effect: Allow
+          Resource: '*'
+        - Action:
+          - organizations:CreatePolicy
+          - organizations:AttachPolicy
+          - organizations:DetachPolicy
+          - organizations:DeletePolicy
+          Effect: Allow
+          Resource: '*'
+        Version: '2012-10-17'
+      PolicyName: RegionRestrictionscpPromiseSCPCustomResourceRoleDefaultPolicy7FCCD194
+      Roles:
+      - Ref: RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+    Type: AWS::IAM::Policy
+  RegionRestrictionscpPromisescpEnabledPromise98664A9F:
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/scpEnabledPromise/Default
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEvent6CBC8A20
+        - Arn
+      enableOrgAndScp: 'true'
+    Type: AWS::CloudFormation::CustomResource
+    UpdateReplacePolicy: Delete
+  RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEvent6CBC8A20:
+    DependsOn:
+    - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleDefaultPolicy2C2D3634
+    - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleE7EFB923
+    Metadata:
+      aws:asset:path: asset.c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c
+      aws:asset:property: Code
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/scpEnabledResourceProvider/framework-onEvent/Resource
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+        S3Key:
+          Fn::Join:
+          - ''
+          - - Fn::Select:
+              - 0
+              - Fn::Split:
+                - '||'
+                - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+            - Fn::Select:
+              - 1
+              - Fn::Split:
+                - '||'
+                - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+      Description: AWS CDK resource provider framework - onEvent (AwsBiotechBlueprint/RegionRestriction/scpPromise/scpEnabledResourceProvider)
+      Environment:
+        Variables:
+          USER_ON_EVENT_FUNCTION_ARN:
+            Fn::GetAtt:
+            - SingletonLambda1asdfasdfaw34535sdxf34235351d782809155FA
+            - Arn
+      Handler: framework.onEvent
+      Role:
+        Fn::GetAtt:
+        - RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleE7EFB923
+        - Arn
+      Runtime: nodejs14.x
+      Timeout: 900
+    Type: AWS::Lambda::Function
+  RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleDefaultPolicy2C2D3634:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/scpEnabledResourceProvider/framework-onEvent/ServiceRole/DefaultPolicy/Resource
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action: lambda:InvokeFunction
+          Effect: Allow
+          Resource:
+            Fn::GetAtt:
+            - SingletonLambda1asdfasdfaw34535sdxf34235351d782809155FA
+            - Arn
+        Version: '2012-10-17'
+      PolicyName: RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleDefaultPolicy2C2D3634
+      Roles:
+      - Ref: RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleE7EFB923
+    Type: AWS::IAM::Policy
+  RegionRestrictionscpPromisescpEnabledResourceProviderframeworkonEventServiceRoleE7EFB923:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/scpEnabledResourceProvider/framework-onEvent/ServiceRole/Resource
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - Fn::Join:
+        - ''
+        - - 'arn:'
+          - Ref: AWS::Partition
+          - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Type: AWS::IAM::Role
+  RegionRestrictionscpPromiseserviceLinkRolePolicy4E3207AC:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/RegionRestriction/scpPromise/serviceLinkRolePolicy/Resource
+    Properties:
+      PolicyDocument:
+        Statement:
+        - Action: iam:CreateServiceLinkedRole
+          Condition:
+            StringLike:
+              iam:AWSServiceName: organizations.amazonaws.com
+          Effect: Allow
+          Resource: arn:aws:iam::*:role/aws-service-role/organizations.amazonaws.com/AWSServiceRoleForOrganizations
+        - Action:
+          - iam:AttachRolePolicy
+          - iam:PutRolePolicy
+          Effect: Allow
+          Resource: arn:aws:iam::*:role/aws-service-role/organizations.amazonaws.com/AWSServiceRoleForOrganizations
+        Version: '2012-10-17'
+      PolicyName: RegionRestrictionscpPromiseserviceLinkRolePolicy4E3207AC
+      Roles:
+      - Ref: RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+    Type: AWS::IAM::Policy
+  SingletonLambda123bhab284702aa5a2234235351d7829940F873:
+    DependsOn:
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleDefaultPolicy7FCCD194
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/SingletonLambda123bhab284702aa5a2234235351d782/Resource
+    Properties:
+      Code:
+        ZipFile: "import boto3\nimport botocore\nimport json\nimport logging\nlogger\
+          \ = logging.getLogger()\nlogger.setLevel(logging.INFO)\norg = boto3.client('organizations')\n\
+          iam = boto3.client('iam')\n\n# Set Global Variables\naccountNumber = boto3.client('sts').get_caller_identity().get('Account')\n\
+          policyName = \"Region-Restriction-Policy\"\n\n# Define action for the creation\
+          \ of a template\ndef create_scp(event, context):\n\n    policyContent =\
+          \ event['ResourceProperties']['policyContentInput']\n    policyName = event['ResourceProperties']['policyNameInput']\n\
+          \n    # Create the SCP\n    response = org.create_policy(\n        Name=policyName,\n\
+          \        Type='SERVICE_CONTROL_POLICY',\n        Description='Policy to\
+          \ restrict access to certain regions',\n        Content=policyContent,\n\
+          \    )\n    policyId = response['Policy']['PolicySummary']['Id']\n    \n\
+          \    # Attach the SCP\n    response = org.attach_policy(\n        PolicyId=policyId,\n\
+          \        TargetId=accountNumber,\n    )\n    print(response)\n    \n   \
+          \ \n    return { 'PhysicalResourceId': policyId }\n    \ndef delete_scp(event,\
+          \ context):\n    \n    policyId = event[\"PhysicalResourceId\"]\n    \n\
+          \    detachPolicy = org.detach_policy(\n        PolicyId=policyId,\n   \
+          \     TargetId=accountNumber,\n    )\n    print(detachPolicy)\n\n    # #\
+          \ Delete policy\n    deletePolicy = org.delete_policy(\n        PolicyId=policyId\n\
+          \    )\n    print(\"SCP Policy Deleted\")\n    return {}\n\ndef main(event,\
+          \ context):\n    print(\"Received event: \" + json.dumps(event, indent=2))\n\
+          \  \n    logger.info(event)\n    \n    if event['RequestType'] == 'Delete':\n\
+          \        return delete_scp(event, context)\n    elif event['RequestType']\
+          \ == 'Create':\n        return create_scp(event, context)\n    elif event['RequestType']\
+          \ == 'Update':\n        delete_scp(event, context)\n        return create_scp(event,\
+          \ context)        \n    #print(\"Completed successfully\")\n\n\n\n\n"
+      Handler: index.main
+      Role:
+        Fn::GetAtt:
+        - RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+        - Arn
+      Runtime: python3.7
+      Timeout: 60
+    Type: AWS::Lambda::Function
+  SingletonLambda1asdfasdfaw34535sdxf34235351d782809155FA:
+    DependsOn:
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleDefaultPolicy7FCCD194
+    - RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/SingletonLambda1asdfasdfaw34535sdxf34235351d782/Resource
+    Properties:
+      Code:
+        ZipFile: "import boto3\nimport botocore\nimport json\nimport logging\nimport\
+          \ cfnresponse\nlogger = logging.getLogger()\nlogger.setLevel(logging.INFO)\n\
+          org = boto3.client('organizations')\n\n# Define action for the creation\
+          \ of a template\ndef create_endpoint(event, context):\n\n    responseData\
+          \ = {}\n\n    # Check if the account is part of an Organization.  Only accounts\
+          \ within an Organization can receive a SCP\n    try:\n        response =\
+          \ org.describe_organization()\n        logger.info(\"Account is member of\
+          \ an existing Organization.\")\n\n        try:\n            getRootId =\
+          \ org.list_roots()\n            rootId = getRootId['Roots'][0]['Id']\n \
+          \   \n            enableSCP = org.enable_policy_type(\n                RootId=rootId,\n\
+          \                PolicyType='SERVICE_CONTROL_POLICY'\n            )\n  \
+          \          print(\"SCP has been enabled\")\n\n            responseData['response']\
+          \ = enableSCP\n            responseData['statusMessage'] = 'SCP Enabled'\n\
+          \            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)\n\
+          \n            return {\n                'body': 'Organization exists & SCP\
+          \ Policy Type is enabled.'\n            }\n            \n        \n    \
+          \    except:\n            print(\"SCP policies are already enabled\")\n\n\
+          \            responseData['response'] = \"Success\"\n            responseData['statusMessage']\
+          \ = 'SCP Enabled'\n            cfnresponse.send(event, context, cfnresponse.SUCCESS,\
+          \ responseData)\n\n            return {\n                'body': 'Organization\
+          \ exists & SCP Policy Type is enabled.'\n            }\n\n    except:\n\
+          \        print(\"Not part of an Organization.  Organization will be created.\"\
+          )\n\n        # Create the Organization based on the current account\n  \
+          \      createOrganization = org.create_organization(\n            FeatureSet='ALL'\n\
+          \        )\n        print(\"Organization created.\")\n        print(createOrganization)\n\
+          \n        # Enable SCP\n        getRootId = org.list_roots()\n        rootId\
+          \ = getRootId['Roots'][0]['Id']\n\n        enableSCP = org.enable_policy_type(\n\
+          \            RootId=rootId,\n            PolicyType='SERVICE_CONTROL_POLICY'\n\
+          \        )\n        print(\"SCP has been enabled\")\n\n        responseData['response']\
+          \ = enableSCP\n        responseData['statusMessage'] = 'SCP Enabled'\n \
+          \       cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData)\n\
+          \n        return {\n            'body': 'Organization exists & SCP Policy\
+          \ Type is enabled.'\n        }\n\n# Define action for the template deletion\n\
+          def delete_endpoint(event, context):\n    \n    \n    return {\n       \
+          \     'body': 'Organization will not be deleted.'\n        }\n\ndef main(event,\
+          \ context):\n    print(\"Received event: \" + json.dumps(event, indent=2))\n\
+          \  \n    logger.info(event)\n  \n  \n    if event['RequestType'] == 'Delete':\n\
+          \        return {} #noop\n    elif event['RequestType'] == 'Create':\n \
+          \       return create_endpoint(event, context)\n    elif event['RequestType']\
+          \ == 'Update':\n        return {} #noop\n    #print(\"Completed successfully\"\
+          )\n\n\n\n\n"
+      Handler: index.main
+      Role:
+        Fn::GetAtt:
+        - RegionRestrictionscpPromiseSCPCustomResourceRoleBA81E678
+        - Arn
+      Runtime: python3.7
+      Timeout: 60
+    Type: AWS::Lambda::Function
   SingletonLambdaCreateVpnCertificateLambda14FF3DCC:
     DependsOn:
     - ClientVpnVpnCertificateLambdaCustomResourceRoleDefaultPolicyBC6B56F1
@@ -1340,6 +1907,85 @@ Resources:
       Runtime: python3.7
       Timeout: 300
     Type: AWS::Lambda::Function
+  SingletonLambdaenforceRegionalPermissionBoundaryLambda5331A8F9:
+    DependsOn:
+    - RegionRestrictionenforceRegionConfigLambdaRole53D3D76E
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/SingletonLambdaenforceRegionalPermissionBoundaryLambda/Resource
+    Properties:
+      Code:
+        ZipFile: '''use strict'';const aws=require(''aws-sdk'');const config=new aws.ConfigService();function
+          checkDefined(reference,referenceName){if(!reference){throw new Error(`Error:${referenceName}is
+          not defined`);}
+
+          return reference;}
+
+          function isOverSizedChangeNotification(messageType){checkDefined(messageType,''messageType'');return
+          messageType===''OversizedConfigurationItemChangeNotification'';}
+
+          function getConfiguration(resourceType,resourceId,configurationCaptureTime,callback){config.getResourceConfigHistory({resourceType,resourceId,laterTime:new
+          Date(configurationCaptureTime),limit:1},(err,data)=>{if(err){callback(err,null);}
+
+          const configurationItem=data.configurationItems[0];callback(null,configurationItem);});}
+
+          function convertApiConfiguration(apiConfiguration){apiConfiguration.awsAccountId=apiConfiguration.accountId;apiConfiguration.ARN=apiConfiguration.arn;apiConfiguration.configurationStateMd5Hash=apiConfiguration.configurationItemMD5Hash;apiConfiguration.configurationItemVersion=apiConfiguration.version;apiConfiguration.configuration=JSON.parse(apiConfiguration.configuration);if({}.hasOwnProperty.call(apiConfiguration,''relationships'')){for(let
+          i=0;i<apiConfiguration.relationships.length;i++){apiConfiguration.relationships[i].name=apiConfiguration.relationships[i].relationshipName;}}
+
+          return apiConfiguration;}
+
+          function getConfigurationItem(invokingEvent,callback){checkDefined(invokingEvent,''invokingEvent'');if(isOverSizedChangeNotification(invokingEvent.messageType)){const
+          configurationItemSummary=checkDefined(invokingEvent.configurationItemSummary,''configurationItemSummary'');getConfiguration(configurationItemSummary.resourceType,configurationItemSummary.resourceId,configurationItemSummary.configurationItemCaptureTime,(err,apiConfigurationItem)=>{if(err){callback(err);}
+
+          const configurationItem=convertApiConfiguration(apiConfigurationItem);callback(null,configurationItem);});}else{checkDefined(invokingEvent.configurationItem,''configurationItem'');callback(null,invokingEvent.configurationItem);}}
+
+          function isApplicable(configurationItem,event){checkDefined(configurationItem,''configurationItem'');checkDefined(event,''event'');const
+          status=configurationItem.configurationItemStatus;const eventLeftScope=event.eventLeftScope;return(status===''OK''||status===''ResourceDiscovered'')&&eventLeftScope===false;}
+
+          function evaluateChangeNotificationCompliance(configurationItem,ruleParameters){checkDefined(configurationItem,''configurationItem'');checkDefined(configurationItem.configuration,''configurationItem.configuration'');checkDefined(ruleParameters,''ruleParameters'');if(configurationItem.resourceType!==''AWS::IAM::Role''&&configurationItem.resourceType!==''AWS::IAM::User''){console.info(''Resource
+          NOT_APPLICABLE'');return''NOT_APPLICABLE'';}
+
+          if(configurationItem.configuration.permissionsBoundary===null)return"NON_COMPLIANT";if(ruleParameters.desiredBoundaryPolicyArn===configurationItem.configuration.permissionsBoundary.permissionsBoundaryArn)
+
+          {console.info(''Resource Compliant'');return''COMPLIANT'';}else{console.info(''Resource
+          Non Compliant'');return''NON_COMPLIANT'';}}
+
+          exports.handler=(event,context,callback)=>{console.info("EVENT\n"+JSON.stringify(event,null,2));checkDefined(event,''event'');const
+          invokingEvent=JSON.parse(event.invokingEvent);const ruleParameters=JSON.parse(event.ruleParameters);getConfigurationItem(invokingEvent,(err,configurationItem)=>{if(err){callback(err);}
+
+          let compliance=''NOT_APPLICABLE'';const putEvaluationsRequest={};if(isApplicable(configurationItem,event)){compliance=evaluateChangeNotificationCompliance(configurationItem,ruleParameters);}
+
+          putEvaluationsRequest.Evaluations=[{ComplianceResourceType:configurationItem.resourceType,ComplianceResourceId:configurationItem.resourceId,ComplianceType:compliance,OrderingTimestamp:configurationItem.configurationItemCaptureTime,},];putEvaluationsRequest.ResultToken=event.resultToken;config.putEvaluations(putEvaluationsRequest,(error,data)=>{if(error){callback(error,null);}else
+          if(data.FailedEvaluations.length>0){callback(JSON.stringify(data),null);}else{callback(null,data);}});});};'
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+        - RegionRestrictionenforceRegionConfigLambdaRole53D3D76E
+        - Arn
+      Runtime: nodejs12.x
+      Timeout: 60
+    Type: AWS::Lambda::Function
+  SingletonLambdaenforceRegionalPermissionBoundaryLambdaInvokeServicePrincipalconfigamazonawscomC9182C3A:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/SingletonLambdaenforceRegionalPermissionBoundaryLambda/InvokeServicePrincipal(config.amazonaws.com)
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - SingletonLambdaenforceRegionalPermissionBoundaryLambda5331A8F9
+        - Arn
+      Principal: config.amazonaws.com
+    Type: AWS::Lambda::Permission
+  SingletonLambdaenforceRegionalPermissionBoundaryLambdaPermission8E815139:
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/SingletonLambdaenforceRegionalPermissionBoundaryLambda/Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - SingletonLambdaenforceRegionalPermissionBoundaryLambda5331A8F9
+        - Arn
+      Principal: config.amazonaws.com
+    Type: AWS::Lambda::Permission
   VpcCoreDevelopment37E2B994:
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/VpcCore/Development/Resource
