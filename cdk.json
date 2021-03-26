@@ -3,6 +3,7 @@
   "context": {
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
-    "apply_EU_RegionRestriction": "false"
+    "apply_EU_RegionRestriction": "false",
+    "apply_US_RegionRestriction": "false"
   }
 }
