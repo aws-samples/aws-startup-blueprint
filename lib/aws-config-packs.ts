@@ -135,7 +135,6 @@ export class ConfigConformancePacks extends cdk.Construct {
       
     }
 
-    
     const controlTowerDetectiveGuardRailsConformancePack = new cfg.CfnConformancePack(this, 'ControlTowerDetectiveGuardRailsConformancePack', {
       conformancePackName: "AWS-Control-Tower-Detective-Guardrails-Conformance-Pack",
       deliveryS3Bucket: deliveryBucketName,
