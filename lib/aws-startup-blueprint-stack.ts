@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as s3 from '@aws-cdk/aws-s3';
-import { ConfigConformancePacks } from './aws-config-packs'
+import { ConfigRecorderEnabledPromise, ConfigConformancePackBundle } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
@@ -14,7 +14,11 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Core VPCs
+
     const blueprintVPCs = new BlueprintVpcs(this, 'VpcCore', {});
+
+    // Client VPN Capability
 
     new ClientVpn(this, 'ClientVpn',{
       HomeVpc: blueprintVPCs.ManagmentVPC,      
@@ -25,9 +29,23 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
       DevelopmentVpc: blueprintVPCs.DevelopmentVpc
     });
 
-    new ConfigConformancePacks(this, 'ConfigPacks', {
+    // Config Conformance Packs
+
+    const ConfigEnabled = new ConfigRecorderEnabledPromise(this, 'ConfigEnabledPromise',{
       skipCreatingRecorderAndDeliveryChannel: false
+      //existingRecorderDeliveryBucket: "" 
     });
+    new ConfigConformancePackBundle(this, 'ConfigPacks', {
+      ConfigRecorderEnabledPromise: ConfigEnabled,
+      PackConfigs: [
+        {ConformancePackName: "Operational-Best-Practices-For-AWS-Identity-And-Access-Management", TemplatePath: "config-packs/configpack.iam.bestpractices.yaml" },
+        {ConformancePackName: "Operational-Best-Practices-For-Amazon-S3", TemplatePath: "config-packs/configpack.s3.bestpractices.yaml" },
+        {ConformancePackName: "Operational-Best-Practices-for-NIST-CSF", TemplatePath: "config-packs/configpack.nist.csf.bestpractices.yaml" },
+        {ConformancePackName: "AWS-Control-Tower-Detective-Guardrails-Conformance-Pack", TemplatePath: "config-packs/configpack.ct.detectiveguardrails.yaml" },
+      ]
+    });
+    
+    // Shared DNS
 
     new Dns(this,'Dns', {
       ManagmentVPC: blueprintVPCs.ManagmentVPC,
@@ -36,6 +54,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
       TopLevelDomain: "corp"      
     });
     
+    // Region Restriction 
 
     const apply_EU_RegionRestriction = this.node.tryGetContext('apply_EU_RegionRestriction');
     const apply_US_RegionRestriction = this.node.tryGetContext('apply_US_RegionRestriction');

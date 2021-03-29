@@ -76,10 +76,86 @@ Usage instructions for other OpenVPN clients like https://openvpn.net/download-o
 
 //_Add any best practices for using the software._
 
-//== Security
+== Security and Compliance.
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
 
+The Blueprint creates a number of AWS Config Conformance Packs during the deployment: 
+
+*Operational-Best-Practices-For-AWS-Identity-And-Access-Management
+*Operational-Best-Practices-For-Amazon-S3
+*Operational-Best-Practices-for-NIST-CSF
+*AWS-Control-Tower-Detective-Guardrails-Conformance-Pack
+
+These packs create a number of AWS Config rules that regularly evaluate resources in your account against security practices. When AWS Config finds an offending resource, it will flag it for your review in the AWS Config Console. Any resources you created in your account BEFORE you deployed the Blueprint will also be scanned during the next AWS Config Rule evaluation period. This can be handy to help identify resources you are already using, or create in the future, that fall short of the best practices defined in the Config packs above.
+
+Your first step should be simply visiting the AWS Config console and getting a feel for how AWS Config tracks individual resources, rules, and remediation. You'll quickly find that AWS Config will become a big part of your Compliance story going forward. Every resource tracked by AWS Config, from S3 buckets, to IAM resources, to EC2 hosts, etc has it's history tracked over time in a very easy to consume and understand way (compared to consuming raw CloudTrail events for example).
+
+For example, the Operational Best Practices for NIST-CSF Conformance pack comes with 93 rules, one of which, `encrypted-volumes-conformance-pack` checks whether EBS volumes that are in an attached state are encrypted. 
+
+image::conformancepacks_0.png[Config,width=100%,height=100%]
+
+If you drill into the `encrypted-volumes-conformance-pack`, you can see a list of all the resources and their compliance status. 
+
+image::conformancepacks_1.png[Config,width=100%,height=100%]
+
+From here, you can configure the AWS Config delivery channel to include an Amazon SNS topic to send email or text notifications when resources are flagged. More sophisticated approaches might include regularly reviewing Config reports, using AWS Config's auto remediation capabilities, and/or integrating AWS Config with security ticketing or SEIM solutions. 
+
+
 //_Add any security-related information._
+
+        
+== Region Restriction Capabilities 
+
+A common ask from Startups using AWS is to restrict all IAM actions to specific regions. For example, you may only want users to create EC2 instances or S3 buckets in EU-only regions. This could be for compliance reasons or simply because its a good practice to keep resources out of regions you never intend to use. 
+
+If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity polcies that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission polcies like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
+
+The `RegionRestriction` class configured in 'lib/aws-startup-blueprint-stack.ts' creates just such an IAM permisison boundary restriction actions to the regions you specify:
+
+For example:
+
+```typescript
+      new RegionRestriction(this, 'RegionRestriction', {
+        AllowedRegions: ["eu-central-1","eu-west-1","eu-west-3", "eu-south-1", "eu-north-1"]
+      });  
+```
+
+In order for the permission boundary to have any effect, it needs to be attached to all exisiting and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
+
+If you visit the AWS Config Rules console, find and click on the rule titled `AwsBiotechBlueprint-RegionRestriction...`
+
+image::regionrestriction_config0.png[Config,width=100%,height=100%]
+
+The Config Rule will have evaluated all of your IAM users and roles and listed thier compliance status. You can quickly remediate a non-compliant resource by selecting the radio button next to it and clicking the 'Remediate' button. That will immediately apply the service control policy and that user or role will no longer be able to perform any action outside of the region you specified. 
+
+image::regionrestriction_config1.png[Config,width=100%,height=100%]
+
+After the remediation is complete, AWS CloudTrail will eventually trigger the AWS Config rule. CloudTraill tells Config that that the IAM principal has been updated and that its time to reevaluate the offending resource (takes about 15 minutes). Because the boundary has been applied, the reevaluation will report the role or user as compliant.
+
+
+*What about automatically remediating resources?* The Blueprint intentionally leaves the remediation configuration set to "Manual" instead of "Automatic". This is in the event you have existing IAM users or roles. Automatically applying the remediation and attaching the permission boundary will impact those existing IAM principals permissions. You should verify if any of the flagged IAM principals depend on any non-approved regions before applying the boundary. If you are working in a brand new account or are unconcerned about the impact on existing IAM principals, you turn on automatic remedation: 
+
+Click the edit button in the "Remediation Action" section of the `AwsBiotechBlueprint-RegionRestriction` Config Rule. 
+
+image::regionrestriction_config2.png[Config,width=100%,height=100%]
+
+WARNING: Turning on automatic remedation will impact existing IAM users and roles not created by the Blueprint itself.
+
+Select the "Automatic Remedation" radio button and click "Save changes"
+
+image::regionrestriction_config3.png[Config,width=100%,height=100%]
+
+
+=== Region Restriction Capabilities in Multi Account Configurations:
+
+In a multi-account setup, Service Control Polcies (SCPs) are superior to Permission Boundaries. SCPs are applied across an entire account and dont need to be indivdiually attached to IAM principals. The only hiccup with SCPs is that they can only take effect on your sub-accounts. So if you just have one account right now, SCPs cant't really help. Thats just fine! The permission boundary and Config approach are enough restrict regions in a single account setup. But when the time comes to create a new account, the Blueprint has already created a region restricting SCP that will automatically be applied to any new account you create right off the bat.
+
+You can take a look at the service control policy by looking at it in the https://console.aws.amazon.com/iam/home?organizations/ServiceControlPolicies/#/organizations/ServiceControlPolicies[IAM Console]
+
+TIP: The SCP created by the applies only to your sub accounts, if and when you create them!
+
+image::regionrestriction_config4.png[Config,width=100%,height=100%]
+
 
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
