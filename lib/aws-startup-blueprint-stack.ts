@@ -42,6 +42,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
         {ConformancePackName: "Operational-Best-Practices-For-Amazon-S3", TemplatePath: "config-packs/configpack.s3.bestpractices.yaml" },
         {ConformancePackName: "Operational-Best-Practices-for-NIST-CSF", TemplatePath: "config-packs/configpack.nist.csf.bestpractices.yaml" },
         {ConformancePackName: "AWS-Control-Tower-Detective-Guardrails-Conformance-Pack", TemplatePath: "config-packs/configpack.ct.detectiveguardrails.yaml" },
+        {ConformancePackName: "Operational-Best-Practices-for-HIPAA Security", TemplatePath: "config-packs/configpack.hipaa.bestpractices.yaml" },
       ]
     });
     
