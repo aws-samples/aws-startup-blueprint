@@ -1,7 +1,7 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
-=== Deployment Option 2: AWS CDK Deployment
+=== AWS CDK deployment
 
 First you need to make sure you have the AWS CDK installed on your development machine. 
 
@@ -108,6 +108,13 @@ image::service-catalog-permission.png[scpermission,width=100%,height=100%]
 Click on the `Add groups, users, and roles` button and select any IAM users/groups/roles that you want grant permissions to. *Make sure you add yourself.*
 
 Anyone you just added can now visit the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products['Products list' section of the Service Catalog console] and deploy any of the tools listed.
+
+
+* https://chemaxon.com/products/compound-registration[ChemAxon Compound Registration]
+* https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/[Nextflow]
+* https://aws.amazon.com/quickstart/biotech-blueprint/dotmatics-suite/[Dotmatics Suite]
+* https://aws.amazon.com/quickstart/architecture/hail/[Hail 0.2]
+* https://aws.amazon.com/quickstart/biotech-blueprint/titian-mosaic-freezermanagement/[Titian Mosaic FreezerManagement]
 
 Please reference the following documentation pages for tool specific deployment and usage instructions
 
