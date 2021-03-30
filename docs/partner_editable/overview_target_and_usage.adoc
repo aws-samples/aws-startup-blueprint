@@ -2,10 +2,12 @@
 // Identify your target audience and explain how/why they would use this Quick Start.
 //Avoid borrowing text from third-party websites (copying text from AWS service documentation is fine). Also, avoid marketing-speak, focusing instead on the technical aspect.
 
-This guide provides instructions for deploying the {partner-product-short-name} Quick Start reference architecture on the AWS Cloud.
+This Quick Start automatically builds a biotech research infrastructure on the AWS Cloud based on AWS best practices. It prepares a base environment configured for identity management, access control, encryption key management, network configuration, logging, alarms, partitioned environments, and built-in compliance auditing. Into this core you can deploy informatics and computational add-on products using AWS Service Catalog, such as:
 
-This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+* https://aws.amazon.com/quickstart/biotech-blueprint/chemaxon-compound-registration/[ChemAxon Compound Registration]
+* https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/[Nextflow]
+* https://aws.amazon.com/quickstart/biotech-blueprint/dotmatics-suite/[Dotmatics Suite]
+* https://aws.amazon.com/quickstart/architecture/hail/[Hail 0.2]
+* https://aws.amazon.com/quickstart/biotech-blueprint/titian-mosaic-freezermanagement/[Titian Mosaic FreezerManagement ]
 
-The {partner-product-short-name} core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
-
-Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
+For more information on what this Quick Start deploys, see link:#_architecture[Architecture], later in this guide.
