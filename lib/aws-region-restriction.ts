@@ -81,7 +81,7 @@ export class RegionRestriction extends cdk.Construct {
 
         const configServicePrincipal = new iam.ServicePrincipal('config.amazonaws.com');
         
-        enforceRegionalPermissionBoundaryLambda.grantInvoke(configServicePrincipal);
+        const configPrincipalGrant = enforceRegionalPermissionBoundaryLambda.grantInvoke(configServicePrincipal);
 
         const enforceRegionalPermissionBoundary = new config.CustomRule(this, 'enforceRegionalPermissionBoundary', {
           lambdaFunction: enforceRegionalPermissionBoundaryLambda,
@@ -92,6 +92,8 @@ export class RegionRestriction extends cdk.Construct {
           ruleScope: config.RuleScope.fromResources([config.ResourceType.IAM_ROLE, config.ResourceType.IAM_USER]), // restrict to all CloudFormation stacks and S3 buckets
         });
         
+        enforceRegionalPermissionBoundary.node.addDependency(configPrincipalGrant);
+        enforceRegionalPermissionBoundary.node.addDependency(enforceRegionalPermissionBoundaryLambda);
         
         
         const permissionBoundaryMissingRemediationConfig = new config.CfnRemediationConfiguration(this, 'permissionBoundaryMissingRemediationConfig', {
