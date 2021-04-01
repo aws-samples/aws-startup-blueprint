@@ -5,11 +5,11 @@
 
 First you need to make sure you have the AWS CDK installed on your development machine. 
 
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequiesites]
+* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequisites]
 
 * https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK]
 
-* Clone the repo, build the project, and then boostrap your AWS account for the AWS CDK.
+* Clone the repo, build the project, and then bootstrap your AWS account for the AWS CDK.
 ```bash
 git clone https://github.com/aws-samples/aws-startup-blueprint.git
 npm run build 
@@ -35,12 +35,12 @@ In order for you to route into the private subnets in the VPCs, you need to conn
 [#vpn1]
 .VPN routing rules in the {partner-product-short-name} on AWS
 [link=VPNRoutingDiagram.png]
-image::VPNRoutingDiagram.png[VPN,width=100%,height=100%]
+image::../images/VPNRoutingDiagram.png[VPN,width=100%,height=100%]
 
 
 Once the deployment is complete, go to the https://console.aws.amazon.com/vpc/home?#ClientVPNEndpoints:sort=clientVpnEndpointId[Client VPN Endpoint section in the AWS VPC web console]. Select the Client VPN Endpoint listed and click the "Download Client Configuration" button. Your browser will download a downloaded-client-config.ovpn file.
 
-image::downloadclientconfig.png[VPN,width=100%,height=100%]
+image::../images/downloadclientconfig.png[VPN,width=100%,height=100%]
 
 Now go to the AWS S3 web console and open the bucket prefixed awsstartupblueprintstack-clientvpnvpnconfigbucket*. You will see 5 files listed. Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on. For now, you just need `client1.domain.tld.key` and `client1.domain.tld.crt`.
 
@@ -49,8 +49,8 @@ At this point we have to edit make some tweaks to the downloaded-client-config.o
 
 Add the following lines to the bottom of the file, replace the contents of the two files inside the respective `<cert>` and `<key>` sections.
 
+
 ```
-....
 <cert>
 Contents of client certificate (client1.domain.tld.crt) file
 </cert>
@@ -76,13 +76,98 @@ Usage instructions for other OpenVPN clients like https://openvpn.net/download-o
 
 //_Add any best practices for using the software._
 
-//== Security
+== Security and Compliance.
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+The Blueprint creates a number of AWS Config Conformance Packs during the deployment: 
+
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html[Operational Best Practices for HIPAA Security]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html[Operational Best Practices For AWS Identity And Access Management]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html[Operational Best Practices For Amazon S3]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html[Operational Best Practices for NIST CSF]
+* https://docs.aws.amazon.com/config/latest/developerguide/aws-control-tower-detective-guardrails.html[AWS Control Tower Detective Guardrails Conformance Pack]
+
+These packs create a number of AWS Config rules that regularly evaluate resources in your account against security best practices. When AWS Config finds an offending resource, it will flag it for your review in the AWS Config Console. Any resources you created in your account BEFORE you deployed the Blueprint will also be scanned during the next AWS Config Rule evaluation. This can be handy to help identify resources you are already using, or create in the future, that fall short of the best practices defined in the Config packs above.
+
+Your first step should be simply visiting the AWS Config console and getting a feel for how AWS Config tracks individual resources, rules, and remediation. You'll quickly find that AWS Config will become a big part of your compliance story going forward. Every resource tracked by AWS Config, from S3 buckets, to IAM resources, to EC2 hosts, etc has it's history tracked over time in a very easy to consume and understand way (compared to consuming raw CloudTrail events for example).
+
+For example, the Operational Best Practices for NIST-CSF Conformance pack comes with 93 rules, one of which, `encrypted-volumes-conformance-pack` checks whether EBS volumes that are in an attached state are encrypted. 
+
+image::../images/conformancepacks_0.png[Config,width=100%,height=100%]
+
+If you drill into the `encrypted-volumes-conformance-pack`, you can see a list of relevant resources and their compliance status. 
+
+image::../images/conformancepacks_1.png[Config,width=100%,height=100%]
+
+Going forward, you can update the AWS Config delivery channel to include an Amazon SNS topic to send email or text notifications when resources are flagged. More sophisticated approaches might include simply regularly reviewing Config reports, using AWS Config's auto remediation capabilities, and/or integrating AWS Config with security ticketing or SEIM solutions. 
+
+=== Notes on the Operational Best Practices for HIPAA Security pack
+
+While HIPAA might not be a concern for every Biotech, a large majority need or will eventually store/transmit/process PHI. Whether you handle PHI or not, the HIPAA security conformance pack has >80 rules that still capture a number of best practices that any secure company should consider implementing.
+
+If you do have HIPAA/PHI needs, it is *strongly* encouraged that you check out the https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html[documentation on the config pack]. For every config rule included in the pack, there is a corresponding HIPAA control ID along with AWS guidance for each check. This Conformance Pack was validated by AWS Security Assurance Services LLC (AWS SAS), which is a team of Payment Card Industry Qualified Security Assessors (QSAs), HITRUST Certified Common Security Framework Practitioners (CCSFPs), and compliance professionals certified to provide guidance and assessments for various industry frameworks. AWS SAS professionals designed this Conformance Pack to enable a customer to align to a subset of the HIPAA.
+
+WARNING: Conformance packs provide a general-purpose compliance framework designed to enable you to create security, operational or cost-optimization governance checks using managed or custom AWS Config rules and AWS Config remediation actions. Conformance Packs, as sample templates, are not designed to fully ensure compliance with a specific governance or compliance standard. You are responsible for making your own assessment of whether your use of the Services meets applicable legal and regulatory requirements.
 
 //_Add any security-related information._
 
+        
+== Region Restriction Capabilities 
+
+A common ask from Startups using AWS is to restrict all IAM actions to specific regions. For example, you may only want users to create EC2 instances or S3 buckets in EU-only regions. This could be for compliance reasons or simply because its a good practice to keep resources out of regions you never intend to use. 
+
+If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity polices that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission polices like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
+
+The `RegionRestriction` class configured in 'lib/aws-startup-blueprint-stack.ts' creates just such an IAM permission boundary restriction actions to the regions you specify:
+
+For example:
+
+```typescript
+      new RegionRestriction(this, 'RegionRestriction', {
+        AllowedRegions: ["eu-central-1","eu-west-1","eu-west-3", "eu-south-1", "eu-north-1"]
+      });  
+```
+
+In order for the permission boundary to have any effect, it needs to be attached to all existing and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
+
+If you visit the AWS Config Rules console, find and click on the rule titled `AwsBiotechBlueprint-RegionRestriction...`
+
+image::../images/regionrestriction_config0.png[Config,width=100%,height=100%]
+
+The Config Rule will have evaluated all of your IAM users and roles and listed their compliance status. You can quickly remediate a non-compliant resource by selecting the radio button next to it and clicking the 'Remediate' button. That will immediately apply the service control policy and that user or role will no longer be able to perform any action outside of the region you specified. 
+
+image::../images/regionrestriction_config1.png[Config,width=100%,height=100%]
+
+After the remediation is complete, AWS CloudTrail will eventually trigger the AWS Config rule. CloudTrail tells Config that that the IAM principal has been updated and that its time to reevaluate the offending resource (takes about 15 minutes). Because the boundary has been applied, the reevaluation will report the role or user as compliant.
+
+
+*What about automatically remediating resources?* The Blueprint intentionally leaves the remediation configuration set to "Manual" instead of "Automatic". This is in the event you have existing IAM users or roles. Automatically applying the remediation and attaching the permission boundary will impact those existing IAM principals permissions. You should verify if any of the flagged IAM principals depend on any non-approved regions before applying the boundary. If you are working in a brand new account or are unconcerned about the impact on existing IAM principals, you turn on automatic remediation: 
+
+Click the edit button in the "Remediation Action" section of the `AwsBiotechBlueprint-RegionRestriction` Config Rule. 
+
+image::../images/regionrestriction_config2.png[Config,width=100%,height=100%]
+
+WARNING: Turning on automatic remediation will impact existing IAM users and roles not created by the Blueprint itself.
+
+Select the "Automatic Remediation" radio button and click "Save changes"
+
+image::regionrestriction_config3.png[Config,width=100%,height=100%]
+
+
+=== Region Restriction Capabilities in Multi Account Configurations:
+
+In a multi-account setup, Service Control Polices (SCPs) are superior to Permission Boundaries. SCPs are applied across an entire account and don't need to be individually attached to IAM principals. The only hiccup with SCPs is that they can only take effect on your sub-accounts. So if you just have one account right now, SCPs can't really help. Thats just fine! The permission boundary and Config approach are enough restrict regions in a single account setup. But when the time comes to create a new account, the Blueprint has already created a region restricting SCP that will automatically be applied to any new account you create right off the bat.
+
+You can take a look at the service control policy by looking at it in the https://console.aws.amazon.com/iam/home?organizations/ServiceControlPolicies/#/organizations/ServiceControlPolicies[IAM Console]
+
+TIP: The SCP created by the applies only to your sub accounts, if and when you create them!
+
+image::../images/regionrestriction_config4.png[Config,width=100%,height=100%]
+
+
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
+
 
 === Where to go from here?
 Once you are connected to the VPN, you essentially have a private encrypted channel into your new VPCs. You can now connect to any resources you launch into your VPCs using private IP addresses without having to hassle with insecure/public bastion hosts. 
@@ -91,7 +176,7 @@ Are you unsure where to launch your first server? If you are confused about whic
 
 We've filled out some of the subnets in the diagram below to give an generalized example of the sorts of things you may end up deploying into your VPCs and subnets.
 
-image::bb-diagram-filled-out.png[bbdiagramfilledout,width=100%,height=100%]
+image::../images/bb-diagram-filled-out.png[bbdiagramfilledout,width=100%,height=100%]
 
 === (Optional) Enable Biotech Blueprint Informatics Catalog
 
@@ -103,7 +188,7 @@ To grant that permission you first need to visit the https://console.aws.amazon.
 
 Click on the `Biotech Blueprint Informatics Catalog` portfolio and then the `Groups, roles, and users` tab. 
 
-image::service-catalog-permission.png[scpermission,width=100%,height=100%]
+image::../images/service-catalog-permission.png[scpermission,width=100%,height=100%]
 
 Click on the `Add groups, users, and roles` button and select any IAM users/groups/roles that you want grant permissions to. *Make sure you add yourself.*
 
@@ -123,4 +208,18 @@ Please reference the following documentation pages for tool specific deployment 
 A private DNS is setup by the Blueprint with `.corp` (default) as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account]. From there, you can create private A or CNAME records to any private resources you create. 
 
 For example, you may decide to launch a development server that gets a private IP like `10.60.0.198`. Instead of you having to remember that IP, you can create an 'A' record in the .corp Route 53 hosted zone for `pauls-machine.corp` to the private IP `10.60.0.198`. Resources in all three VPCs, and clients connected to the Client VPN Endpoint, will then all be able to resolve `pauls-machine.corp` from a browser, terminal, api call, etc.
+
+=== (Optional) Delete the "Default VPC"
+
+Every brand new account created in AWS automatically comes with a "Default VPC". You will see it listed in the VPC console list alongside the Production, Management, and Development VPCs that the Blueprint created. 
+
+image::../images/defaultvpc_0.png[Config,width=100%,height=100%]
+
+The default VPC consists of *public* subnets in every availability zone. It is a fundamentally insecure VPC and should not be used. If you are starting from a brand new account, and know you have never launched anything into the default VPC, you are best off *DELETING* the Default VPC, right from the start, and only using the VPCs created by the Blueprint. If you have already launched a resources into the Default VPC, you should begin migrating them to the VPCs created by the Blueprint, and *then* delete the Default VPC. By deleting the Default VPC, you will drastically reduce the likelihood a user mistakenly launches a resource into an exposed public subnet. 
+
+TIP: If you have a brand new account, delete the Default VPC as soon as possible. If you have already have resources using the Default VPC, migrate them to Blueprint VPCs, then delete the Default VPC.
+
+
+
+
 

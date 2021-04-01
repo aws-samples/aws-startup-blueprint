@@ -1,14 +1,9 @@
 ##################################################################################
 #
 #   Conformance Pack:
-#     Operational Best Practices for NIST CSF
+#     Operational Best Practices for HIPAA Security
 #
-#   This conformance pack helps verify compliance with NIST CSF requirements.
-#                                                                                 
-#   This Conformance Pack has been designed for compatibility with the majority of AWS 
-#   regions and to not require setting of any Parameters. Additional managed rules that 
-#   require parameters to be set for your environment and/or for your specific region can 
-#   be found at https://docs.aws.amazon.com/config/latest/developerguide/managed-rules-by-aws-config.html
+#   This conformance pack helps verify compliance with HIPAA Security requirements.
 #
 #   See Parameters section for names and descriptions of required parameters. 
 #
@@ -18,8 +13,17 @@ Parameters:
   AccessKeysRotatedParamMaxAccessKeyAge:
     Default: '90'
     Type: String
-  AcmCertificateExpirationCheckParamDaysToExpiration:
-    Default: '90'
+  CloudwatchAlarmActionCheckParamInsufficientDataActionRequired:
+    Default: 'TRUE'
+    Type: String
+  CloudwatchAlarmActionCheckParamOkActionRequired:
+    Default: 'FALSE'
+    Type: String
+  DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage:
+    Default: '80'
+    Type: String
+  DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage:
+    Default: '80'
     Type: String
   GuarddutyNonArchivedFindingsParamDaysHighSev:
     Default: '1'
@@ -53,6 +57,9 @@ Parameters:
     Type: String
   IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge:
     Default: '90'
+    Type: String
+  InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds:
+    Default: ' '
     Type: String
   RestrictedIncomingTrafficParamBlockedPort1:
     Default: '20'
@@ -94,22 +101,6 @@ Resources:
       Source:
         Owner: AWS
         SourceIdentifier: ACCESS_KEYS_ROTATED
-    Type: AWS::Config::ConfigRule
-  AcmCertificateExpirationCheck:
-    Properties:
-      ConfigRuleName: acm-certificate-expiration-check
-      InputParameters:
-        daysToExpiration:
-          Fn::If:
-          - acmCertificateExpirationCheckParamDaysToExpiration
-          - Ref: AcmCertificateExpirationCheckParamDaysToExpiration
-          - Ref: AWS::NoValue
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::ACM::Certificate
-      Source:
-        Owner: AWS
-        SourceIdentifier: ACM_CERTIFICATE_EXPIRATION_CHECK
     Type: AWS::Config::ConfigRule
   AlbHttpToHttpsRedirectionCheck:
     Properties:
@@ -189,8 +180,10 @@ Resources:
       ConfigRuleName: cloudwatch-alarm-action-check
       InputParameters:
         alarmActionRequired: 'TRUE'
-        insufficientDataActionRequired: 'TRUE'
-        okActionRequired: 'FALSE'
+        insufficientDataActionRequired:
+          Ref: CloudwatchAlarmActionCheckParamInsufficientDataActionRequired
+        okActionRequired:
+          Ref: CloudwatchAlarmActionCheckParamOkActionRequired
       Scope:
         ComplianceResourceTypes:
         - AWS::CloudWatch::Alarm
@@ -267,19 +260,20 @@ Resources:
   DynamodbThroughputLimitCheck:
     Properties:
       ConfigRuleName: dynamodb-throughput-limit-check
+      InputParameters:
+        accountRCUThresholdPercentage:
+          Fn::If:
+          - dynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage
+          - Ref: DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage
+          - Ref: AWS::NoValue
+        accountWCUThresholdPercentage:
+          Fn::If:
+          - dynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage
+          - Ref: DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage
+          - Ref: AWS::NoValue
       Source:
         Owner: AWS
         SourceIdentifier: DYNAMODB_THROUGHPUT_LIMIT_CHECK
-    Type: AWS::Config::ConfigRule
-  EbsOptimizedInstance:
-    Properties:
-      ConfigRuleName: ebs-optimized-instance
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::Instance
-      Source:
-        Owner: AWS
-        SourceIdentifier: EBS_OPTIMIZED_INSTANCE
     Type: AWS::Config::ConfigRule
   EbsSnapshotPublicRestorableCheck:
     Properties:
@@ -288,26 +282,12 @@ Resources:
         Owner: AWS
         SourceIdentifier: EBS_SNAPSHOT_PUBLIC_RESTORABLE_CHECK
     Type: AWS::Config::ConfigRule
-  Ec2InstanceDetailedMonitoringEnabled:
+  Ec2EbsEncryptionByDefault:
     Properties:
-      ConfigRuleName: ec2-instance-detailed-monitoring-enabled
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::Instance
+      ConfigRuleName: ec2-ebs-encryption-by-default
       Source:
         Owner: AWS
-        SourceIdentifier: EC2_INSTANCE_DETAILED_MONITORING_ENABLED
-    Type: AWS::Config::ConfigRule
-  Ec2InstanceManagedBySsm:
-    Properties:
-      ConfigRuleName: ec2-instance-managed-by-systems-manager
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::Instance
-        - AWS::SSM::ManagedInstanceInventory
-      Source:
-        Owner: AWS
-        SourceIdentifier: EC2_INSTANCE_MANAGED_BY_SSM
+        SourceIdentifier: EC2_EBS_ENCRYPTION_BY_DEFAULT
     Type: AWS::Config::ConfigRule
   Ec2InstanceNoPublicIp:
     Properties:
@@ -319,36 +299,6 @@ Resources:
         Owner: AWS
         SourceIdentifier: EC2_INSTANCE_NO_PUBLIC_IP
     Type: AWS::Config::ConfigRule
-  Ec2ManagedinstanceAssociationComplianceStatusCheck:
-    Properties:
-      ConfigRuleName: ec2-managedinstance-association-compliance-status-check
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::SSM::AssociationCompliance
-      Source:
-        Owner: AWS
-        SourceIdentifier: EC2_MANAGEDINSTANCE_ASSOCIATION_COMPLIANCE_STATUS_CHECK
-    Type: AWS::Config::ConfigRule
-  Ec2ManagedinstancePatchComplianceStatusCheck:
-    Properties:
-      ConfigRuleName: ec2-managedinstance-patch-compliance-status-check
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::SSM::PatchCompliance
-      Source:
-        Owner: AWS
-        SourceIdentifier: EC2_MANAGEDINSTANCE_PATCH_COMPLIANCE_STATUS_CHECK
-    Type: AWS::Config::ConfigRule
-  Ec2SecurityGroupAttachedToEni:
-    Properties:
-      ConfigRuleName: ec2-security-group-attached-to-eni
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::SecurityGroup
-      Source:
-        Owner: AWS
-        SourceIdentifier: EC2_SECURITY_GROUP_ATTACHED_TO_ENI
-    Type: AWS::Config::ConfigRule
   Ec2StoppedInstance:
     Properties:
       ConfigRuleName: ec2-stopped-instance
@@ -356,32 +306,12 @@ Resources:
         Owner: AWS
         SourceIdentifier: EC2_STOPPED_INSTANCE
     Type: AWS::Config::ConfigRule
-  Ec2VolumeInuseCheck:
-    Properties:
-      ConfigRuleName: ec2-volume-inuse-check
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::Volume
-      Source:
-        Owner: AWS
-        SourceIdentifier: EC2_VOLUME_INUSE_CHECK
-    Type: AWS::Config::ConfigRule
   EfsEncryptedCheck:
     Properties:
       ConfigRuleName: efs-encrypted-check
       Source:
         Owner: AWS
         SourceIdentifier: EFS_ENCRYPTED_CHECK
-    Type: AWS::Config::ConfigRule
-  EipAttached:
-    Properties:
-      ConfigRuleName: eip-attached
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::EIP
-      Source:
-        Owner: AWS
-        SourceIdentifier: EIP_ATTACHED
     Type: AWS::Config::ConfigRule
   ElasticacheRedisClusterAutomaticBackupCheck:
     Properties:
@@ -624,6 +554,12 @@ Resources:
   InternetGatewayAuthorizedVpcOnly:
     Properties:
       ConfigRuleName: internet-gateway-authorized-vpc-only
+      InputParameters:
+         AuthorizedVpcIds:
+           Fn::If:
+           - internetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds
+           - Ref: InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds
+           - Ref: AWS::NoValue
       Scope:
         ComplianceResourceTypes:
         - AWS::EC2::InternetGateway
@@ -640,16 +576,6 @@ Resources:
       Source:
         Owner: AWS
         SourceIdentifier: KMS_CMK_NOT_SCHEDULED_FOR_DELETION
-    Type: AWS::Config::ConfigRule
-  LambdaConcurrencyCheck:
-    Properties:
-      ConfigRuleName: lambda-concurrency-check
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::Lambda::Function
-      Source:
-        Owner: AWS
-        SourceIdentifier: LAMBDA_CONCURRENCY_CHECK
     Type: AWS::Config::ConfigRule
   LambdaDlqCheck:
     Properties:
@@ -695,16 +621,6 @@ Resources:
         Owner: AWS
         SourceIdentifier: MULTI_REGION_CLOUD_TRAIL_ENABLED
     Type: AWS::Config::ConfigRule
-  RdsEnhancedMonitoringEnabled:
-    Properties:
-      ConfigRuleName: rds-enhanced-monitoring-enabled
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::RDS::DBInstance
-      Source:
-        Owner: AWS
-        SourceIdentifier: RDS_ENHANCED_MONITORING_ENABLED
-    Type: AWS::Config::ConfigRule
   RdsInstancePublicAccessCheck:
     Properties:
       ConfigRuleName: rds-instance-public-access-check
@@ -724,6 +640,17 @@ Resources:
       Source:
         Owner: AWS
         SourceIdentifier: RDS_MULTI_AZ_SUPPORT
+    Type: AWS::Config::ConfigRule
+  RdsSnapshotEncrypted:
+    Properties:
+      ConfigRuleName: rds-snapshot-encrypted
+      Scope:
+        ComplianceResourceTypes:
+        - AWS::RDS::DBSnapshot
+        - AWS::RDS::DBClusterSnapshot
+      Source:
+        Owner: AWS
+        SourceIdentifier: RDS_SNAPSHOT_ENCRYPTED
     Type: AWS::Config::ConfigRule
   RdsSnapshotsPublicProhibited:
     Properties:
@@ -981,16 +908,6 @@ Resources:
         Owner: AWS
         SourceIdentifier: SECRETSMANAGER_ROTATION_ENABLED_CHECK
     Type: AWS::Config::ConfigRule
-  SecretsmanagerScheduledRotationSuccessCheck:
-    Properties:
-      ConfigRuleName: secretsmanager-scheduled-rotation-success-check
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::SecretsManager::Secret
-      Source:
-        Owner: AWS
-        SourceIdentifier: SECRETSMANAGER_SCHEDULED_ROTATION_SUCCESS_CHECK
-    Type: AWS::Config::ConfigRule
   SecurityhubEnabled:
     Properties:
       ConfigRuleName: securityhub-enabled
@@ -1007,16 +924,6 @@ Resources:
       Source:
         Owner: AWS
         SourceIdentifier: SNS_ENCRYPTED_KMS
-    Type: AWS::Config::ConfigRule
-  VpcDefaultSecurityGroupClosed:
-    Properties:
-      ConfigRuleName: vpc-default-security-group-closed
-      Scope:
-        ComplianceResourceTypes:
-        - AWS::EC2::SecurityGroup
-      Source:
-        Owner: AWS
-        SourceIdentifier: VPC_DEFAULT_SECURITY_GROUP_CLOSED
     Type: AWS::Config::ConfigRule
   VpcFlowLogsEnabled:
     Properties:
@@ -1051,11 +958,16 @@ Conditions:
     - Fn::Equals:
       - ''
       - Ref: AccessKeysRotatedParamMaxAccessKeyAge
-  acmCertificateExpirationCheckParamDaysToExpiration:
+  dynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage:
     Fn::Not:
     - Fn::Equals:
       - ''
-      - Ref: AcmCertificateExpirationCheckParamDaysToExpiration
+      - Ref: DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage
+  dynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage:
+    Fn::Not:
+    - Fn::Equals:
+      - ''
+      - Ref: DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage
   guarddutyNonArchivedFindingsParamDaysHighSev:
     Fn::Not:
     - Fn::Equals:
@@ -1111,6 +1023,11 @@ Conditions:
     - Fn::Equals:
       - ''
       - Ref: IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge
+  internetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds:
+    Fn::Not:
+    - Fn::Equals:
+      - ''
+      - Ref: InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds
   restrictedIncomingTrafficParamBlockedPort1:
     Fn::Not:
     - Fn::Equals:
