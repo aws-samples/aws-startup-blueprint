@@ -11,7 +11,7 @@ First you need to make sure you have the AWS CDK installed on your development m
 
 * Clone the repo, build the project, and then bootstrap your AWS account for the AWS CDK.
 ```bash
-git clone https://github.com/aws-samples/aws-startup-blueprint.git
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
 npm run build 
 cdk bootstrap
 ```
