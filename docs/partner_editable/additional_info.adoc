@@ -81,6 +81,7 @@ Usage instructions for other OpenVPN clients like https://openvpn.net/download-o
 
 The Blueprint creates a number of AWS Config Conformance Packs during the deployment: 
 
+*Operational-Best-Practices-for-PCI-DSS-3.2.1
 *Operational-Best-Practices-For-AWS-Identity-And-Access-Management
 *Operational-Best-Practices-For-Amazon-S3
 *Operational-Best-Practices-for-NIST-CSF
@@ -99,6 +100,15 @@ If you drill into the `encrypted-volumes-conformance-pack`, you can see a list o
 image::conformancepacks_1.png[Config,width=100%,height=100%]
 
 From here, you can configure the AWS Config delivery channel to include an Amazon SNS topic to send email or text notifications when resources are flagged. More sophisticated approaches might include regularly reviewing Config reports, using AWS Config's auto remediation capabilities, and/or integrating AWS Config with security ticketing or SEIM solutions. 
+
+
+=== Notes on the Operational Best Practices for PCI DSS 3.2.1 pack
+
+While handling payment data might not be a concern for every Fintech, the PCI DSS 3.2.1 security conformance pack has >80 rules that still capture a number of best practices that any secure company should consider implementing.
+
+If you do have PCI compliance needs, it is *strongly* encouraged that you check out the https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-pci-dss.html[documentation on the PCI config pack]. The documentation provides a sample mapping between the Payment Card Data Security Standard (PCI DSS) 3.2.1 and AWS managed Config rules. Each AWS Config rule applies to a specific AWS resource, and relates to one or more PCI DSS controls. A PCI DSS control can be related to multiple Config rules. Refer to the table below for more detail and guidance related to these mappings.
+
+WARNING: Conformance packs provide a general-purpose compliance framework designed to enable you to create security, operational or cost-optimization governance checks using managed or custom AWS Config rules and AWS Config remediation actions. Conformance Packs, as sample templates, are not designed to fully ensure compliance with a specific governance or compliance standard. You are responsible for making your own assessment of whether your use of the Services meets applicable legal and regulatory requirements.
 
 
 //_Add any security-related information._
