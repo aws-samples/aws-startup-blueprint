@@ -122,7 +122,7 @@ For example:
 
 In order for the permission boundary to have any effect, it needs to be attached to all exisiting and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
 
-If you visit the AWS Config Rules console, find and click on the rule titled `AwsBiotechBlueprint-RegionRestriction...`
+If you visit the AWS Config Rules console, find and click on the rule titled `AwsFintechBlueprint-RegionRestriction...`
 
 image::regionrestriction_config0.png[Config,width=100%,height=100%]
 
@@ -135,7 +135,7 @@ After the remediation is complete, AWS CloudTrail will eventually trigger the AW
 
 *What about automatically remediating resources?* The Blueprint intentionally leaves the remediation configuration set to "Manual" instead of "Automatic". This is in the event you have existing IAM users or roles. Automatically applying the remediation and attaching the permission boundary will impact those existing IAM principals permissions. You should verify if any of the flagged IAM principals depend on any non-approved regions before applying the boundary. If you are working in a brand new account or are unconcerned about the impact on existing IAM principals, you turn on automatic remedation: 
 
-Click the edit button in the "Remediation Action" section of the `AwsBiotechBlueprint-RegionRestriction` Config Rule. 
+Click the edit button in the "Remediation Action" section of the `AwsFintechBlueprint-RegionRestriction` Config Rule. 
 
 image::regionrestriction_config2.png[Config,width=100%,height=100%]
 
@@ -170,15 +170,15 @@ We've filled out some of the subnets in the diagram below to give an generalized
 
 image::bb-diagram-filled-out.png[bbdiagramfilledout,width=100%,height=100%]
 
-=== (Optional) Enable Biotech Blueprint Informatics Catalog
+=== (Optional) Enable Fintech Blueprint Informatics Catalog
 
-All of the informatics and scientific computing tools mentioned earlier in this guide are made available to you through the AWS Service Catalog as the `Biotech Blueprint Informatics Catalog`. 
+All of the informatics and scientific computing tools mentioned earlier in this guide are made available to you through the AWS Service Catalog as the `Fintech Blueprint Catalog`. 
 
 Service Catalog requires that you explicitly give permissions to individual IAM users/groups/roles to launch products from a Service Catalog portfolio. 
 
 To grant that permission you first need to visit the https://console.aws.amazon.com/servicecatalog/home?#portfolios?activeTab=localAdminPortfolios[Service Catalog Portfolio Console]. 
 
-Click on the `Biotech Blueprint Informatics Catalog` portfolio and then the `Groups, roles, and users` tab. 
+Click on the `Fintech Blueprint Informatics Catalog` portfolio and then the `Groups, roles, and users` tab. 
 
 image::service-catalog-permission.png[scpermission,width=100%,height=100%]
 
@@ -188,12 +188,7 @@ Anyone you just added can now visit the https://us-east-1.console.aws.amazon.com
 
 Please reference the following documentation pages for tool specific deployment and usage instructions
 
-* https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631[ChemAxon Compound Registry]
-* https://fwd.aws/RvJpR[Dotmatics Suite]
-* https://aws-quickstart.github.io/quickstart-hail/[Hail 0.2 on EMR]
-* https://fwd.aws/KNmPd[Mosaic FreezerMangement]
-* https://fwd.aws/B4VnD[Nextflow]
-** https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/[Source Documentation]
+* More to come..
 
 
 === (Optional) DNS Setup

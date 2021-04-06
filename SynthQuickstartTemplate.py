@@ -11,7 +11,7 @@ for entry in os.scandir('./lambda_functions/source/'):
         else:
             folders.append(entry.path)
 
-templateStream = open('./templates/AwsBiotechBlueprint.template.yml', 'r')
+templateStream = open('./templates/AwsFintechBlueprint.template.yml', 'r')
 templateData = yaml.load(templateStream)
 
 taskcatConfigStream = open('./.taskcat.yml', 'r')
@@ -30,8 +30,8 @@ for assetFolder in folders:
                 templateData['Parameters'][parameter]['Default'] = "aws-quickstart"
                 taskcatConfig['tests']['default']['parameters'][parameter] = '$[taskcat_autobucket]'
             if 'VersionKey' in parameter:
-                templateData['Parameters'][parameter]['Default'] = f"quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/asset{assetId}/||lambda.zip"
-                taskcatConfig['tests']['default']['parameters'][parameter] = f"quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/asset{assetId}/||lambda.zip"
+                templateData['Parameters'][parameter]['Default'] = f"quickstart-aws-fintech-blueprint/lambda_functions/packages/asset{assetId}/||lambda.zip"
+                taskcatConfig['tests']['default']['parameters'][parameter] = f"quickstart-aws-fintech-blueprint/lambda_functions/packages/asset{assetId}/||lambda.zip"
             if 'ArtifactHash' in parameter:
                 templateData['Parameters'][parameter]['Default'] = assetId
                 taskcatConfig['tests']['default']['parameters'][parameter] = assetId
@@ -40,7 +40,7 @@ for assetFolder in folders:
     os.replace(assetFolder, f"./lambda_functions/source/asset{assetId}")
 
     
-with open('./templates/AwsBiotechBlueprint.template.quickstart.yml', 'w') as yaml_file:
+with open('./templates/AwsFintechBlueprint.template.quickstart.yml', 'w') as yaml_file:
     yaml_file.write( yaml.dump(templateData, default_flow_style=False))
     
 

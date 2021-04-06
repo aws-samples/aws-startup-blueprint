@@ -23,7 +23,7 @@ endif::marketplace_subscription[]
 
 === Deployment Options
 
-The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
+The Fintech Blueprint is built with the AWS CDK which allows for two deployment options. 
 
 If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
