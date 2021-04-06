@@ -3,26 +3,39 @@
 
 === AWS CDK deployment
 
-First you need to make sure you have the AWS CDK installed on your development machine. 
+To deploy {partner-product-name} using the AWS CDK, do the following:
+[start=1]
+. Verify that you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites] to install the AWS CDK. 
 
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequiesites]
+. https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK].
 
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK]
-
-* Clone the repo, build the project, and then boostrap your AWS account for the AWS CDK.
+. Clone the {partner-product-name} Quick Start repository.
 ```bash
 git clone https://github.com/aws-samples/aws-startup-blueprint.git
+```
+[start=4]
+. Build the project.
+```bash
 npm run build 
+```
+
+[start=5]
+. Bootstrap your AWS environment.
+```bash
 cdk bootstrap
 ```
 
-* Feel free to review the code and make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). 
+NOTE: You can review and change code to suit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to `corp`). 
 
-When you are ready, or when you need update the blueprint's architecture in the future based on changes you make, you just need to run:
+[start=6]
+. Deploy.
 
 ```bash 
 npm run build && cdk deploy
 ```
+
+TIP: To update the architecture after making changes later, run the command in Step 6.
+
 == Post deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 

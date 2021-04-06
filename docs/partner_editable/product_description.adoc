@@ -3,3 +3,7 @@
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
 With the Biotech Blueprint Quick Start, you build the foundation for a biotech informatics environment on AWS.
+
+You benefit running your informatics infrastructure on AWS by eliminating the manual processes required to deploy 
+
+The Biotech Blueprint Quick Start saves the manual deployment of the security, network, storage, and compute infrastructure needed to host your informatics systems on the cloud.
