@@ -38,7 +38,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     new ConfigConformancePackBundle(this, 'ConfigPacks', {
       ConfigRecorderEnabledPromise: ConfigEnabled,
       PackConfigs: [
-        {ConformancePackName: "Operational-Best-Practices-for-PCI-DSS-3.2.1", TemplatePath: "config-packs/configpack.pci.bestpractices.yaml" },
+        {ConformancePackName: "Operational-Best-Practices-for-PCI-DSS-3-2-1", TemplatePath: "config-packs/configpack.pci.bestpractices.yaml" },
         {ConformancePackName: "Operational-Best-Practices-For-AWS-Identity-And-Access-Management", TemplatePath: "config-packs/configpack.iam.bestpractices.yaml" },
         {ConformancePackName: "Operational-Best-Practices-For-Amazon-S3", TemplatePath: "config-packs/configpack.s3.bestpractices.yaml" },
         {ConformancePackName: "Operational-Best-Practices-for-NIST-CSF", TemplatePath: "config-packs/configpack.nist.csf.bestpractices.yaml" },
