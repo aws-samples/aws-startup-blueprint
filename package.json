@@ -1,0 +1,38 @@
+{
+  "name": "aws-startup-blueprint",
+  "version": "0.1.0",
+  "bin": {
+    "aws-startup-blueprint": "bin/aws-startup-blueprint.js"
+  },
+  "scripts": {
+    "build": "npm run minify && tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js",
+    "synth": "cdk synth > templates/AwsBiotechBlueprint.template.yml && mkdir -p lambda_functions/source/ && rm -rf lambda_functions/source/asset* && cp -a cdk.out/asset*/ lambda_functions/source/ && python3 SynthQuickstartTemplate.py"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "^1.94.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^10.17.5",
+    "aws-cdk": "^1.94.0",
+    "aws-sdk": "^2.867.0",
+    "jest": "^25.5.1",
+    "jsmin": "^1.0.1",
+    "ts-jest": "^25.5.1",
+    "ts-node": "^8.1.0",
+    "typescript": "~3.7.2",
+    "yaml": "^1.10.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-config": "^1.94.0",
+    "@aws-cdk/aws-cloudformation": "^1.94.0",
+    "@aws-cdk/aws-route53": "^1.94.0",
+    "@aws-cdk/aws-servicecatalog": "^1.94.0",
+    "@aws-cdk/aws-ec2": "^1.94.0",
+    "@aws-cdk/aws-s3": "^1.94.0",
+    "@aws-cdk/core": "^1.94.0",
+    "source-map-support": "^0.5.16"
+  }
+}

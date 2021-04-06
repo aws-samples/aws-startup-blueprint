@@ -1,0 +1,52 @@
+// We need to work around Step numbers here if we are going to potentially exclude the AMI subscription
+=== Sign in to your AWS account
+
+. Sign in to your AWS account at https://aws.amazon.com with an IAM user or role that has the necessary permissions. For details, see link:#_planning_the_deployment[Planning the deployment] earlier in this guide.
+. Make sure that your AWS account is configured correctly, as discussed in the link:#_technical_requirements[Technical requirements] section.
+
+NOTE: You are responsible for the cost of the AWS services used while running this Quick Start reference deployment. There is no additional cost for using this Quick Start. For full details, see the pricing pages for each AWS service used by this Quick Start. Prices are subject to change.
+
+// Optional based on Marketplace listing. Not to be edited
+ifdef::marketplace_subscription[]
+=== Subscribe to the {partner-product-short-name} AMI
+
+This Quick Start requires a subscription to the AMI for {partner-product-short-name} in AWS Marketplace.
+
+. Sign in to your AWS account.
+. {marketplace_listing_url}[Open the page for the {partner-product-short-name} AMI in AWS Marketplace], and then choose *Continue to Subscribe*.
+. Review the terms and conditions for software usage, and then choose *Accept Terms*. +
+  A confirmation page loads, and an email confirmation is sent to the account owner. For detailed subscription instructions, see the https://aws.amazon.com/marketplace/help/200799470[AWS Marketplace documentation^].
+
+. When the subscription process is complete, exit out of AWS Marketplace without further action. *Do not* provision the software from AWS Marketplace—the Quick Start deploys the AMI for you.
+endif::marketplace_subscription[]
+// \Not to be edited
+
+=== Deployment Options
+
+The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
+
+If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
+
+If you prefer using the awesome https://aws.amazon.com/cdk/[AWS CDK], follow the CDK Deployment option (2).
+
+Both deployment options take about ~7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the CloudFormation template in option 1.
+
+=== Deployment Option 1: AWS CloudFormation Deployment (quick and easy)
+
+. Sign in to your AWS account, and click the deploy link below to launch the AWS CloudFormation template. 
+
+[cols=2*]
+|===
+^|http://qs_launch_link[Deploy {partner-product-short-name} into your AWS Account^]
+^|http://qs_template_link[View template^]
+|===
+
+
+[start=2]
+. Check the AWS Region that’s displayed in the upper-right corner of the navigation bar, and change it if necessary. This is where the network infrastructure for {partner-product-short-name} will be built. The template is launched in the {default_deployment_region} Region by default.
+
+// *Note:* This deployment includes Amazon EFS, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see the https://docs.aws.amazon.com/general/latest/gr/elasticfilesystem.html[endpoints and quotas webpage].
+
+[start=3]
+. On the *Create stack* page, keep the default setting for the template URL, and then choose *Next*.
+. On the *Specify stack details* page, change the stack name if needed. There are no parameters you need to supply.
