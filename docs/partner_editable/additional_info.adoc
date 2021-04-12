@@ -41,7 +41,7 @@ TIP: To update the architecture after making changes later, run the command in S
 
 === Connect to the VPN
 
-In order for you to route into the private subnets in the VPCs, you need to connect to the VPN. The blueprint has deployed a client vpn endpoint in the Management vpc that will NAT traffic over peering connections into the Production and Development vpcs. We are using the Management VPC as a hub VPC for networking into other VPCs. The Development and Production environments are designed to NOT be able to communicate with each other.
+In order for you to route into the private subnets in the VPCs, you need to connect to the VPN. The blueprint deploys a client VPN endpoint in the management VPC that will NAT traffic over peering connections into the Production and Development VPCs. We are using the Management VPC as a hub VPC for networking into other VPCs. The Development and Production environments are designed to NOT be able to communicate with each other.
 
 
 :xrefstyle: short
