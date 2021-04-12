@@ -8,18 +8,18 @@ image::../images/biotech-blueprint-architecture-diagram.png[Architecture,width=1
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
 * A highly available architecture that spans two Availability Zones.
-* Three virtual private clouds (VPCs) configured with public, private, and isolated subnets, according to AWS best practices, to provide you with your own virtual network on AWS.
+* Three virtual private clouds (VPCs) configured with public and private subnets, according to AWS best practices, to provide you with your own virtual network on AWS.
 ** A production VPC into which you can deploy informatics software from the AWS Services Catalog.
 ** A management VPC with AWS Client VPN in the public subnets to provide secure VPN access using OpenVPN-based clients.
-** A research VPC to.. .
+** A development VPC to test software deployed from the AWS Services Catalog.
 * Peering connections to allow Secure Shell (SSH) or remote desktop access to private subnets in the production and research VPC from the management VPC.
-* AWS Config to continuously audit and assess the overall compliance of your AWS resources with the following conformance packs:
+* AWS Config to continuously assess the overall compliance of your AWS resources with the following conformance packs:
 ** AWS Control Tower Detective Guard Rails Conformance Pack.
 ** Operational Best Practices for AWS Identity and Access Management (IAM).
 ** Operational Best Practices for NIST Cyber Security Framework (CSF).
 ** Operational Best Practices for Amazon Simple Storage Service (Amazon S3).
 * Amazon Route 53 for a private Domain Name System (DNS).
-* AWS Service Catalog with the following informatics software that you can deploy into the production VPC whenever you want:
+* AWS Service Catalog with the following informatics software that you can deploy into the production and development VPC:
 ** ChemAxon Compound Registration
 ** Nextflow
 ** Dotmatics
