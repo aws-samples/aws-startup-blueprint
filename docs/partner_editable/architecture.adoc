@@ -8,8 +8,7 @@ After you deploy the core Quick Start, you can install prepackaged informatics t
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
-[link=bb-diagram.png]
-image::bb-diagram.png[Architecture,width=100%,height=100%]
+image::../images/biotech-blueprint-architecture-diagram.png[Architecture,width=100%,height=100%]
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
@@ -35,4 +34,19 @@ best practices, to provide you with your own virtual networks on AWS.
 ** Hail 0.2 - An open-source library for scalable genomic data exploration, on AWS EMR.
 ** Titian Mosaic FreezerManagment 
 
+Deploying this Quick Start for a new virtual private cloud (VPC) with default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
 
+
+
+As shown in <<architecture1>>, the Quick Start sets up the following:
+
+* A highly available architecture that spans two Availability Zones.
+* Three virtual private clouds (VPCs) configured with public, private, and isolated subnets, according to AWS best practices, to provide you with your own virtual network on AWS.
+** A production VPC into which you can deploy informatics software from the AWS Services Catalog.
+** A management VPC to...
+** A research VPC into which you can deploy research software from the AWS Services Catalog.
+* AWS Client VPN in the public subnets of the management VPC to...
+* Peering connections to allow Secure Shell (SSH) or remote desktop access to private subnet servers in the production and research VPC from the management VPC.
+* AWS Config to ..
+* Amazon Route 53 for a highly available and scalable Domain Name System (DNS).
+* AWS Service Catalog with optional informatics software that you can deploy into the production VPC whenever you want.
