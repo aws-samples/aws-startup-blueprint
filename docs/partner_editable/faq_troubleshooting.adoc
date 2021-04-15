@@ -6,38 +6,37 @@
 
 *A.* The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - in the production and development VPCs - isolated subnets. Consider the function of the resource when choosing the VPC. For example, use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. The Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
 
-Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for public-facing resources such as Application Load Balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
+Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
 
-The following table provides examples of resource deployments: 
+The following table provides some examples. 
 
+[cols="1,1,1"]
+|===
+|Resource |VPC |Subnet
 
-* Need a server where I'm going to test out installing an application to test out on my own or show to a coworker?
-** Development VPC, Private Subnet
-* Restoring an RDS snapshot in Development into Production?
-** Production VPC, Isolated Subnet
-* Launching an application load balancer to try installing a custom TLS certificate?
-** Development VPC, Public Subnet
-* Standing up a DevOps tool like Jenkins to automate deployments into Production and Development?
-** Management VPC, Private Subnet
-* Standing up and Okta Cloud Connect appliance or Active Directory?
-** Management VPC, Private Subnet
+|Test server |Development |Private
+|Amazon Relational Database Server (Amazon RDS) snapshot restored from development VPC |Production |Isolated
+|Application Load Balancer to test a custom TLS certificate |Development |Public
+|DevOps tool to automate deployments to production and development VPCs |Management |Private
+|Okta Cloud Connect appliance |Management VPC |Private
+|===
 
 *Q.* Why are there two subnets of the same class in each VPC? 
 
-*A.* Each subnet of the same class is in a different Availability Zone, providing high availability. In the event of an availability zone outage, having another subnet in another availability zone allows your service or AWS services to cleanly failover. For example AWS auto scaling, RDS multi-az, and the Client VPN Endpoint all take advantage of multi-az capability for clean failover in the event of a physical disaster. Outside of the subnets being in different AZ, subnets of the same class are identical from a networking perspective, it really does not matter which one you choose.
+*A.* Each subnet of the same class is in a different Availability Zone, providing high availability. Subnets of the same class are identical from a networking perspective, so it does not matter which you specify when deploying a resource.
 
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
 *A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *Disabled*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
 // If you’re deploying on Linux instances, provide the location for log files on Linux, or omit this sentence.
 
-WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Please make sure to delete the stack when you finish troubleshooting.
+WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Ensure that you delete the stack after troubleshooting.
 
-For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation^] on the AWS website.
+For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation^].
 
 *Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
 
-*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS documentation^].
+*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
 
 // == Troubleshooting
