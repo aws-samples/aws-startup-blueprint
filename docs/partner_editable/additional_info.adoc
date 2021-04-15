@@ -25,7 +25,7 @@ npm run build
 cdk bootstrap
 ```
 
-NOTE: You can review and change code to suit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to `corp`). 
+NOTE: You can review and change code. For example, you can use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to `corp`). 
 
 [start=6]
 . Deploy.
@@ -41,43 +41,44 @@ TIP: To update the architecture after making changes later, run the command in S
 
 === Connect to the VPN
 
-In order for you to route into the private subnets in the VPCs, you need to connect to the VPN. The blueprint deploys a client VPN endpoint in the management VPC that will NAT traffic over peering connections into the Production and Development VPCs. We are using the Management VPC as a hub VPC for networking into other VPCs. The Development and Production environments are designed to NOT be able to communicate with each other.
+The Quick Start deploys a client VPN endpoint in the management VPC that will route traffic over peering connections to the production and development VPCs. The management VPC is the hub for networking into the other VPCs. The production and development VPCs are designed to not be able to communicate with each other. After deploying the Quick Start, follow these instructions to connect to the VPN.
 
-
+[start=1]
+. Navigate to the https://console.aws.amazon.com/vpc/home?#ClientVPNEndpoints:sort=clientVpnEndpointId[Client VPN Endpoint section in the AWS VPC web console].
+. Select the client VPN endpoint listed,
+. Select *Download Client Configuration*. Your browser downloads a `downloaded-client-config.ovpn` file.
++
 :xrefstyle: short
-[#vpn1]
-.VPN routing rules in the {partner-product-short-name} on AWS
-[link=VPNRoutingDiagram.png]
-image::VPNRoutingDiagram.png[VPN,width=100%,height=100%]
+[#downloadclientconfig]
+.Download Client Configuration
+image::../images/downloadclientconfig.png[VPN,width=100%,height=100%]
 
+[start=4]
+. Navigate to the AWS S3 console.
+. Open the bucket with the prefix `awsstartupblueprintstack-clientvpnvpnconfigbucket*`.
+. Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. 
++
+NOTE: The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on.
 
-Once the deployment is complete, go to the https://console.aws.amazon.com/vpc/home?#ClientVPNEndpoints:sort=clientVpnEndpointId[Client VPN Endpoint section in the AWS VPC web console]. Select the Client VPN Endpoint listed and click the "Download Client Configuration" button. Your browser will download a downloaded-client-config.ovpn file.
-
-image::downloadclientconfig.png[VPN,width=100%,height=100%]
-
-Now go to the AWS S3 web console and open the bucket prefixed awsstartupblueprintstack-clientvpnvpnconfigbucket*. You will see 5 files listed. Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on. For now, you just need `client1.domain.tld.key` and `client1.domain.tld.crt`.
-
-At this point we have to edit make some tweaks to the downloaded-client-config.ovpn file so open it in a text editor:
-
-
-Add the following lines to the bottom of the file, replace the contents of the two files inside the respective `<cert>` and `<key>` sections.
+[start=5]
+. Open `downloaded-client-config.ovpn` in a text editor.
+. Add the following lines to the bottom of the file. Replace the contents of the two files inside the respective `<cert>` and `<key>` sections.
 
 ```
-....
 <cert>
-Contents of client certificate (client1.domain.tld.crt) file
+Contents of client certificate file (client1.domain.tld.crt)
 </cert>
 
 <key>
-Contents of private key (client1.domain.tld.key) file
+Contents of private key file (client1.domain.tld.key)
 </key>
 ```
 
-Save the downloaded-client-config.ovpn. You should be able to open/import that file with any OpenVPN client. 
+[start=6]
+. Save your changes to `downloaded-client-config.ovpn`. You can open or import the configuration file with an OpenVPN client. 
 
-AWS offers is own lightweight VPN client that works on most operating systems. https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Install and usage instructions here.]
-
-Usage instructions for other OpenVPN clients like https://openvpn.net/download-open-vpn/[OpenVPN Connect] can be found https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[in our docs]
+* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client]
+* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client]
 
 
 //== Test the deployment
