@@ -2,13 +2,13 @@
 
 == FAQ
 
-*Q.* What VPC and Subnet should I deploy into?
+*Q.* What VPCs and subnets should I deploy resources into?
 
-*A.* These are the primary landing zones for resources you deploy into AWS. You can think of VPCs as houses and the subnets as rooms. When you deploy a load balancer, EC2 instance, RDS databases, etc you will need to tell AWS what VPC and subnet it should deploy into.
+*A.* The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - for the production and development VPCs - isolated subnets. When deploying a resource, consider what function it serves (the VPC it belongs in) and its level of isolation (the type of subnet).
 
-If the resource you want to deploy is for Production or Development purposes, make sure to use the Production or Development VPC. Separating the Production and Development VPCs allows you to manage the environments with different levels of controls and restrictions.
+Use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. For example, the Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
 
-You want to use the Management VPC only for resources that more operational in nature, like a DevOps tool, active directory, security appliance, etc. For example, the Blueprint deploys the Client VPN Endpoint into the Management VPC.
+For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
 
 All three VPCs have similar classes of subnets. Public, Private, and Isolated. When you are deploying a resource, if the resource needs to be publically addressable by the internet at large, you need to specify the Public subnet. Ideally, this should only ever be things like AWS application load balancers (ALB). If you are deploying a resource like application server that should never be directly internet facing (but perhaps sits behind an ALB) that still needs outbound internet access, use the Private subnet. If you are deploying a sensitive resource like a database that should only be addressable to your internal networks and needs no outbound internet access, use the isolated subnets.
 
