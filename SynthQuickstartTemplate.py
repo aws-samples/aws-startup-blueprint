@@ -37,6 +37,23 @@ for assetFolder in folders:
                 taskcatConfig['tests']['default']['parameters'][parameter] = assetId
             
     
+    for resource in templateData['Resources']:
+        resourceType = templateData['Resources'][resource]['Type']
+        if resourceType == 'AWS::Lambda::Function':
+            
+            
+            if "S3Bucket" in templateData['Resources'][resource]['Properties']['Code']:
+                if assetId in templateData['Resources'][resource]['Properties']['Code']['S3Bucket']['Ref']:
+                    
+                    bucketParamName = templateData['Resources'][resource]['Properties']['Code']['S3Bucket']['Ref']
+                    
+                    templateData['Resources'][resource]['Properties']['Code']['S3Bucket'] = {
+                        "Fn::Join" : ['-', [ bucketParamName, {"Ref": 'AWS::Region'} ] ]
+                    }
+                    
+
+   
+    
     os.replace(assetFolder, f"./lambda_functions/source/asset{assetId}")
 
     
