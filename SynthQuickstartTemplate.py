@@ -24,11 +24,17 @@ for assetFolder in folders:
     
     assetId = assetFolderComponents[1]
     
+
     for parameter in templateData['Parameters']:
         if assetId in parameter:
             if 'S3Bucket' in parameter:
                 templateData['Parameters'][parameter]['Default'] = "aws-quickstart"
                 taskcatConfig['tests']['default']['parameters'][parameter] = '$[taskcat_autobucket]'
+                
+                templateData['Conditions'][f'UsingDefaultQuickstartBucket{assetId}'] = {
+                    "Fn::Equals" : [{"Ref" : parameter}, "aws-quickstart"]
+                }
+                
             if 'VersionKey' in parameter:
                 templateData['Parameters'][parameter]['Default'] = f"quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/asset{assetId}/||lambda.zip"
                 taskcatConfig['tests']['default']['parameters'][parameter] = f"quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/asset{assetId}/||lambda.zip"
@@ -48,7 +54,8 @@ for assetFolder in folders:
                     bucketParamName = templateData['Resources'][resource]['Properties']['Code']['S3Bucket']['Ref']
                     
                     templateData['Resources'][resource]['Properties']['Code']['S3Bucket'] = {
-                        "Fn::Join" : ['-', [ {"Ref": bucketParamName} , {"Ref": 'AWS::Region'} ] ]
+                        "Fn::If": [f'UsingDefaultQuickstartBucket{assetId}', { "Fn::Join" : ['-', [ {"Ref": bucketParamName} , {"Ref": 'AWS::Region'} ] ] } , {"Ref": bucketParamName}]
+                        
                     }
                     
 
