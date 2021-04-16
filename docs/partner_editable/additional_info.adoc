@@ -5,9 +5,9 @@
 
 To deploy {partner-product-name} using the AWS CDK, do the following:
 [start=1]
-. Verify that you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites] to install the AWS CDK. 
+. Verify that you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites^] to install the AWS CDK. 
 
-. https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK].
+. https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK^].
 
 . Clone the {partner-product-name} Quick Start repository.
 ```bash
@@ -44,7 +44,7 @@ TIP: To update the architecture after making changes later, run the command in S
 The Quick Start deploys a client VPN endpoint in the management VPC that will route traffic over peering connections to the production and development VPCs. The management VPC is the hub for networking into the other VPCs. The production and development VPCs are designed to not be able to communicate with each other. After deploying the Quick Start, follow these instructions to connect to the VPN.
 
 [start=1]
-. Navigate to the https://console.aws.amazon.com/vpc/home?#ClientVPNEndpoints:sort=clientVpnEndpointId[Client VPN Endpoint section in the AWS VPC web console].
+. Navigate to the https://console.aws.amazon.com/vpc/home?#ClientVPNEndpoints:sort=clientVpnEndpointId[Client VPN Endpoint section in the AWS VPC web console^].
 . Select the client VPN endpoint listed,
 . Select *Download Client Configuration*. Your browser downloads a `downloaded-client-config.ovpn` file.
 +
@@ -77,8 +77,8 @@ Contents of private key file (client1.domain.tld.key)
 [start=6]
 . Save and close the file. You can establish a VPN connection with the configuration and an OpenVPN client or AWS provided client. 
 
-* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client]
-* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client]
+* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client^]
+* https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client^]
 
 With a VPN connection you can connect using private IP addresses to resources you deploy in the production, development, and management VPCs. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
 
@@ -102,7 +102,7 @@ With a VPN connection you can connect using private IP addresses to resources yo
 
 The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - in the production and development VPCs - isolated subnets. Consider the function of the resource when choosing the VPC. For example, use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. The Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
 
-Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
+Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
 
 The following table provides some examples. 
 
@@ -119,20 +119,20 @@ The following table provides some examples.
 
 == Biotech Blueprint Informatics Catalog
 
-After deploying the Quick Start, you can launch the following informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console]:
+After deploying the Quick Start, you can launch the following informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console^]:
 
-* https://chemaxon.com/products/compound-registration[ChemAxon Compound Registration]
-* https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/[Nextflow]
-* https://aws.amazon.com/quickstart/biotech-blueprint/dotmatics-suite/[Dotmatics Suite]
-* https://aws.amazon.com/quickstart/architecture/hail/[Hail 0.2]
-* https://aws.amazon.com/quickstart/biotech-blueprint/titian-mosaic-freezermanagement/[Titian Mosaic FreezerManagement]
+* https://chemaxon.com/products/compound-registration[ChemAxon Compound Registration^]
+* https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/[Nextflow^]
+* https://aws.amazon.com/quickstart/biotech-blueprint/dotmatics-suite/[Dotmatics Suite^]
+* https://aws.amazon.com/quickstart/architecture/hail/[Hail 0.2^]
+* https://aws.amazon.com/quickstart/biotech-blueprint/titian-mosaic-freezermanagement/[Titian Mosaic FreezerManagement^]
   
 
 === AWS Service Catalog permissions
 Access to AWS Service Catalog requires credentials. Those credentials must have permission to access AWS resources, such as an AWS Service Catalog portfolio or product. AWS Service Catalog integrates with AWS Identity and Access Management (IAM) to enable you to grant AWS Service Catalog end users the permissions they need to launch products and manage provisioned products. To control access, you attach these policies to the IAM users, groups, and roles that you use with AWS Service Catalog.
 
 [start=1]
-. Navigate to the https://console.aws.amazon.com/servicecatalog/home?#portfolios?activeTab=localAdminPortfolios[AWS Service Catalog console]. 
+. Navigate to the https://console.aws.amazon.com/servicecatalog/home?#portfolios?activeTab=localAdminPortfolios[AWS Service Catalog console^]. 
 . Select the *Biotech Blueprint Informatics Catalog* portfolio.
 . Select the *Groups, roles, and users* tab.
 
@@ -146,20 +146,20 @@ image::../images/service-catalog-permission.png[scpermission,width=100%,height=1
 . Select the IAM identities requiring AWS Service Catalog permissions. Do not forget to include yourself if you need permissions.
 
 == Optional DNS setup
-The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account]. From there, you can create private A or CNAME records to private resources you deploy. 
+The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account^]. You can create A or CNAME records to private applications you deploy using the Amazon Route 53 console. 
 
-For example, you may decide to launch a development server that gets a private IP like `10.60.0.198`. Instead of you having to remember that IP, you can create an 'A' record in the .corp Route 53 hosted zone for `pauls-machine.corp` to the private IP `10.60.0.198`. Resources in all three VPCs, and clients connected to the client VPN endpoint, can resolve `pauls-machine.corp` from a browser, terminal, or API call.
+For example, suppose you launch a development server with private IP `10.60.0.198`. Using the Amazon Route 53 console, you can create an A record to the address in the `.corp` hosted zone with a simpler name such as `abc-machine-corp`. Then, resources in all three VPCs and clients connected to the client VPN endpoint can resolve `abc-machine.corp` from a browser, terminal, or API call.
 
 == Additional resources
 
 === Informatics applications
 
-* https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631[ChemAxon Compound Registry]
-* https://fwd.aws/RvJpR[Dotmatics Suite]
-* https://aws-quickstart.github.io/quickstart-hail/[Hail 0.2 on EMR]
-* https://fwd.aws/KNmPd[Mosaic FreezerMangement]
-* https://fwd.aws/B4VnD[Nextflow]
-** https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/[Source Documentation]
+* https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631[ChemAxon Compound Registry Product Overview^]
+* https://fwd.aws/RvJpR[Dotmatics Suite on the AWS Cloud^]
+* https://fwd.aws/GMvwj[Hail 0.2 on the AWS Cloud^]
+* https://fwd.aws/KNmPd[Titian Mosaic FreezerMangement on the AWS Cloud^]
+* https://fwd.aws/B4VnD[Workflow Orchestration for Genomics Analysis with Nextflow on the AWS Cloud^]
+** https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/[Nextflow on AWS Batch^]
 
 
 
