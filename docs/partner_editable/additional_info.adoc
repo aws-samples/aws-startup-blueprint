@@ -80,7 +80,7 @@ Contents of private key file (client1.domain.tld.key)
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client]
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client]
 
-With a VPN connection you can connect using private IP addresses of resources you deploy in the production, development, and management VPCs. For more information about deploying resources, see the link:#_faq[FAQ] section, later in this guide. 
+With a VPN connection you can connect using private IP addresses to resources you deploy in the production, development, and management VPCs. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
 
 //== Test the deployment
 // If steps are required to test the deployment, add them here. If not, remove the heading
@@ -99,19 +99,44 @@ With a VPN connection you can connect using private IP addresses of resources yo
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
+=== Deploying resources into VPCs
+
+The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - in the production and development VPCs - isolated subnets. Consider the function of the resource when choosing the VPC. For example, use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. The Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
+
+Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
+
+The following table provides some examples. 
+
+[cols="1,1,1"]
+|===
+|Resource |VPC |Subnet
+
+|Test server |Development |Private
+|Amazon Relational Database Server (Amazon RDS) snapshot restored from development VPC |Production |Isolated
+|Application Load Balancer to test a custom TLS certificate |Development |Public
+|DevOps tool to automate deployments to production and development VPCs |Management |Private
+|Okta Cloud Connect appliance |Management VPC |Private
+|===
+
 === Biotech Blueprint Informatics Catalog
 
-All of the informatics and scientific computing tools mentioned earlier in this guide are made available to you through the AWS Service Catalog as the `Biotech Blueprint Informatics Catalog`. 
+The informatics and scientific tools you can launch after deploying the Quick Start are available to you in the Biotech Blueprint Informatics Catalog of the AWS Service Catalog.  
 
-Service Catalog requires that you explicitly give permissions to individual IAM users/groups/roles to launch products from a Service Catalog portfolio. 
+==== AWS Service Catalog permissions
+AWS Service Catalog requires that you explicitly give permissions to individual IAM groups, roles, and users to launch products from a Service Catalog portfolio.
 
-To grant that permission you first need to visit the https://console.aws.amazon.com/servicecatalog/home?#portfolios?activeTab=localAdminPortfolios[Service Catalog Portfolio Console]. 
-
-Click on the `Biotech Blueprint Informatics Catalog` portfolio and then the `Groups, roles, and users` tab. 
+[start=1]
+. Navigate to the https://console.aws.amazon.com/servicecatalog/home?#portfolios?activeTab=localAdminPortfolios[AWS Service Catalog console]. 
+. Select the *Biotech Blueprint Informatics Catalog* portfolio.
+. Select the *Groups, roles, and users* tab.
 
 image::service-catalog-permission.png[scpermission,width=100%,height=100%]
 
-Click on the `Add groups, users, and roles` button and select any IAM users/groups/roles that you want grant permissions to. *Make sure you add yourself.*
+[start=4]
+. Select *Add groups, users, and roles*.
+. Select the IAM groups, users, and roles to grant permissions to.
++
+NOTE: Make sure you add yourself.
 
 Anyone you just added can now visit the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products['Products list' section of the Service Catalog console] and deploy any of the tools listed.
 

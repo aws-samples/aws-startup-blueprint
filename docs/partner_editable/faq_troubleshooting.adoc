@@ -2,25 +2,6 @@
 
 == FAQ
 
-*Q.* What VPCs and subnets should I deploy resources into?
-
-*A.* The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - in the production and development VPCs - isolated subnets. Consider the function of the resource when choosing the VPC. For example, use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. The Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
-
-Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)].
-
-The following table provides some examples. 
-
-[cols="1,1,1"]
-|===
-|Resource |VPC |Subnet
-
-|Test server |Development |Private
-|Amazon Relational Database Server (Amazon RDS) snapshot restored from development VPC |Production |Isolated
-|Application Load Balancer to test a custom TLS certificate |Development |Public
-|DevOps tool to automate deployments to production and development VPCs |Management |Private
-|Okta Cloud Connect appliance |Management VPC |Private
-|===
-
 *Q.* Why are there two subnets of the same class in each VPC? 
 
 *A.* Each subnet of the same class is in a different Availability Zone, providing high availability. Subnets of the same class are identical from a networking perspective, so it does not matter which you specify when deploying a resource.
