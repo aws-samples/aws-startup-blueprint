@@ -48,7 +48,7 @@ for assetFolder in folders:
                     bucketParamName = templateData['Resources'][resource]['Properties']['Code']['S3Bucket']['Ref']
                     
                     templateData['Resources'][resource]['Properties']['Code']['S3Bucket'] = {
-                        "Fn::Join" : ['-', [ bucketParamName, {"Ref": 'AWS::Region'} ] ]
+                        "Fn::Join" : ['-', [ {"Ref": bucketParamName} , {"Ref": 'AWS::Region'} ] ]
                     }
                     
 

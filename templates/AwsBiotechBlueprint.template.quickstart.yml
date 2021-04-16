@@ -363,7 +363,7 @@ Resources:
         S3Bucket:
           Fn::Join:
           - '-'
-          - - AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+          - - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
             - Ref: AWS::Region
         S3Key:
           Fn::Join:
