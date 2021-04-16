@@ -6,5 +6,4 @@ This Quick Start reference deployment guide provides instructions for deploying 
 
 This Quick Start builds an informatics infrastructure on the Amazon Web Services (AWS) Cloud. It sets up a virtual data center with partitioned virtual private clouds (VPCs) for biotech development, production, and management processes. This infrastructure is set up according to AWS best practices with identity management, access control, network configuration, and built-in compliance auditing. Into the foundation this Quick Start builds, you can deploy the industry’s leading scientific research applications from the AWS Service Catalog. 
 
-You have the choice of deploying the Quick Start from an AWS CloudFormation template or using AWS Cloud Development Kit (AWS CDK).
-For more information on what this Quick Start deploys, see link:#_architecture[Architecture], later in this guide.
+You have the choice of deploying the Quick Start from an AWS CloudFormation template or using AWS Cloud Development Kit (AWS CDK). For more information on what this Quick Start deploys, see link:#_architecture[Architecture], later in this guide.

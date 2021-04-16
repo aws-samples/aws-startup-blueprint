@@ -58,7 +58,7 @@ image::../images/downloadclientconfig.png[VPN,width=100%,height=100%]
 . Open the bucket with the prefix `awsstartupblueprintstack-clientvpnvpnconfigbucket*`.
 . Download the `client1.domain.tld.key` and `client1.domain.tld.crt`. 
 +
-NOTE: The other three files are the CA chain and server key/cert. You will need those if you want to create additional client certificates later on.
+NOTE: The other three files are the CA chain and server key/cert. You will need those to create additional client certificates.
 
 [start=5]
 . Open `downloaded-client-config.ovpn` in a text editor.
@@ -75,11 +75,12 @@ Contents of private key file (client1.domain.tld.key)
 ```
 
 [start=6]
-. Save your changes to `downloaded-client-config.ovpn`. You can open or import the configuration file with an OpenVPN client. 
+. Save and close the file. You can establish a VPN connection with the configuration and an OpenVPN client or AWS provided client. 
 
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client]
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client]
 
+With a VPN connection you can connect using private IP addresses of resources you deploy in the production, development, and management VPCs. For more information about deploying resources, see the link:#_faq[FAQ] section, later in this guide. 
 
 //== Test the deployment
 // If steps are required to test the deployment, add them here. If not, remove the heading
@@ -97,15 +98,6 @@ Contents of private key file (client1.domain.tld.key)
 
 == Other useful information
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
-
-=== Deploying resources to VPCs
-Once you are connected to the VPN, you essentially have a private encrypted channel into your new VPCs. You can now connect to any resources you launch into your VPCs using private IP addresses without having to hassle with insecure/public bastion hosts. 
-
-Are you unsure where to launch your first server? If you are confused about which VPC and/or which subnets you should be deploying resources into, check out the FAQ section. We did our best to explain some of the theory and give some concrete examples.  
-
-We've filled out some of the subnets in the diagram below to give an generalized example of the sorts of things you may end up deploying into your VPCs and subnets.
-
-image::bb-diagram-filled-out.png[bbdiagramfilledout,width=100%,height=100%]
 
 === Biotech Blueprint Informatics Catalog
 
