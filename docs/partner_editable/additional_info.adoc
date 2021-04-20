@@ -100,7 +100,7 @@ With a VPN connection, you can connect to resources you launch into your VPCs us
 
 == Deploying resources into VPCs
 
-The Quick Start builds an architecture with three VPCs: production, development, and management. Use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. For example, the Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC. Use the production VPC for live resources users interact with. Use the development VPC 
+This Quick Start builds an architecture with three VPCs: production, development, and management. Use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. For example, the Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC. Production and development VPCs are provided so you can manage live and test environments with different levels of controls.  
 
 Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
 
