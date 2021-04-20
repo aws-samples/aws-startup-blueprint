@@ -27,8 +27,8 @@ endif::marketplace_subscription[]
 
 [cols=2*]
 |===
-^|http://qs_launch_link[Deploy {partner-product-short-name} into your AWS Account^]
-^|http://qs_template_link[View template^]
+^|https://fwd.aws/RAnNy[Deploy {partner-product-short-name} into your AWS Account^]
+^|https://fwd.aws/DzbRN[View template^]
 |===
 
 

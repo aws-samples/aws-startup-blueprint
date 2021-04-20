@@ -3,7 +3,7 @@
 
 === AWS CDK deployment
 
-To deploy {partner-product-name} using the AWS CDK, do the following:
+To deploy {partner-product-name} using AWS CDK, do the following:
 [start=1]
 . Verify that you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites^] to install the AWS CDK. 
 
