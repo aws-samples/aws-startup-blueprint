@@ -29,6 +29,8 @@ Click the launch stack button below. Make sure you are in your preferred region 
 
 ```bash
 git clone https://github.com/aws-quickstart/quickstart-aws-fintech-blueprint-cdk.git
+cd quickstart-aws-fintech-blueprint-cdk
+npm install
 npm run build 
 cdk bootstrap
 ```
