@@ -118,11 +118,7 @@ WARNING: Conformance packs provide a general-purpose compliance framework design
 
 A common ask from Startups using AWS is to restrict all IAM actions to specific regions. For example, you may only want users to create EC2 instances or S3 buckets in EU-only regions. This could be for compliance reasons or simply because its a good practice to keep resources out of regions you never intend to use. 
 
-<<<<<<< HEAD
 If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity policies that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission policies like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
-=======
-If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity polices that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission polices like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
->>>>>>> 418fccbdebdc1aedf2d53eee56d0d989b9477f56
 
 The `RegionRestriction` class configured in 'lib/aws-startup-blueprint-stack.ts' creates just such an IAM permission boundary restriction actions to the regions you specify:
 
@@ -134,13 +130,9 @@ For example:
       });  
 ```
 
-<<<<<<< HEAD
 We have added some helper context variables (`apply_EU_RegionRestriction` and `apply_US_RegionRestriction`) inside the the `cdk.json` file. Setting one of those to `"true"` and running `cdk deploy` again will apply the region restriction.
 
 In order for the permission boundary to have any effect, it needs to be attached to all existing and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary gets attached, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
-=======
-In order for the permission boundary to have any effect, it needs to be attached to all existing and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
->>>>>>> 418fccbdebdc1aedf2d53eee56d0d989b9477f56
 
 If you visit the AWS Config Rules console, find and click on the rule titled `AwsBiotechBlueprint-RegionRestriction...`
 
