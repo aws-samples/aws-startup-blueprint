@@ -74,13 +74,13 @@ Contents of private key file (client1.domain.tld.key)
 </key>
 ```
 
-[start=6]
+[start=7]
 . Save and close the file. You can establish a VPN connection with the configuration and an OpenVPN client or AWS provided client. 
 
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect.html[Connect using an OpenVPN client^]
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client^]
 
-With a VPN connection you can connect using private IP addresses to resources you deploy in the production, development, and management VPCs. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
+With a VPN connection, you can connect to resources you launch into your VPCs using private IP addresses. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
 
 //== Test the deployment
 // If steps are required to test the deployment, add them here. If not, remove the heading
@@ -100,9 +100,9 @@ With a VPN connection you can connect using private IP addresses to resources yo
 
 == Deploying resources into VPCs
 
-The Quick Start builds an architecture with three VPCs: production, development, and management. Each is equipped with public, private, and - in the production and development VPCs - isolated subnets. Consider the function of the resource when choosing the VPC. For example, use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. The Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC.
+When deploying a resource such as a load balancer, EC2 instance, or RDS database, you specify a VPC and a subnet. The Quick Start builds an architecture with three VPCs: production, development, and management. Use the management VPC for operational resources such as DevOps tools, active directories, and security appliances. For example, the Biotech Blueprint Quick Start deploys client VPN endpoints into the public subnets of the management VPC. Use the production VPC 
 
-Consider the level of isolation the resource requires when choosing the subnet. Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
+Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
 
 The following table provides some examples. 
 
