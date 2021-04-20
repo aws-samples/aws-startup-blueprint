@@ -30,6 +30,8 @@ If you dont already have the CDK installed on your development machine, make sur
 
 ```bash
 git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
 npm run build 
 cdk bootstrap
 ```
