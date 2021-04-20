@@ -64,7 +64,7 @@ for assetFolder in folders:
     os.replace(assetFolder, f"./lambda_functions/source/asset{assetId}")
 
     
-with open('./templates/AwsFintechBlueprint.template.quickstart.yml', 'w') as yaml_file:
+with open('./templates/AwsFintechBlueprint.quickstart-template.yml', 'w') as yaml_file:
     yaml_file.write( yaml.dump(templateData, default_flow_style=False))
     
 

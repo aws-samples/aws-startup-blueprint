@@ -22,7 +22,7 @@ Both deployment options take about 7 minutes to complete and create the exact sa
 
 Click the launch stack button below. Make sure you are in your preferred region before you deploy.
 
-[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=https://aws-quickstart.s3.amazonaws.com/quickstart-aws-fintech-blueprint-cdk/templates/AwsFintechBlueprint.template.quickstart.yml&stackName=FintechBlueprint) 
+[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=https://aws-quickstart.s3.amazonaws.com/quickstart-aws-fintech-blueprint-cdk/templates/AwsFintechBlueprint.quickstart-template.yml&stackName=FintechBlueprint) 
 
 
 ### Option 2) AWS CDK Deployment

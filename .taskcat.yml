@@ -4,7 +4,7 @@ project:
   name: quickstart-aws-fintech-blueprint
   owner: quickstart-eng@amazon.com
   regions:
-  - us-east-1
+  - us-east-2
 tests:
   default:
     parameters:
