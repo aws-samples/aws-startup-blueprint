@@ -70,6 +70,10 @@ Conditions:
       - Fn::Equals:
         - Ref: AWS::Region
         - us-west-2
+  UsingDefaultQuickstartBucketc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c:
+    Fn::Equals:
+    - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+    - aws-quickstart
 Description: AWS Biotech Blueprint CDK is an AWS Quick Start that helps Biotech companies
   deploy core AWS Infrastructure as well as CloudFormation templates for common ISV
   solutions. (qs-1of009lua) (ib-1of009lua)
@@ -92,7 +96,7 @@ Resources:
     Metadata:
       aws:cdk:path: AwsBiotechBlueprint/CDKMetadata/Default
     Properties:
-      Analytics: v2:deflate64:H4sIAAAAAAAAA11STW/bMAz9Lb0ratN1h92WeV1XYCgMp8hhN0VmHDW2GFBUgszwfx9tuXaQkx4fKX48vKX+9qSXd9/NOSxsebhvLRLods3GHlSGPjBFy6qAgJEsqFUIwJKtnK9UFgNjM+Wynb/GuSHTAAP1gbQqHTv0nepHtWAfdbs52j63yTOVx23t7DpuPXDPzajAyPButjXM/MzJPmid6TtPxT14fs37583wi2E4m4vKyZ0Ezo1fvewm+LMgbTJGKxYF9g14ViMjyz778ojO81h6E+YAJKrIpR7ssNAabCTHlxfCeBy2vyWy2smIzdFf95rId0MV8BvwGelwc+lUtIq8R3L/hkwRk0xTdhCkU840ui0wJYc3R9F7ODqhToUvuv0R7SGpM6L0zMXXcadq02xLI3aRu2tg9L+iT6dPQP584n7EwvQGCnrwkaqxCrr9g9UkyIQFrJnANCObgk5Z9DtX6VbYn1C7E9Al2xuRvB5tJtlISQwQM5eT/3ZIjfEWcrF2p6gX5qucPPriNwaG8i/6QaI56mTkYPMFjd4OOic8OWncKY8l6I9wf1o+6Mcn/XD3EZxbUPTsGtBFev8DoQ/eHmQDAAA=
+      Analytics: v2:deflate64:H4sIAAAAAAAAA11STW/bMAz9Lb0ratOth92WeV1XYCgMp8hhN0VmHDW2GFBUgszwfx9lu3aQkx4fKX48vKX+9qSXd9/NOSxsebhvLRLods3GHlSGPjBFy6qAgJEsqFUIwJKtnK9UFgNjM+Wynb/GuSHTAAOlQFqVjh36TqVRLdhH3W6ONuU2eabyuK2dXcetB07cjAqMDO9mW8PMz5zsg9aZ1HkqTuD5NU/Pm+EXw3A2F5WTOwmcG7962U3wZ8GwyRitWBTYN+BZjYws++zLIzrPY+lNmAOQqCKXerD9QmuwkRxfXgjjsd/+lshqJyM2R3/dayLfDVXAb8BnpMPNpVPRKvIeyf3rM0UcZJqyvSCdcqbRbYFDsn9zFL37owfUqfBFtz+iPQzqjGh45uLruFO1abalEbvI3TUw+l/RD6dPQP584jRiYZKBgu59pGqsgm7/YDUJMmEBayYwzcgOQacs+p2rdCvsT6jdCeiS7Y1IXo82k2ykQQwQM5eT/3ZIjfEWcrF2pygJ8yQnj774jYGh/Iu+l2iOOhnZ23xBo7eDzglPThp3ymMJ+iPcn5YP+vGrfrj7CM4tKHp2DehieP8DM2955GQDAAA=
     Type: AWS::CDK::Metadata
   ClientVpn0clientVpnEndpointAssociation8160B577:
     Metadata:
@@ -361,7 +365,13 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+          Fn::If:
+          - UsingDefaultQuickstartBucketc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c
+          - Fn::Join:
+            - '-'
+            - - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+              - Ref: AWS::Region
+          - Ref: AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
         S3Key:
           Fn::Join:
           - ''
@@ -425,18 +435,18 @@ Resources:
       Roles:
       - Ref: ClientVpnvpnCertificateProviderframeworkonEventServiceRole60471AD0
     Type: AWS::IAM::Policy
-  ConfigPacksConfigBucket2FDEAE68:
+  ConfigEnabledPromiseConfigBucket2F967063:
     DeletionPolicy: Retain
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigBucket/Resource
+      aws:cdk:path: AwsBiotechBlueprint/ConfigEnabledPromise/ConfigBucket/Resource
     Type: AWS::S3::Bucket
     UpdateReplacePolicy: Retain
-  ConfigPacksConfigBucketPolicy19F5D317:
+  ConfigEnabledPromiseConfigBucketPolicy2B9A439D:
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigBucket/Policy/Resource
+      aws:cdk:path: AwsBiotechBlueprint/ConfigEnabledPromise/ConfigBucket/Policy/Resource
     Properties:
       Bucket:
-        Ref: ConfigPacksConfigBucket2FDEAE68
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
       PolicyDocument:
         Statement:
         - Action: s3:GetBucketAcl
@@ -452,7 +462,7 @@ Resources:
             Fn::Join:
             - ''
             - - 'arn:aws:s3:::'
-              - Ref: ConfigPacksConfigBucket2FDEAE68
+              - Ref: ConfigEnabledPromiseConfigBucket2F967063
           Sid: AWSConfigConformsBucketPermissionsCheck
         - Action: s3:PutObject
           Condition:
@@ -470,7 +480,7 @@ Resources:
             Fn::Join:
             - ''
             - - 'arn:aws:s3:::'
-              - Ref: ConfigPacksConfigBucket2FDEAE68
+              - Ref: ConfigEnabledPromiseConfigBucket2F967063
               - /*
           Sid: AWSConfigConformsBucketDelivery
         - Action: s3:GetObject
@@ -486,22 +496,22 @@ Resources:
             Fn::Join:
             - ''
             - - 'arn:aws:s3:::'
-              - Ref: ConfigPacksConfigBucket2FDEAE68
+              - Ref: ConfigEnabledPromiseConfigBucket2F967063
               - /*
           Sid: ' AWSConfigConformsBucketReadAccess'
         Version: '2012-10-17'
     Type: AWS::S3::BucketPolicy
-  ConfigPacksConfigDeliveryChannel58AE9291:
+  ConfigEnabledPromiseConfigDeliveryChannel84DA8CB8:
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigDeliveryChannel
+      aws:cdk:path: AwsBiotechBlueprint/ConfigEnabledPromise/ConfigDeliveryChannel
     Properties:
       Name: BlueprintConfigDeliveryChannel
       S3BucketName:
-        Ref: ConfigPacksConfigBucket2FDEAE68
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
     Type: AWS::Config::DeliveryChannel
-  ConfigPacksConfigRecorder41CB4109:
+  ConfigEnabledPromiseConfigRecorder0A75B039:
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigRecorder
+      aws:cdk:path: AwsBiotechBlueprint/ConfigEnabledPromise/ConfigRecorder
     Properties:
       Name: BlueprintConfigRecorder
       RecordingGroup:
@@ -509,12 +519,12 @@ Resources:
         IncludeGlobalResourceTypes: true
       RoleARN:
         Fn::GetAtt:
-        - ConfigPacksConfigRecorderRole443C2431
+        - ConfigEnabledPromiseConfigRecorderRoleFC6F886B
         - Arn
     Type: AWS::Config::ConfigurationRecorder
-  ConfigPacksConfigRecorderRole443C2431:
+  ConfigEnabledPromiseConfigRecorderRoleFC6F886B:
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ConfigRecorderRole/Resource
+      aws:cdk:path: AwsBiotechBlueprint/ConfigEnabledPromise/ConfigRecorderRole/Resource
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -541,7 +551,7 @@ Resources:
               Fn::Join:
               - ''
               - - 'arn:aws:s3:::'
-                - Ref: ConfigPacksConfigBucket2FDEAE68
+                - Ref: ConfigEnabledPromiseConfigBucket2F967063
                 - /*
           - Action: s3:GetBucketAcl
             Effect: Allow
@@ -549,21 +559,21 @@ Resources:
               Fn::Join:
               - ''
               - - 'arn:aws:s3:::'
-                - Ref: ConfigPacksConfigBucket2FDEAE68
+                - Ref: ConfigEnabledPromiseConfigBucket2F967063
           Version: '2012-10-17'
         PolicyName: configRecorderS3Access
     Type: AWS::IAM::Role
-  ConfigPacksControlTowerDetectiveGuardRailsConformancePack7CE4F243:
+  ConfigPacksCPAWSControlTowerDetectiveGuardrailsConformancePack9184C90A:
     DependsOn:
-    - ConfigPacksConfigRecorder41CB4109
+    - ConfigEnabledPromiseConfigRecorder0A75B039
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/ControlTowerDetectiveGuardRailsConformancePack
+      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/CP-AWS-Control-Tower-Detective-Guardrails-Conformance-Pack
     Properties:
       ConformancePackInputParameters: []
       ConformancePackName: AWS-Control-Tower-Detective-Guardrails-Conformance-Pack
       DeliveryS3Bucket:
-        Ref: ConfigPacksConfigBucket2FDEAE68
-      DeliveryS3KeyPrefix: ct-detective-guardrails
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
+      DeliveryS3KeyPrefix: AWS-Control-Tower-Detective-Guardrails-Conformance-Pack
       TemplateBody: "###################################################################################\n\
         #\n#   Conformance Pack:\n#     AWS Control Tower Detective Guardrails Conformance\
         \ Pack\n#\n#    The AWS Control Tower detective guardrails conformance pack\
@@ -667,17 +677,17 @@ Resources:
         \        Scope:\n          ComplianceResourceTypes:\n            - AWS::S3::Bucket\
         \  "
     Type: AWS::Config::ConformancePack
-  ConfigPacksOperationalBestPracticesForIamConformancePackF6F0D5C9:
+  ConfigPacksCPOperationalBestPracticesForAWSIdentityAndAccessManagement7100FE82:
     DependsOn:
-    - ConfigPacksConfigRecorder41CB4109
+    - ConfigEnabledPromiseConfigRecorder0A75B039
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/OperationalBestPracticesForIamConformancePack
+      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/CP-Operational-Best-Practices-For-AWS-Identity-And-Access-Management
     Properties:
       ConformancePackInputParameters: []
       ConformancePackName: Operational-Best-Practices-For-AWS-Identity-And-Access-Management
       DeliveryS3Bucket:
-        Ref: ConfigPacksConfigBucket2FDEAE68
-      DeliveryS3KeyPrefix: iam-bestpractices
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
+      DeliveryS3KeyPrefix: Operational-Best-Practices-For-AWS-Identity-And-Access-Management
       TemplateBody: "################################################################################\n\
         #\n#   Conformance Pack:\n#     Operational Best Practices for AWS Identity\
         \ and Access Management\n#\n#   See Parameters section for names and descriptions\
@@ -753,17 +763,504 @@ Resources:
         \    authentication for console sign-in.\n        Source:\n          Owner:\
         \ AWS\n          SourceIdentifier: ROOT_ACCOUNT_MFA_ENABLED\n      Type: AWS::Config::ConfigRule"
     Type: AWS::Config::ConformancePack
-  ConfigPacksOperationalBestPracticesForNistCsfConformancePackFB810725:
+  ConfigPacksCPOperationalBestPracticesForAmazonS30892D47D:
     DependsOn:
-    - ConfigPacksConfigRecorder41CB4109
+    - ConfigEnabledPromiseConfigRecorder0A75B039
     Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/OperationalBestPracticesForNistCsfConformancePack
+      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/CP-Operational-Best-Practices-For-Amazon-S3
+    Properties:
+      ConformancePackInputParameters: []
+      ConformancePackName: Operational-Best-Practices-For-Amazon-S3
+      DeliveryS3Bucket:
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
+      DeliveryS3KeyPrefix: Operational-Best-Practices-For-Amazon-S3
+      TemplateBody: "###############################################################################################\n\
+        #\n#   Conformance Pack:\n#     Operational Best Practices for Amazon S3\n\
+        #\n#    This pack contains AWS Config rules based on the best practice guidelines\
+        \ for Amazon S3.\n#\n###############################################################################################\n\
+        \nResources:\n    S3BucketPublicReadProhibited:\n      Type: AWS::Config::ConfigRule\n\
+        \      Properties:\n        ConfigRuleName: S3BucketPublicReadProhibited\n\
+        \        Description: >- \n          Checks that your Amazon S3 buckets do\
+        \ not allow public read access.\n          The rule checks the Block Public\
+        \ Access settings, the bucket policy, and the\n          bucket access control\
+        \ list (ACL).\n        Scope:\n          ComplianceResourceTypes:\n      \
+        \    - \"AWS::S3::Bucket\"\n        Source:\n          Owner: AWS\n      \
+        \    SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED\n        MaximumExecutionFrequency:\
+        \ Six_Hours\n    S3BucketPublicWriteProhibited: \n      Type: \"AWS::Config::ConfigRule\"\
+        \n      Properties: \n        ConfigRuleName: S3BucketPublicWriteProhibited\n\
+        \        Description: \"Checks that your Amazon S3 buckets do not allow public\
+        \ write access. The rule checks the Block Public Access settings, the bucket\
+        \ policy, and the bucket access control list (ACL).\"\n        Scope: \n \
+        \         ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n   \
+        \     Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED\n\
+        \        MaximumExecutionFrequency: Six_Hours\n    S3BucketReplicationEnabled:\
+        \ \n      Type: \"AWS::Config::ConfigRule\"\n      Properties: \n        ConfigRuleName:\
+        \ S3BucketReplicationEnabled\n        Description: \"Checks whether the Amazon\
+        \ S3 buckets have cross-region replication enabled.\"\n        Scope: \n \
+        \         ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n   \
+        \     Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_REPLICATION_ENABLED\n\
+        \    S3BucketSSLRequestsOnly: \n      Type: \"AWS::Config::ConfigRule\"\n\
+        \      Properties: \n        ConfigRuleName: S3BucketSSLRequestsOnly\n   \
+        \     Description: \"Checks whether S3 buckets have policies that require\
+        \ requests to use Secure Socket Layer (SSL).\"\n        Scope: \n        \
+        \  ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n        Source:\
+        \ \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_SSL_REQUESTS_ONLY\n\
+        \    ServerSideReplicationEnabled: \n      Type: \"AWS::Config::ConfigRule\"\
+        \n      Properties: \n        ConfigRuleName: ServerSideReplicationEnabled\n\
+        \        Description: \"Checks that your Amazon S3 bucket either has S3 default\
+        \ encryption enabled or that the S3 bucket policy explicitly denies put-object\
+        \ requests without server side encryption.\"\n        Scope: \n          ComplianceResourceTypes:\
+        \ \n          - \"AWS::S3::Bucket\"\n        Source: \n          Owner: AWS\n\
+        \          SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED\n  \
+        \  S3BucketLoggingEnabled: \n      Type: \"AWS::Config::ConfigRule\"\n   \
+        \   Properties: \n        ConfigRuleName: S3BucketLoggingEnabled\n       \
+        \ Description: \"Checks whether logging is enabled for your S3 buckets.\"\n\
+        \        Scope: \n          ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\
+        \n        Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_LOGGING_ENABLED"
+    Type: AWS::Config::ConformancePack
+  ConfigPacksCPOperationalBestPracticesforHIPAASecurity01583019:
+    DependsOn:
+    - ConfigEnabledPromiseConfigRecorder0A75B039
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/CP-Operational-Best-Practices-for-HIPAA-Security
+    Properties:
+      ConformancePackInputParameters: []
+      ConformancePackName: Operational-Best-Practices-for-HIPAA-Security
+      DeliveryS3Bucket:
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
+      DeliveryS3KeyPrefix: Operational-Best-Practices-for-HIPAA-Security
+      TemplateBody: "##################################################################################\n\
+        #\n#   Conformance Pack:\n#     Operational Best Practices for HIPAA Security\n\
+        #\n#   This conformance pack helps verify compliance with HIPAA Security requirements.\n\
+        #\n#   See Parameters section for names and descriptions of required parameters.\
+        \ \n#\n##################################################################################\n\
+        \nParameters:\n  AccessKeysRotatedParamMaxAccessKeyAge:\n    Default: '90'\n\
+        \    Type: String\n  CloudwatchAlarmActionCheckParamInsufficientDataActionRequired:\n\
+        \    Default: 'TRUE'\n    Type: String\n  CloudwatchAlarmActionCheckParamOkActionRequired:\n\
+        \    Default: 'FALSE'\n    Type: String\n  DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage:\n\
+        \    Default: '80'\n    Type: String\n  DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage:\n\
+        \    Default: '80'\n    Type: String\n  GuarddutyNonArchivedFindingsParamDaysHighSev:\n\
+        \    Default: '1'\n    Type: String\n  GuarddutyNonArchivedFindingsParamDaysLowSev:\n\
+        \    Default: '30'\n    Type: String\n  GuarddutyNonArchivedFindingsParamDaysMediumSev:\n\
+        \    Default: '7'\n    Type: String\n  IamPasswordPolicyParamMaxPasswordAge:\n\
+        \    Default: '90'\n    Type: String\n  IamPasswordPolicyParamMinimumPasswordLength:\n\
+        \    Default: '14'\n    Type: String\n  IamPasswordPolicyParamPasswordReusePrevention:\n\
+        \    Default: '24'\n    Type: String\n  IamPasswordPolicyParamRequireLowercaseCharacters:\n\
+        \    Default: 'TRUE'\n    Type: String\n  IamPasswordPolicyParamRequireNumbers:\n\
+        \    Default: 'TRUE'\n    Type: String\n  IamPasswordPolicyParamRequireSymbols:\n\
+        \    Default: 'TRUE'\n    Type: String\n  IamPasswordPolicyParamRequireUppercaseCharacters:\n\
+        \    Default: 'TRUE'\n    Type: String\n  IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge:\n\
+        \    Default: '90'\n    Type: String\n  InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds:\n\
+        \    Default: ' '\n    Type: String\n  RestrictedIncomingTrafficParamBlockedPort1:\n\
+        \    Default: '20'\n    Type: String\n  RestrictedIncomingTrafficParamBlockedPort2:\n\
+        \    Default: '21'\n    Type: String\n  RestrictedIncomingTrafficParamBlockedPort3:\n\
+        \    Default: '3389'\n    Type: String\n  RestrictedIncomingTrafficParamBlockedPort4:\n\
+        \    Default: '3306'\n    Type: String\n  RestrictedIncomingTrafficParamBlockedPort5:\n\
+        \    Default: '4333'\n    Type: String\n  S3AccountLevelPublicAccessBlocksParamBlockPublicAcls:\n\
+        \    Default: 'True'\n    Type: String\n  S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy:\n\
+        \    Default: 'True'\n    Type: String\n  S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls:\n\
+        \    Default: 'True'\n    Type: String\n  S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets:\n\
+        \    Default: 'True'\n    Type: String\nResources:\n  AccessKeysRotated:\n\
+        \    Properties:\n      ConfigRuleName: access-keys-rotated\n      InputParameters:\n\
+        \        maxAccessKeyAge:\n          Fn::If:\n          - accessKeysRotatedParamMaxAccessKeyAge\n\
+        \          - Ref: AccessKeysRotatedParamMaxAccessKeyAge\n          - Ref:\
+        \ AWS::NoValue\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ ACCESS_KEYS_ROTATED\n    Type: AWS::Config::ConfigRule\n  AlbHttpToHttpsRedirectionCheck:\n\
+        \    Properties:\n      ConfigRuleName: alb-http-to-https-redirection-check\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: ALB_HTTP_TO_HTTPS_REDIRECTION_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  ApiGwCacheEnabledAndEncrypted:\n   \
+        \ Properties:\n      ConfigRuleName: api-gw-cache-enabled-and-encrypted\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::ApiGateway::Stage\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: API_GW_CACHE_ENABLED_AND_ENCRYPTED\n\
+        \    Type: AWS::Config::ConfigRule\n  ApiGwExecutionLoggingEnabled:\n    Properties:\n\
+        \      ConfigRuleName: api-gw-execution-logging-enabled\n      Scope:\n  \
+        \      ComplianceResourceTypes:\n        - AWS::ApiGateway::Stage\n      \
+        \  - AWS::ApiGatewayV2::Stage\n      Source:\n        Owner: AWS\n       \
+        \ SourceIdentifier: API_GW_EXECUTION_LOGGING_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  AutoscalingGroupElbHealthcheckRequired:\n    Properties:\n      ConfigRuleName:\
+        \ autoscaling-group-elb-healthcheck-required\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::AutoScaling::AutoScalingGroup\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: AUTOSCALING_GROUP_ELB_HEALTHCHECK_REQUIRED\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudTrailCloudWatchLogsEnabled:\n \
+        \   Properties:\n      ConfigRuleName: cloud-trail-cloud-watch-logs-enabled\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudTrailEnabled:\n    Properties:\n\
+        \      ConfigRuleName: cloudtrail-enabled\n      Source:\n        Owner: AWS\n\
+        \        SourceIdentifier: CLOUD_TRAIL_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  CloudTrailEncryptionEnabled:\n    Properties:\n      ConfigRuleName: cloud-trail-encryption-enabled\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CLOUD_TRAIL_ENCRYPTION_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudTrailLogFileValidationEnabled:\n\
+        \    Properties:\n      ConfigRuleName: cloud-trail-log-file-validation-enabled\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CLOUD_TRAIL_LOG_FILE_VALIDATION_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudtrailS3DataeventsEnabled:\n   \
+        \ Properties:\n      ConfigRuleName: cloudtrail-s3-dataevents-enabled\n  \
+        \    Source:\n        Owner: AWS\n        SourceIdentifier: CLOUDTRAIL_S3_DATAEVENTS_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudwatchAlarmActionCheck:\n    Properties:\n\
+        \      ConfigRuleName: cloudwatch-alarm-action-check\n      InputParameters:\n\
+        \        alarmActionRequired: 'TRUE'\n        insufficientDataActionRequired:\n\
+        \          Ref: CloudwatchAlarmActionCheckParamInsufficientDataActionRequired\n\
+        \        okActionRequired:\n          Ref: CloudwatchAlarmActionCheckParamOkActionRequired\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::CloudWatch::Alarm\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CLOUDWATCH_ALARM_ACTION_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  CloudwatchLogGroupEncrypted:\n    Properties:\n\
+        \      ConfigRuleName: cloudwatch-log-group-encrypted\n      Source:\n   \
+        \     Owner: AWS\n        SourceIdentifier: CLOUDWATCH_LOG_GROUP_ENCRYPTED\n\
+        \    Type: AWS::Config::ConfigRule\n  CodebuildProjectEnvvarAwscredCheck:\n\
+        \    Properties:\n      ConfigRuleName: codebuild-project-envvar-awscred-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::CodeBuild::Project\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CODEBUILD_PROJECT_ENVVAR_AWSCRED_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  CodebuildProjectSourceRepoUrlCheck:\n\
+        \    Properties:\n      ConfigRuleName: codebuild-project-source-repo-url-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::CodeBuild::Project\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: CODEBUILD_PROJECT_SOURCE_REPO_URL_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  DbInstanceBackupEnabled:\n    Properties:\n\
+        \      ConfigRuleName: db-instance-backup-enabled\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::RDS::DBInstance\n      Source:\n        Owner: AWS\n     \
+        \   SourceIdentifier: DB_INSTANCE_BACKUP_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  DmsReplicationNotPublic:\n    Properties:\n      ConfigRuleName: dms-replication-not-public\n\
+        \      Scope:\n        ComplianceResourceTypes: []\n      Source:\n      \
+        \  Owner: AWS\n        SourceIdentifier: DMS_REPLICATION_NOT_PUBLIC\n    Type:\
+        \ AWS::Config::ConfigRule\n  DynamodbAutoscalingEnabled:\n    Properties:\n\
+        \      ConfigRuleName: dynamodb-autoscaling-enabled\n      Scope:\n      \
+        \  ComplianceResourceTypes:\n        - AWS::DynamoDB::Table\n      Source:\n\
+        \        Owner: AWS\n        SourceIdentifier: DYNAMODB_AUTOSCALING_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  DynamodbPitrEnabled:\n    Properties:\n\
+        \      ConfigRuleName: dynamodb-pitr-enabled\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::DynamoDB::Table\n      Source:\n        Owner: AWS\n     \
+        \   SourceIdentifier: DYNAMODB_PITR_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  DynamodbThroughputLimitCheck:\n    Properties:\n      ConfigRuleName: dynamodb-throughput-limit-check\n\
+        \      InputParameters:\n        accountRCUThresholdPercentage:\n        \
+        \  Fn::If:\n          - dynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage\n\
+        \          - Ref: DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage\n\
+        \          - Ref: AWS::NoValue\n        accountWCUThresholdPercentage:\n \
+        \         Fn::If:\n          - dynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage\n\
+        \          - Ref: DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage\n\
+        \          - Ref: AWS::NoValue\n      Source:\n        Owner: AWS\n      \
+        \  SourceIdentifier: DYNAMODB_THROUGHPUT_LIMIT_CHECK\n    Type: AWS::Config::ConfigRule\n\
+        \  EbsSnapshotPublicRestorableCheck:\n    Properties:\n      ConfigRuleName:\
+        \ ebs-snapshot-public-restorable-check\n      Source:\n        Owner: AWS\n\
+        \        SourceIdentifier: EBS_SNAPSHOT_PUBLIC_RESTORABLE_CHECK\n    Type:\
+        \ AWS::Config::ConfigRule\n  Ec2EbsEncryptionByDefault:\n    Properties:\n\
+        \      ConfigRuleName: ec2-ebs-encryption-by-default\n      Source:\n    \
+        \    Owner: AWS\n        SourceIdentifier: EC2_EBS_ENCRYPTION_BY_DEFAULT\n\
+        \    Type: AWS::Config::ConfigRule\n  Ec2InstanceNoPublicIp:\n    Properties:\n\
+        \      ConfigRuleName: ec2-instance-no-public-ip\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::EC2::Instance\n      Source:\n        Owner: AWS\n       \
+        \ SourceIdentifier: EC2_INSTANCE_NO_PUBLIC_IP\n    Type: AWS::Config::ConfigRule\n\
+        \  Ec2StoppedInstance:\n    Properties:\n      ConfigRuleName: ec2-stopped-instance\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: EC2_STOPPED_INSTANCE\n\
+        \    Type: AWS::Config::ConfigRule\n  EfsEncryptedCheck:\n    Properties:\n\
+        \      ConfigRuleName: efs-encrypted-check\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: EFS_ENCRYPTED_CHECK\n    Type: AWS::Config::ConfigRule\n\
+        \  ElasticacheRedisClusterAutomaticBackupCheck:\n    Properties:\n      ConfigRuleName:\
+        \ elasticache-redis-cluster-automatic-backup-check\n      Source:\n      \
+        \  Owner: AWS\n        SourceIdentifier: ELASTICACHE_REDIS_CLUSTER_AUTOMATIC_BACKUP_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  ElasticsearchEncryptedAtRest:\n    Properties:\n\
+        \      ConfigRuleName: elasticsearch-encrypted-at-rest\n      Source:\n  \
+        \      Owner: AWS\n        SourceIdentifier: ELASTICSEARCH_ENCRYPTED_AT_REST\n\
+        \    Type: AWS::Config::ConfigRule\n  ElasticsearchInVpcOnly:\n    Properties:\n\
+        \      ConfigRuleName: elasticsearch-in-vpc-only\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: ELASTICSEARCH_IN_VPC_ONLY\n    Type: AWS::Config::ConfigRule\n\
+        \  ElbAcmCertificateRequired:\n    Properties:\n      ConfigRuleName: elb-acm-certificate-required\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::ElasticLoadBalancing::LoadBalancer\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: ELB_ACM_CERTIFICATE_REQUIRED\n\
+        \    Type: AWS::Config::ConfigRule\n  ElbDeletionProtectionEnabled:\n    Properties:\n\
+        \      ConfigRuleName: elb-deletion-protection-enabled\n      Scope:\n   \
+        \     ComplianceResourceTypes:\n        - AWS::ElasticLoadBalancingV2::LoadBalancer\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: ELB_DELETION_PROTECTION_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  ElbLoggingEnabled:\n    Properties:\n\
+        \      ConfigRuleName: elb-logging-enabled\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::ElasticLoadBalancing::LoadBalancer\n        - AWS::ElasticLoadBalancingV2::LoadBalancer\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: ELB_LOGGING_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  EmrKerberosEnabled:\n    Properties:\n\
+        \      ConfigRuleName: emr-kerberos-enabled\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: EMR_KERBEROS_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  EmrMasterNoPublicIp:\n    Properties:\n      ConfigRuleName: emr-master-no-public-ip\n\
+        \      Scope:\n        ComplianceResourceTypes: []\n      Source:\n      \
+        \  Owner: AWS\n        SourceIdentifier: EMR_MASTER_NO_PUBLIC_IP\n    Type:\
+        \ AWS::Config::ConfigRule\n  EncryptedVolumes:\n    Properties:\n      ConfigRuleName:\
+        \ encrypted-volumes\n      Scope:\n        ComplianceResourceTypes:\n    \
+        \    - AWS::EC2::Volume\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ ENCRYPTED_VOLUMES\n    Type: AWS::Config::ConfigRule\n  GuarddutyEnabledCentralized:\n\
+        \    Properties:\n      ConfigRuleName: guardduty-enabled-centralized\n  \
+        \    Source:\n        Owner: AWS\n        SourceIdentifier: GUARDDUTY_ENABLED_CENTRALIZED\n\
+        \    Type: AWS::Config::ConfigRule\n  GuarddutyNonArchivedFindings:\n    Properties:\n\
+        \      ConfigRuleName: guardduty-non-archived-findings\n      InputParameters:\n\
+        \        daysHighSev:\n          Fn::If:\n          - guarddutyNonArchivedFindingsParamDaysHighSev\n\
+        \          - Ref: GuarddutyNonArchivedFindingsParamDaysHighSev\n         \
+        \ - Ref: AWS::NoValue\n        daysLowSev:\n          Fn::If:\n          -\
+        \ guarddutyNonArchivedFindingsParamDaysLowSev\n          - Ref: GuarddutyNonArchivedFindingsParamDaysLowSev\n\
+        \          - Ref: AWS::NoValue\n        daysMediumSev:\n          Fn::If:\n\
+        \          - guarddutyNonArchivedFindingsParamDaysMediumSev\n          - Ref:\
+        \ GuarddutyNonArchivedFindingsParamDaysMediumSev\n          - Ref: AWS::NoValue\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: GUARDDUTY_NON_ARCHIVED_FINDINGS\n\
+        \    Type: AWS::Config::ConfigRule\n  IamGroupHasUsersCheck:\n    Properties:\n\
+        \      ConfigRuleName: iam-group-has-users-check\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::IAM::Group\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ IAM_GROUP_HAS_USERS_CHECK\n    Type: AWS::Config::ConfigRule\n  IamPasswordPolicy:\n\
+        \    Properties:\n      ConfigRuleName: iam-password-policy\n      InputParameters:\n\
+        \        MaxPasswordAge:\n          Fn::If:\n          - iamPasswordPolicyParamMaxPasswordAge\n\
+        \          - Ref: IamPasswordPolicyParamMaxPasswordAge\n          - Ref: AWS::NoValue\n\
+        \        MinimumPasswordLength:\n          Fn::If:\n          - iamPasswordPolicyParamMinimumPasswordLength\n\
+        \          - Ref: IamPasswordPolicyParamMinimumPasswordLength\n          -\
+        \ Ref: AWS::NoValue\n        PasswordReusePrevention:\n          Fn::If:\n\
+        \          - iamPasswordPolicyParamPasswordReusePrevention\n          - Ref:\
+        \ IamPasswordPolicyParamPasswordReusePrevention\n          - Ref: AWS::NoValue\n\
+        \        RequireLowercaseCharacters:\n          Fn::If:\n          - iamPasswordPolicyParamRequireLowercaseCharacters\n\
+        \          - Ref: IamPasswordPolicyParamRequireLowercaseCharacters\n     \
+        \     - Ref: AWS::NoValue\n        RequireNumbers:\n          Fn::If:\n  \
+        \        - iamPasswordPolicyParamRequireNumbers\n          - Ref: IamPasswordPolicyParamRequireNumbers\n\
+        \          - Ref: AWS::NoValue\n        RequireSymbols:\n          Fn::If:\n\
+        \          - iamPasswordPolicyParamRequireSymbols\n          - Ref: IamPasswordPolicyParamRequireSymbols\n\
+        \          - Ref: AWS::NoValue\n        RequireUppercaseCharacters:\n    \
+        \      Fn::If:\n          - iamPasswordPolicyParamRequireUppercaseCharacters\n\
+        \          - Ref: IamPasswordPolicyParamRequireUppercaseCharacters\n     \
+        \     - Ref: AWS::NoValue\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ IAM_PASSWORD_POLICY\n    Type: AWS::Config::ConfigRule\n  IamPolicyNoStatementsWithAdminAccess:\n\
+        \    Properties:\n      ConfigRuleName: iam-policy-no-statements-with-admin-access\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::IAM::Policy\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS\n\
+        \    Type: AWS::Config::ConfigRule\n  IamRootAccessKeyCheck:\n    Properties:\n\
+        \      ConfigRuleName: iam-root-access-key-check\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: IAM_ROOT_ACCESS_KEY_CHECK\n    Type: AWS::Config::ConfigRule\n\
+        \  IamUserGroupMembershipCheck:\n    Properties:\n      ConfigRuleName: iam-user-group-membership-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::IAM::User\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: IAM_USER_GROUP_MEMBERSHIP_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  IamUserMfaEnabled:\n    Properties:\n\
+        \      ConfigRuleName: iam-user-mfa-enabled\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: IAM_USER_MFA_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  IamUserNoPoliciesCheck:\n    Properties:\n      ConfigRuleName: iam-user-no-policies-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::IAM::User\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: IAM_USER_NO_POLICIES_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  IamUserUnusedCredentialsCheck:\n   \
+        \ Properties:\n      ConfigRuleName: iam-user-unused-credentials-check\n \
+        \     InputParameters:\n        maxCredentialUsageAge:\n          Fn::If:\n\
+        \          - iamUserUnusedCredentialsCheckParamMaxCredentialUsageAge\n   \
+        \       - Ref: IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge\n \
+        \         - Ref: AWS::NoValue\n      Source:\n        Owner: AWS\n       \
+        \ SourceIdentifier: IAM_USER_UNUSED_CREDENTIALS_CHECK\n    Type: AWS::Config::ConfigRule\n\
+        \  IncomingSshDisabled:\n    Properties:\n      ConfigRuleName: restricted-ssh\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::EC2::SecurityGroup\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: INCOMING_SSH_DISABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  InstancesInVpc:\n    Properties:\n \
+        \     ConfigRuleName: ec2-instances-in-vpc\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::EC2::Instance\n      Source:\n        Owner: AWS\n       \
+        \ SourceIdentifier: INSTANCES_IN_VPC\n    Type: AWS::Config::ConfigRule\n\
+        \  InternetGatewayAuthorizedVpcOnly:\n    Properties:\n      ConfigRuleName:\
+        \ internet-gateway-authorized-vpc-only\n      InputParameters:\n         AuthorizedVpcIds:\n\
+        \           Fn::If:\n           - internetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds\n\
+        \           - Ref: InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds\n\
+        \           - Ref: AWS::NoValue\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::EC2::InternetGateway\n      Source:\n        Owner: AWS\n\
+        \        SourceIdentifier: INTERNET_GATEWAY_AUTHORIZED_VPC_ONLY\n    Type:\
+        \ AWS::Config::ConfigRule\n  KmsCmkNotScheduledForDeletion:\n    Properties:\n\
+        \      ConfigRuleName: kms-cmk-not-scheduled-for-deletion\n      Scope:\n\
+        \        ComplianceResourceTypes:\n        - AWS::KMS::Key\n      Source:\n\
+        \        Owner: AWS\n        SourceIdentifier: KMS_CMK_NOT_SCHEDULED_FOR_DELETION\n\
+        \    Type: AWS::Config::ConfigRule\n  LambdaDlqCheck:\n    Properties:\n \
+        \     ConfigRuleName: lambda-dlq-check\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::Lambda::Function\n      Source:\n        Owner: AWS\n    \
+        \    SourceIdentifier: LAMBDA_DLQ_CHECK\n    Type: AWS::Config::ConfigRule\n\
+        \  LambdaFunctionPublicAccessProhibited:\n    Properties:\n      ConfigRuleName:\
+        \ lambda-function-public-access-prohibited\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::Lambda::Function\n      Source:\n        Owner: AWS\n    \
+        \    SourceIdentifier: LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED\n    Type:\
+        \ AWS::Config::ConfigRule\n  LambdaInsideVpc:\n    Properties:\n      ConfigRuleName:\
+        \ lambda-inside-vpc\n      Scope:\n        ComplianceResourceTypes:\n    \
+        \    - AWS::Lambda::Function\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ LAMBDA_INSIDE_VPC\n    Type: AWS::Config::ConfigRule\n  MfaEnabledForIamConsoleAccess:\n\
+        \    Properties:\n      ConfigRuleName: mfa-enabled-for-iam-console-access\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: MFA_ENABLED_FOR_IAM_CONSOLE_ACCESS\n\
+        \    Type: AWS::Config::ConfigRule\n  MultiRegionCloudTrailEnabled:\n    Properties:\n\
+        \      ConfigRuleName: multi-region-cloudtrail-enabled\n      Source:\n  \
+        \      Owner: AWS\n        SourceIdentifier: MULTI_REGION_CLOUD_TRAIL_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  RdsInstancePublicAccessCheck:\n    Properties:\n\
+        \      ConfigRuleName: rds-instance-public-access-check\n      Scope:\n  \
+        \      ComplianceResourceTypes:\n        - AWS::RDS::DBInstance\n      Source:\n\
+        \        Owner: AWS\n        SourceIdentifier: RDS_INSTANCE_PUBLIC_ACCESS_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  RdsMultiAzSupport:\n    Properties:\n\
+        \      ConfigRuleName: rds-multi-az-support\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::RDS::DBInstance\n      Source:\n        Owner: AWS\n     \
+        \   SourceIdentifier: RDS_MULTI_AZ_SUPPORT\n    Type: AWS::Config::ConfigRule\n\
+        \  RdsSnapshotEncrypted:\n    Properties:\n      ConfigRuleName: rds-snapshot-encrypted\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::RDS::DBSnapshot\n\
+        \        - AWS::RDS::DBClusterSnapshot\n      Source:\n        Owner: AWS\n\
+        \        SourceIdentifier: RDS_SNAPSHOT_ENCRYPTED\n    Type: AWS::Config::ConfigRule\n\
+        \  RdsSnapshotsPublicProhibited:\n    Properties:\n      ConfigRuleName: rds-snapshots-public-prohibited\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::RDS::DBSnapshot\n\
+        \        - AWS::RDS::DBClusterSnapshot\n      Source:\n        Owner: AWS\n\
+        \        SourceIdentifier: RDS_SNAPSHOTS_PUBLIC_PROHIBITED\n    Type: AWS::Config::ConfigRule\n\
+        \  RdsStorageEncrypted:\n    Properties:\n      ConfigRuleName: rds-storage-encrypted\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::RDS::DBInstance\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: RDS_STORAGE_ENCRYPTED\n\
+        \    Type: AWS::Config::ConfigRule\n  RedshiftClusterConfigurationCheck:\n\
+        \    Properties:\n      ConfigRuleName: redshift-cluster-configuration-check\n\
+        \      InputParameters:\n        clusterDbEncrypted: 'TRUE'\n        loggingEnabled:\
+        \ 'TRUE'\n      Scope:\n        ComplianceResourceTypes:\n        - AWS::Redshift::Cluster\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: REDSHIFT_CLUSTER_CONFIGURATION_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  RedshiftClusterPublicAccessCheck:\n\
+        \    Properties:\n      ConfigRuleName: redshift-cluster-public-access-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::Redshift::Cluster\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: REDSHIFT_CLUSTER_PUBLIC_ACCESS_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  RedshiftRequireTlsSsl:\n    Properties:\n\
+        \      ConfigRuleName: redshift-require-tls-ssl\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::Redshift::Cluster\n      Source:\n        Owner: AWS\n   \
+        \     SourceIdentifier: REDSHIFT_REQUIRE_TLS_SSL\n    Type: AWS::Config::ConfigRule\n\
+        \  RestrictedIncomingTraffic:\n    Properties:\n      ConfigRuleName: restricted-common-ports\n\
+        \      InputParameters:\n        blockedPort1:\n          Fn::If:\n      \
+        \    - restrictedIncomingTrafficParamBlockedPort1\n          - Ref: RestrictedIncomingTrafficParamBlockedPort1\n\
+        \          - Ref: AWS::NoValue\n        blockedPort2:\n          Fn::If:\n\
+        \          - restrictedIncomingTrafficParamBlockedPort2\n          - Ref:\
+        \ RestrictedIncomingTrafficParamBlockedPort2\n          - Ref: AWS::NoValue\n\
+        \        blockedPort3:\n          Fn::If:\n          - restrictedIncomingTrafficParamBlockedPort3\n\
+        \          - Ref: RestrictedIncomingTrafficParamBlockedPort3\n          -\
+        \ Ref: AWS::NoValue\n        blockedPort4:\n          Fn::If:\n          -\
+        \ restrictedIncomingTrafficParamBlockedPort4\n          - Ref: RestrictedIncomingTrafficParamBlockedPort4\n\
+        \          - Ref: AWS::NoValue\n        blockedPort5:\n          Fn::If:\n\
+        \          - restrictedIncomingTrafficParamBlockedPort5\n          - Ref:\
+        \ RestrictedIncomingTrafficParamBlockedPort5\n          - Ref: AWS::NoValue\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::EC2::SecurityGroup\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: RESTRICTED_INCOMING_TRAFFIC\n\
+        \    Type: AWS::Config::ConfigRule\n  RootAccountHardwareMfaEnabled:\n   \
+        \ Properties:\n      ConfigRuleName: root-account-hardware-mfa-enabled\n \
+        \     Source:\n        Owner: AWS\n        SourceIdentifier: ROOT_ACCOUNT_HARDWARE_MFA_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  RootAccountMfaEnabled:\n    Properties:\n\
+        \      ConfigRuleName: root-account-mfa-enabled\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: ROOT_ACCOUNT_MFA_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  S3AccountLevelPublicAccessBlocks:\n    Properties:\n      ConfigRuleName:\
+        \ s3-account-level-public-access-blocks\n      InputParameters:\n        BlockPublicAcls:\n\
+        \          Fn::If:\n          - s3AccountLevelPublicAccessBlocksParamBlockPublicAcls\n\
+        \          - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicAcls\n \
+        \         - Ref: AWS::NoValue\n        BlockPublicPolicy:\n          Fn::If:\n\
+        \          - s3AccountLevelPublicAccessBlocksParamBlockPublicPolicy\n    \
+        \      - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy\n   \
+        \       - Ref: AWS::NoValue\n        IgnorePublicAcls:\n          Fn::If:\n\
+        \          - s3AccountLevelPublicAccessBlocksParamIgnorePublicAcls\n     \
+        \     - Ref: S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls\n     \
+        \     - Ref: AWS::NoValue\n        RestrictPublicBuckets:\n          Fn::If:\n\
+        \          - s3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets\n\
+        \          - Ref: S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets\n\
+        \          - Ref: AWS::NoValue\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::S3::AccountPublicAccessBlock\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: S3_ACCOUNT_LEVEL_PUBLIC_ACCESS_BLOCKS\n \
+        \   Type: AWS::Config::ConfigRule\n  S3BucketDefaultLockEnabled:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-default-lock-enabled\n      Scope:\n    \
+        \    ComplianceResourceTypes:\n        - AWS::S3::Bucket\n      Source:\n\
+        \        Owner: AWS\n        SourceIdentifier: S3_BUCKET_DEFAULT_LOCK_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketLoggingEnabled:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-logging-enabled\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::S3::Bucket\n      Source:\n        Owner: AWS\n        SourceIdentifier:\
+        \ S3_BUCKET_LOGGING_ENABLED\n    Type: AWS::Config::ConfigRule\n  S3BucketPolicyGranteeCheck:\n\
+        \    Properties:\n      ConfigRuleName: s3-bucket-policy-grantee-check\n \
+        \     Scope:\n        ComplianceResourceTypes:\n        - AWS::S3::Bucket\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: S3_BUCKET_POLICY_GRANTEE_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketPublicReadProhibited:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-public-read-prohibited\n      Scope:\n  \
+        \      ComplianceResourceTypes:\n        - AWS::S3::Bucket\n      Source:\n\
+        \        Owner: AWS\n        SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketPublicWriteProhibited:\n   \
+        \ Properties:\n      ConfigRuleName: s3-bucket-public-write-prohibited\n \
+        \     Scope:\n        ComplianceResourceTypes:\n        - AWS::S3::Bucket\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketReplicationEnabled:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-replication-enabled\n      Scope:\n     \
+        \   ComplianceResourceTypes:\n        - AWS::S3::Bucket\n      Source:\n \
+        \       Owner: AWS\n        SourceIdentifier: S3_BUCKET_REPLICATION_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketServerSideEncryptionEnabled:\n\
+        \    Properties:\n      ConfigRuleName: s3-bucket-server-side-encryption-enabled\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::S3::Bucket\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketSslRequestsOnly:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-ssl-requests-only\n      Scope:\n       \
+        \ ComplianceResourceTypes:\n        - AWS::S3::Bucket\n      Source:\n   \
+        \     Owner: AWS\n        SourceIdentifier: S3_BUCKET_SSL_REQUESTS_ONLY\n\
+        \    Type: AWS::Config::ConfigRule\n  S3BucketVersioningEnabled:\n    Properties:\n\
+        \      ConfigRuleName: s3-bucket-versioning-enabled\n      Scope:\n      \
+        \  ComplianceResourceTypes:\n        - AWS::S3::Bucket\n      Source:\n  \
+        \      Owner: AWS\n        SourceIdentifier: S3_BUCKET_VERSIONING_ENABLED\n\
+        \    Type: AWS::Config::ConfigRule\n  SagemakerEndpointConfigurationKmsKeyConfigured:\n\
+        \    Properties:\n      ConfigRuleName: sagemaker-endpoint-configuration-kms-key-configured\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: SAGEMAKER_ENDPOINT_CONFIGURATION_KMS_KEY_CONFIGURED\n\
+        \    Type: AWS::Config::ConfigRule\n  SagemakerNotebookInstanceKmsKeyConfigured:\n\
+        \    Properties:\n      ConfigRuleName: sagemaker-notebook-instance-kms-key-configured\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: SAGEMAKER_NOTEBOOK_INSTANCE_KMS_KEY_CONFIGURED\n\
+        \    Type: AWS::Config::ConfigRule\n  SagemakerNotebookNoDirectInternetAccess:\n\
+        \    Properties:\n      ConfigRuleName: sagemaker-notebook-no-direct-internet-access\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: SAGEMAKER_NOTEBOOK_NO_DIRECT_INTERNET_ACCESS\n\
+        \    Type: AWS::Config::ConfigRule\n  SecretsmanagerRotationEnabledCheck:\n\
+        \    Properties:\n      ConfigRuleName: secretsmanager-rotation-enabled-check\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::SecretsManager::Secret\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: SECRETSMANAGER_ROTATION_ENABLED_CHECK\n\
+        \    Type: AWS::Config::ConfigRule\n  SecurityhubEnabled:\n    Properties:\n\
+        \      ConfigRuleName: securityhub-enabled\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: SECURITYHUB_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  SnsEncryptedKms:\n    Properties:\n      ConfigRuleName: sns-encrypted-kms\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::SNS::Topic\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: SNS_ENCRYPTED_KMS\n\
+        \    Type: AWS::Config::ConfigRule\n  VpcFlowLogsEnabled:\n    Properties:\n\
+        \      ConfigRuleName: vpc-flow-logs-enabled\n      Source:\n        Owner:\
+        \ AWS\n        SourceIdentifier: VPC_FLOW_LOGS_ENABLED\n    Type: AWS::Config::ConfigRule\n\
+        \  VpcSgOpenOnlyToAuthorizedPorts:\n    Properties:\n      ConfigRuleName:\
+        \ vpc-sg-open-only-to-authorized-ports\n      Scope:\n        ComplianceResourceTypes:\n\
+        \        - AWS::EC2::SecurityGroup\n      Source:\n        Owner: AWS\n  \
+        \      SourceIdentifier: VPC_SG_OPEN_ONLY_TO_AUTHORIZED_PORTS\n    Type: AWS::Config::ConfigRule\n\
+        \  VpcVpn2TunnelsUp:\n    Properties:\n      ConfigRuleName: vpc-vpn-2-tunnels-up\n\
+        \      Scope:\n        ComplianceResourceTypes:\n        - AWS::EC2::VPNConnection\n\
+        \      Source:\n        Owner: AWS\n        SourceIdentifier: VPC_VPN_2_TUNNELS_UP\n\
+        \    Type: AWS::Config::ConfigRule\nConditions:\n  accessKeysRotatedParamMaxAccessKeyAge:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: AccessKeysRotatedParamMaxAccessKeyAge\n\
+        \  dynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: DynamodbThroughputLimitCheckParamAccountRCUThresholdPercentage\n\
+        \  dynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: DynamodbThroughputLimitCheckParamAccountWCUThresholdPercentage\n\
+        \  guarddutyNonArchivedFindingsParamDaysHighSev:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: GuarddutyNonArchivedFindingsParamDaysHighSev\n \
+        \ guarddutyNonArchivedFindingsParamDaysLowSev:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: GuarddutyNonArchivedFindingsParamDaysLowSev\n  guarddutyNonArchivedFindingsParamDaysMediumSev:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: GuarddutyNonArchivedFindingsParamDaysMediumSev\n\
+        \  iamPasswordPolicyParamMaxPasswordAge:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: IamPasswordPolicyParamMaxPasswordAge\n  iamPasswordPolicyParamMinimumPasswordLength:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: IamPasswordPolicyParamMinimumPasswordLength\n\
+        \  iamPasswordPolicyParamPasswordReusePrevention:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: IamPasswordPolicyParamPasswordReusePrevention\n\
+        \  iamPasswordPolicyParamRequireLowercaseCharacters:\n    Fn::Not:\n    -\
+        \ Fn::Equals:\n      - ''\n      - Ref: IamPasswordPolicyParamRequireLowercaseCharacters\n\
+        \  iamPasswordPolicyParamRequireNumbers:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: IamPasswordPolicyParamRequireNumbers\n  iamPasswordPolicyParamRequireSymbols:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: IamPasswordPolicyParamRequireSymbols\n\
+        \  iamPasswordPolicyParamRequireUppercaseCharacters:\n    Fn::Not:\n    -\
+        \ Fn::Equals:\n      - ''\n      - Ref: IamPasswordPolicyParamRequireUppercaseCharacters\n\
+        \  iamUserUnusedCredentialsCheckParamMaxCredentialUsageAge:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: IamUserUnusedCredentialsCheckParamMaxCredentialUsageAge\n\
+        \  internetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: InternetGatewayAuthorizedVpcOnlyParamAuthorizedVpcIds\n\
+        \  restrictedIncomingTrafficParamBlockedPort1:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: RestrictedIncomingTrafficParamBlockedPort1\n  restrictedIncomingTrafficParamBlockedPort2:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: RestrictedIncomingTrafficParamBlockedPort2\n\
+        \  restrictedIncomingTrafficParamBlockedPort3:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: RestrictedIncomingTrafficParamBlockedPort3\n  restrictedIncomingTrafficParamBlockedPort4:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: RestrictedIncomingTrafficParamBlockedPort4\n\
+        \  restrictedIncomingTrafficParamBlockedPort5:\n    Fn::Not:\n    - Fn::Equals:\n\
+        \      - ''\n      - Ref: RestrictedIncomingTrafficParamBlockedPort5\n  s3AccountLevelPublicAccessBlocksParamBlockPublicAcls:\n\
+        \    Fn::Not:\n    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicAcls\n\
+        \  s3AccountLevelPublicAccessBlocksParamBlockPublicPolicy:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamBlockPublicPolicy\n\
+        \  s3AccountLevelPublicAccessBlocksParamIgnorePublicAcls:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls\n\
+        \  s3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets:\n    Fn::Not:\n\
+        \    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets"
+    Type: AWS::Config::ConformancePack
+  ConfigPacksCPOperationalBestPracticesforNISTCSFB3E464EB:
+    DependsOn:
+    - ConfigEnabledPromiseConfigRecorder0A75B039
+    Metadata:
+      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/CP-Operational-Best-Practices-for-NIST-CSF
     Properties:
       ConformancePackInputParameters: []
       ConformancePackName: Operational-Best-Practices-for-NIST-CSF
       DeliveryS3Bucket:
-        Ref: ConfigPacksConfigBucket2FDEAE68
-      DeliveryS3KeyPrefix: nist-csf-bestpractices
+        Ref: ConfigEnabledPromiseConfigBucket2F967063
+      DeliveryS3KeyPrefix: Operational-Best-Practices-for-NIST-CSF
       TemplateBody: "##################################################################################\n\
         #\n#   Conformance Pack:\n#     Operational Best Practices for NIST CSF\n\
         #\n#   This conformance pack helps verify compliance with NIST CSF requirements.\n\
@@ -1216,61 +1713,6 @@ Resources:
         \    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamIgnorePublicAcls\n\
         \  s3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets:\n    Fn::Not:\n\
         \    - Fn::Equals:\n      - ''\n      - Ref: S3AccountLevelPublicAccessBlocksParamRestrictPublicBuckets"
-    Type: AWS::Config::ConformancePack
-  ConfigPacksOperationalBestPracticesForS3ConformancePack7F38C015:
-    DependsOn:
-    - ConfigPacksConfigRecorder41CB4109
-    Metadata:
-      aws:cdk:path: AwsBiotechBlueprint/ConfigPacks/OperationalBestPracticesForS3ConformancePack
-    Properties:
-      ConformancePackInputParameters: []
-      ConformancePackName: Operational-Best-Practices-For-Amazon-S3
-      DeliveryS3Bucket:
-        Ref: ConfigPacksConfigBucket2FDEAE68
-      DeliveryS3KeyPrefix: s3-bestpractices
-      TemplateBody: "###############################################################################################\n\
-        #\n#   Conformance Pack:\n#     Operational Best Practices for Amazon S3\n\
-        #\n#    This pack contains AWS Config rules based on the best practice guidelines\
-        \ for Amazon S3.\n#\n###############################################################################################\n\
-        \nResources:\n    S3BucketPublicReadProhibited:\n      Type: AWS::Config::ConfigRule\n\
-        \      Properties:\n        ConfigRuleName: S3BucketPublicReadProhibited\n\
-        \        Description: >- \n          Checks that your Amazon S3 buckets do\
-        \ not allow public read access.\n          The rule checks the Block Public\
-        \ Access settings, the bucket policy, and the\n          bucket access control\
-        \ list (ACL).\n        Scope:\n          ComplianceResourceTypes:\n      \
-        \    - \"AWS::S3::Bucket\"\n        Source:\n          Owner: AWS\n      \
-        \    SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED\n        MaximumExecutionFrequency:\
-        \ Six_Hours\n    S3BucketPublicWriteProhibited: \n      Type: \"AWS::Config::ConfigRule\"\
-        \n      Properties: \n        ConfigRuleName: S3BucketPublicWriteProhibited\n\
-        \        Description: \"Checks that your Amazon S3 buckets do not allow public\
-        \ write access. The rule checks the Block Public Access settings, the bucket\
-        \ policy, and the bucket access control list (ACL).\"\n        Scope: \n \
-        \         ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n   \
-        \     Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_PUBLIC_WRITE_PROHIBITED\n\
-        \        MaximumExecutionFrequency: Six_Hours\n    S3BucketReplicationEnabled:\
-        \ \n      Type: \"AWS::Config::ConfigRule\"\n      Properties: \n        ConfigRuleName:\
-        \ S3BucketReplicationEnabled\n        Description: \"Checks whether the Amazon\
-        \ S3 buckets have cross-region replication enabled.\"\n        Scope: \n \
-        \         ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n   \
-        \     Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_REPLICATION_ENABLED\n\
-        \    S3BucketSSLRequestsOnly: \n      Type: \"AWS::Config::ConfigRule\"\n\
-        \      Properties: \n        ConfigRuleName: S3BucketSSLRequestsOnly\n   \
-        \     Description: \"Checks whether S3 buckets have policies that require\
-        \ requests to use Secure Socket Layer (SSL).\"\n        Scope: \n        \
-        \  ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\n        Source:\
-        \ \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_SSL_REQUESTS_ONLY\n\
-        \    ServerSideReplicationEnabled: \n      Type: \"AWS::Config::ConfigRule\"\
-        \n      Properties: \n        ConfigRuleName: ServerSideReplicationEnabled\n\
-        \        Description: \"Checks that your Amazon S3 bucket either has S3 default\
-        \ encryption enabled or that the S3 bucket policy explicitly denies put-object\
-        \ requests without server side encryption.\"\n        Scope: \n          ComplianceResourceTypes:\
-        \ \n          - \"AWS::S3::Bucket\"\n        Source: \n          Owner: AWS\n\
-        \          SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED\n  \
-        \  S3BucketLoggingEnabled: \n      Type: \"AWS::Config::ConfigRule\"\n   \
-        \   Properties: \n        ConfigRuleName: S3BucketLoggingEnabled\n       \
-        \ Description: \"Checks whether logging is enabled for your S3 buckets.\"\n\
-        \        Scope: \n          ComplianceResourceTypes: \n          - \"AWS::S3::Bucket\"\
-        \n        Source: \n          Owner: AWS\n          SourceIdentifier: S3_BUCKET_LOGGING_ENABLED"
     Type: AWS::Config::ConformancePack
   DnsHostedZone9A2A44DA:
     Metadata:
