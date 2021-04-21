@@ -13,4 +13,4 @@ tests:
       AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7: quickstart-aws-fintech-blueprint/lambda_functions/packages/assetc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c/||lambda.zip
     regions:
     - us-east-2
-    template: templates/AwsFintechBlueprint.template.quickstart.yml
+    template: templates/AwsFintechBlueprint.quickstart-template.yml

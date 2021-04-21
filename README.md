@@ -27,6 +27,8 @@ Click the launch stack button below. Make sure you are in your preferred region 
 
 ### Option 2) AWS CDK Deployment
 
+If you dont already have the CDK installed on your development machine, make sure you have the [CDK prerequisites](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites) and then [install the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install).
+
 ```bash
 git clone https://github.com/aws-quickstart/quickstart-aws-fintech-blueprint-cdk.git
 cd quickstart-aws-fintech-blueprint-cdk
