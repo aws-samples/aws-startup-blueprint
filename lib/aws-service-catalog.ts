@@ -25,27 +25,7 @@ export class BlueprintServiceCatalog extends core.Construct {
             description: "Collection of commercial and open sources tools easily deployed into the Fintech Blueprint.",            
         });
 
-        // const chemAxon = new sc.CfnCloudFormationProduct(this, 'ChemAxon', {
-        //     owner: "ChemAxon",
-        //     description: "ChemAxon's Compound Registration is a system built on a set of web services, aiding users to register molecular structures into a compound database. The registration process spots unique compounds among a set of structures already contained within the database.",
-        //     distributor: "AWS",
-        //     supportDescription: "You need to subscribe to the ChemAxon marketplace AMI before you can deploy this software. https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631&sr=0-1&ref_=srh_res_product_title.",
-        //     supportUrl: "https://chemaxon.com/support",
-        //     supportEmail: "support@chemaxon.com",
-        //     name: "ChemAxon Compound Registry",
-        //     provisioningArtifactParameters: [{
-        //         info: {
-        //             LoadTemplateFromURL: "https://s3.amazonaws.com/aws-quickstart/quickstart-chemaxon-registry/templates/chemaxon-registry.template"
-        //         }
-        //     }]
 
-
-        // });
-
-        // const chemAxonAssocation = new sc.CfnPortfolioProductAssociation(this, 'ChemAxonAssociation', {
-        //     portfolioId: informaticsCatalog.ref,
-        //     productId: chemAxon.ref
-        // });
 
 
        
