@@ -87,7 +87,7 @@ The Quick Start sets up a private DNS with `.corp` as the apex domain using http
 
 === Delete the default VPC
 
-Every new AWS account comes with a default VPC with public subnets in each Availability Zone. It is recommended that you delete the default VPC and only deploy resources into the Production, Management, and Development VPCs that the Biotech Blueprint Quick Start creates. If you have already deployed resources into the default VPC before launching the Quick Start, it is recommended that you migrate these resources to the Biotech Blueprint VPCs and then delete the default VPC. Removing the default VPC will ensure that a user does not mistakenly launch a resource into one of its exposed public subnets.
+Every new AWS account comes with a default VPC with public subnets in each Availability Zone. It is recommended that you delete this default VPC and only deploy resources into the production, management, and development VPCs that the Biotech Blueprint Quick Start provisions. If you have already deployed resources into the default VPC before launching the Quick Start, it is recommended that you migrate these resources to the Biotech Blueprint VPCs and then delete the default VPC. Removing the default VPC will ensure that a user does not launch resources into one of its exposed public subnets.
 
 <<defaultvpc>> shows the default VPC listed in the Amazon VPC console with the VPCs created by the Biotech Blueprint Quick Start.
 
@@ -146,13 +146,13 @@ WARNING: AWS Config conformance packs provide a general-purpose compliance frame
 
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
     
-== Region Restriction Capabilities 
+== Restricting IAM actions to specific AWS Regions 
 
 A common ask from Startups using AWS is to restrict all IAM actions to specific regions. For example, you may only want users to create EC2 instances or S3 buckets in EU-only regions. This could be for compliance reasons or simply because its a good practice to keep resources out of regions you never intend to use. 
 
-If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity polices that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission polices like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
+If you have a single AWS account, the best way to enforce AWS Region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity polices that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies and its permissions boundaries. This means that even the broadest identity-based permission polices like `arn:aws:iam::aws:policy/AdministratorAccess` will still be denied if the principal's permission boundary does not allow it.
 
-The `RegionRestriction` class configured in 'lib/aws-startup-blueprint-stack.ts' creates just such an IAM permission boundary restriction actions to the regions you specify:
+The `RegionRestriction` class configured in `lib/aws-startup-blueprint-stack.ts` creates an IAM permission boundary. It restricts IAM actions to the AWS Regions you specify.
 
 For example:
 
