@@ -119,14 +119,19 @@ The following table provides some examples.
 
 == Biotech Blueprint Informatics Catalog
 
-After deploying the Quick Start, you can launch the following informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console^]:
+After deploying the Biotech Blueprint Quick Start, you can launch a selection of informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console^]. You can also deploy these from the launch links provided on their Quick Start pages and in their deployment guides. The following table provides information to learn more about the available applications.
 
-* https://chemaxon.com/products/compound-registration[ChemAxon Compound Registration^]
-* https://aws.amazon.com/quickstart/biotech-blueprint/nextflow/[Nextflow^]
-* https://aws.amazon.com/quickstart/biotech-blueprint/dotmatics-suite/[Dotmatics Suite^]
-* https://aws.amazon.com/quickstart/architecture/hail/[Hail 0.2^]
-* https://aws.amazon.com/quickstart/biotech-blueprint/titian-mosaic-freezermanagement/[Titian Mosaic FreezerManagement^]
-  
+[cols="1,1,1,1"]
+|===
+|Category |Partner |Product |To install
+
+|Compound registry |ChemAxon |https://chemaxon.com/products/compound-registration[Compound Registration^] |https://fwd.aws/x45Rg[Launch Quick Start template^]
+|Genomics analysis |Nextflow |https://www.nextflow.io/[Nextflow^] |https://fwd.aws/ejxNx[Quick Start page] \| https://fwd.aws/B4VnD[View guide^]
+|Genomics analysis |Hail |https://hail.is/docs/0.2/index.html[Hail 0.2^] |https://fwd.aws/w9E8d[Quick Start page^] \| https://fwd.aws/GMvwj[View guide^]
+|Knowledge management |Dotmatics |https://www.dotmatics.com/[Dotmatics suite^] |https://fwd.aws/A5K9B[Quick Start page^] \| https://fwd.aws/RvJpR[View guide^]
+|Sample management |Titian |https://www.titian.co.uk/products/aws-mosaic-freezermanagement[Mosaic FreezerManagement^] |https://fwd.aws/E736X[Quick Start page^] \| https://fwd.aws/KNmPd[View guide^]
+|===
+
 
 === AWS Service Catalog permissions
 Access to AWS Service Catalog requires credentials. Those credentials must have permission to access AWS resources, such as an AWS Service Catalog portfolio or product. AWS Service Catalog integrates with AWS Identity and Access Management (IAM) to enable you to grant AWS Service Catalog end users permissions to launch products and manage provisioned products. To control access, you attach these policies to the IAM users, groups, and roles that you use with AWS Service Catalog.
@@ -147,17 +152,5 @@ image::../images/service-catalog-permission.png[scpermission,width=100%,height=1
 
 == Optional DNS setup
 The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account^]. Using the Amazon Route 53 console, you can create `A` or `CNAME` records to private applications you deploy. 
-
-== Additional resources
-
-=== Informatics applications
-
-* https://aws.amazon.com/marketplace/pp/B077F6VV3B?qid=1553611079631[ChemAxon Compound Registry Product Overview^]
-* https://fwd.aws/RvJpR[Dotmatics Suite on the AWS Cloud^]
-* https://fwd.aws/GMvwj[Hail 0.2 on the AWS Cloud^]
-* https://fwd.aws/KNmPd[Titian Mosaic FreezerMangement on the AWS Cloud^]
-* https://fwd.aws/B4VnD[Workflow Orchestration for Genomics Analysis with Nextflow on the AWS Cloud^]
-** https://docs.opendata.aws/genomics-workflows/orchestration/nextflow/nextflow-overview/[Nextflow on AWS Batch^]
-
 
 
