@@ -22,4 +22,5 @@ As shown in <<architecture1>>, the Quick Start sets up the following:
 ** Nextflow
 ** Dotmatics
 ** Hail 0.2
-** Titian Mosaic FreezerManagement 
+** Titian Mosaic FreezerManagement
+* With the AWS CDK deployment option, you can enable a feature that restricts IAM actions to specific AWS Regions (not shown).
