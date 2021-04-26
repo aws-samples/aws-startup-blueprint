@@ -1,6 +1,6 @@
 # AWS Biotech Blueprint
 
-For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/XzP5M).
+For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/zyRAg).
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo.
 
