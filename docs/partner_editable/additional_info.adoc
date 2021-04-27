@@ -260,8 +260,3 @@ image::../images/service-catalog-permission.png[scpermission,width=100%,height=1
 . Select *Add groups, users, and roles*.
 . Select the IAM identities requiring AWS Service Catalog permissions. Do not forget to include yourself if you need permissions.
 
-
-
-
-
-

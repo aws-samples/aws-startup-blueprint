@@ -1,4 +1,4 @@
-# AWS Biotech Blueprint
+# AWS Biotech Blueprint - Quick Start
 
 For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/zyRAg).
 

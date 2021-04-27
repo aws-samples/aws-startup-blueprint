@@ -5,5 +5,5 @@ import { AwsStartupBlueprintStack } from '../lib/aws-startup-blueprint-stack';
 
 const app = new cdk.App();
 new AwsStartupBlueprintStack(app, 'AwsBiotechBlueprint', {
-    description: "The AWS Biotech Blueprint is a strongly opinionated architecture for any Startup looking to start using AWS follwing best practices on day 1. (qs-1of009lua)"
+    description: "AWS Biotech Blueprint CDK is an AWS Quick Start that helps Biotech companies deploy core AWS Infrastructure as well as CloudFormation templates for common ISV solutions. (qs-1of009lua) (ib-1of009lua)"
 });
