@@ -2,6 +2,6 @@
 
 This Quick Start provides two deployment options:
 
-* *CloudFormation Only Deployment*. This option uses CloudFormation directly to deploy the {partner-product-short-name} into your AWS account immediately. Use this option if you are unfamiliar with the AWS Cloud Development Kit and just want to get going ASAP.
-* *CDK Deployment*. This option uses the AWS Cloud Development Kit to deploy the {partner-product-short-name}. If you  want to cleanly manage/adapt/update the architecture over time, or you already aware of what the https://aws.amazon.com/cdk/[AWS CDK^] is, use this deployment option.
+* *AWS CloudFormation-only deployment*. Deploy {partner-product-short-name} into your AWS account using the AWS CloudFormation console. Use this option if you are unfamiliar with the AWS Cloud Development Kit. This option takes about seven minutes.
+* *AWS CDK deployment*. Use https://aws.amazon.com/cdk/[AWS CDK^] to deploy {partner-product-short-name}. This option takes about five minutes longer than the AWS CloudFormation-only option.
 

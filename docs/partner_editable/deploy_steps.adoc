@@ -21,24 +21,14 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 endif::marketplace_subscription[]
 // \Not to be edited
 
-=== Deployment Options
-
-The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
-
-If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
-
-If you prefer using the awesome https://aws.amazon.com/cdk/[AWS CDK], follow the CDK Deployment option (2).
-
-Both deployment options take about ~7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the CloudFormation template in option 1.
-
-=== Deployment Option 1: AWS CloudFormation Deployment (quick and easy)
+=== AWS CloudFormation deployment
 
 . Sign in to your AWS account, and click the deploy link below to launch the AWS CloudFormation template. 
 
 [cols=2*]
 |===
-^|http://qs_launch_link[Deploy {partner-product-short-name} into your AWS Account^]
-^|http://qs_template_link[View template^]
+^|https://fwd.aws/RAnNy[Deploy {partner-product-short-name} into your AWS Account^]
+^|https://fwd.aws/DzbRN[View template^]
 |===
 
 
