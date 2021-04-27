@@ -228,7 +228,7 @@ The following table provides some examples.
 |Okta Cloud Connect appliance |Management VPC |Private
 |===
 
-== Biotech Blueprint informatics catalog
+== AWS Service Catalog
 
 After deploying the Biotech Blueprint Quick Start, you can launch a selection of informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console^]. You can also deploy these from the launch links provided on their Quick Start pages and in their deployment guides. The following table provides information to learn more about the available applications.
 
