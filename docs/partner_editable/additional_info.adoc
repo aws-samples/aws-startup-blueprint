@@ -63,7 +63,7 @@ NOTE: The other three files are the CA chain and server key/cert. You will need 
 [start=5]
 . Open `downloaded-client-config.ovpn` in a text editor.
 . Add the following lines to the bottom of the file. Replace the contents of the two files inside the respective `<cert>` and `<key>` sections.
-
++
 ```
 <cert>
 Contents of client certificate file (client1.domain.tld.crt)
@@ -82,6 +82,20 @@ Contents of private key file (client1.domain.tld.key)
 
 With a VPN connection, you can connect to resources you launch into your VPCs using private IP addresses. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
 
+=== Optional DNS setup
+The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account^]. Using the Amazon Route 53 console, you can create `A` or `CNAME` records to private applications you deploy. 
+
+=== Delete the default VPC
+
+Every new AWS account comes with a default VPC with public subnets in each Availability Zone. It is recommended that you delete this default VPC and only deploy resources into the production, management, and development VPCs that the Biotech Blueprint Quick Start provisions. If you have already deployed resources into the default VPC before launching the Quick Start, it is recommended that you migrate these resources to the Biotech Blueprint VPCs and then delete the default VPC. Removing the default VPC will ensure that a user does not launch resources into one of its exposed public subnets.
+
+<<defaultvpc>> shows the default VPC listed in the Amazon VPC console with the VPCs created by the Biotech Blueprint Quick Start.
+
+:xrefstyle: short
+[#defaultvpc]
+.Default VPC
+image::../images/defaultvpc_0.png[Config,width=100%,height=100%]
+
 //== Test the deployment
 // If steps are required to test the deployment, add them here. If not, remove the heading
 
@@ -91,12 +105,109 @@ With a VPN connection, you can connect to resources you launch into your VPCs us
 
 //_Add any best practices for using the software._
 
-//== Security
+== Security and Compliance
 // Provide post-deployment best practices for using the technology on AWS, including considerations such as migrating data, backups, ensuring high performance, high availability, etc. Link to software documentation for detailed information.
+
+The Quick Start deploys the following AWS Config conformance packs: 
+
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html[Operational Best Practices for HIPAA Security]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-aws-identity-and-access-management.html[Operational Best Practices For AWS Identity And Access Management]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html[Operational Best Practices For Amazon S3]
+* https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html[Operational Best Practices for NIST CSF]
+* https://docs.aws.amazon.com/config/latest/developerguide/aws-control-tower-detective-guardrails.html[AWS Control Tower Detective Guardrails Conformance Pack]
+
+These packs create AWS Config rules that regularly evaluate resources in your AWS account against security best practices. When AWS Config finds an offending resource, it will flag it for your review in the AWS Config console. AWS Config also scans resources created in your account before deploying the Quick Start.
+
+For example, the Operational Best Practices for NIST Cyber Security Framework (CSF) conformance pack comes with 93 rules. One of which is `encrypted-volumes-conformance-pack`, which checks whether attached Amazon Elastic Block Store (Amazon EBS) volumes are encrypted. 
+
+:xrefstyle: short
+[#nist]
+.Operational Best Practices for NIST-CSF
+image::../images/conformancepacks_0.png[Config,width=100%,height=100%]
+
+Select `encrypted-volumes-conformance-pack` to display a list of relevant resources and their compliance status. 
+
+:xrefstyle: short
+[#encryptedvolumes]
+.Encrytped volumes conformance pack
+image::../images/conformancepacks_1.png[Config,width=100%,height=100%]
+
+You can update the AWS Config delivery channel to include an Amazon Simple Notification Service (Amazon SNS) topic to send email or text notifications when resources are flagged. More sophisticated approaches might include regularly reviewing AWS Config reports, using AWS Config's automatic remediation capabilities, or integrating AWS Config with security ticketing or SEIM solutions. 
+
+=== Operational Best Practices for HIPAA Security conformance pack
+
+While the Health Insurance Portability and Accountability Act (HIPAA) might not be a concern for every user of this Quick Start, many store, transmit, or process protected health information (PHI). Whether you handle PHI or not, the HIPAA security conformance pack has over 80 rules that capture a number of best practices that any user should consider implementing.
+
+If you do have HIPAA/PHI needs, it is strongly encouraged that you read  https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-hipaa_security.html[Operational Best Practices for HIPAA Security].
+
+WARNING: AWS Config conformance packs provide a general-purpose compliance framework designed to enable you to create security, operational or cost-optimization governance checks using managed or custom AWS Config rules and AWS Config remediation actions. Conformance packs, as sample templates, are not designed to fully ensure compliance with a specific governance or compliance standard. You are responsible for making your own assessment of whether your use of the Services meets applicable legal and regulatory requirements.
 
 //_Add any security-related information._
 
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
+    
+== Restricting IAM actions to specific AWS Regions 
+
+A common requirement of startups using AWS is to be able to restrict IAM actions to specific AWS Regions. For example, they may want to restrict the creation of Amazon Elastic Compute Cloud (Amazon EC2) instances or AWS Simple Storage Service (Amazon S3) buckets to only European Regions. This could be for compliance reasons or simply because its a good practice to keep resources out of Regions you never intend to use. 
+
+If you have a single AWS account, the best way to enforce AWS Region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary^]. The `RegionRestriction` class configured in `lib/aws-startup-blueprint-stack.ts` creates an IAM permission boundary. It restricts IAM actions to the AWS Regions you specify. For example:
+
+```typescript
+      new RegionRestriction(this, 'RegionRestriction', {
+        AllowedRegions: ["eu-central-1","eu-west-1","eu-west-3", "eu-south-1", "eu-north-1"]
+      });  
+```
+
+In order for the permission boundary to have any effect, it should be attached to all existing and future IAM users and roles. 
+
+To enforce the permission boundary, the `RegionRestriction` class creates an AWS Config rule to detect and remediate a missing IAM permission boundary. 
+
+For example, in AWS Config Rules console, select the `AwsBiotechBlueprint-RegionRestriction` rule.
+
+:xrefstyle: short
+[#rules]
+.AwsBiotechBlueprint-RegionRestriction rule
+image::../images/regionrestriction_config0.png[Config,width=100%,height=100%]
+
+The Config Rule will have evaluated all of your IAM users and roles and listed their compliance status. To remediate a non-compliant resource, select the resource and select *Remediate*. The service control policy is applied and that user or role will no longer be able to perform any action outside of the specified Region. 
+
+image::../images/regionrestriction_config1.png[Config,width=100%,height=100%]
+
+After the remediation is complete, AWS CloudTrail triggers the AWS Config rule. CloudTrail tells AWS Config that that the IAM principal has been updated and that its time to reevaluate the offending resource (takes about 15 minutes). Because the boundary has been applied, the reevaluation will report the role or user as compliant.
+
+=== Enabling automatic remediation
+
+The Biotech Blueprint Quick Start intentionally leaves the remediation configuration set to *Manual* instead of *Automatic*. This is in the event you have existing IAM users or roles. Automatically applying the remediation and attaching the permission boundary will impact those existing IAM principals permissions. You should verify if any of the flagged IAM principals depend on any non-approved Regions before applying the boundary. If you are working in a brand new account or are unconcerned about the impact on existing IAM principals, you can turn on automatic remediation by following these steps: 
+
+WARNING: Enabling automatic remediation will impact existing IAM users and roles not created by the Biotech Blueprint.
+
+[start=1]
+. In the AWS Config console, select *Edit* in the *Remediation Action* section of the `AwsBiotechBlueprint-RegionRestriction` AWS Config rule. 
+
+:xrefstyle: short
+[#ruleedit]
+.AwsBiotechBlueprint-RegionRestriction rule
+image::../images/regionrestriction_config2.png[Config,width=100%,height=100%]
+
+[start=2]
+. Select *Automatic Remediation*.
+. Select *Save changes*.
+
+:xrefstyle: short
+[#editaction]
+.Edit Remediation action
+image::../images/regionrestriction_config3.png[Config,width=100%,height=100%]
+
+=== Region Restriction Capabilities in Multi Account Configurations:
+
+In a multi-account setup, Service Control Polices (SCPs) are superior to permission boundaries. SCPs are applied across an entire account and do not need to be individually attached to IAM principals. However, if you have only one account, use permission boundaries discussed previously to restrict Regions. SCPs only apply to sub-accounts. When you create a new account, the Region-restricting SCP created by the Biotech Blueprint will be applied automatically to any new account you create.
+
+For more information about the service control policy, see https://console.aws.amazon.com/iam/home?organizations/ServiceControlPolicies/#/organizations/ServiceControlPolicies[IAM Console]
+
+:xrefstyle: short
+[#regionrestriction]
+.RegionRestriction
+image::../images/regionrestriction_config4.png[Config,width=100%,height=100%]
 
 == Deploying resources into VPCs
 
@@ -117,7 +228,7 @@ The following table provides some examples.
 |Okta Cloud Connect appliance |Management VPC |Private
 |===
 
-== Biotech Blueprint Informatics Catalog
+== AWS Service Catalog
 
 After deploying the Biotech Blueprint Quick Start, you can launch a selection of informatics and scientific applications from the https://us-east-1.console.aws.amazon.com/servicecatalog/home?isSceuc=true&region=us-east-1#/products[AWS Service Catalog console^]. You can also deploy these from the launch links provided on their Quick Start pages and in their deployment guides. The following table provides information to learn more about the available applications.
 
@@ -131,7 +242,6 @@ After deploying the Biotech Blueprint Quick Start, you can launch a selection of
 |Knowledge management |Dotmatics |https://www.dotmatics.com/[Dotmatics suite^] |https://fwd.aws/A5K9B[Quick Start page^] \| https://fwd.aws/RvJpR[View guide^]
 |Sample management |Titian |https://www.titian.co.uk/products/aws-mosaic-freezermanagement[Mosaic FreezerManagement^] |https://fwd.aws/E736X[Quick Start page^] \| https://fwd.aws/KNmPd[View guide^]
 |===
-
 
 === AWS Service Catalog permissions
 Access to AWS Service Catalog requires credentials. Those credentials must have permission to access AWS resources, such as an AWS Service Catalog portfolio or product. AWS Service Catalog integrates with AWS Identity and Access Management (IAM) to enable you to grant AWS Service Catalog end users permissions to launch products and manage provisioned products. To control access, you attach these policies to the IAM users, groups, and roles that you use with AWS Service Catalog.
@@ -150,7 +260,8 @@ image::../images/service-catalog-permission.png[scpermission,width=100%,height=1
 . Select *Add groups, users, and roles*.
 . Select the IAM identities requiring AWS Service Catalog permissions. Do not forget to include yourself if you need permissions.
 
-== Optional DNS setup
-The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account^]. Using the Amazon Route 53 console, you can create `A` or `CNAME` records to private applications you deploy. 
+
+
+
 
 
