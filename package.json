@@ -10,6 +10,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "synth": "cdk synth && cp cdk.out/SwiftDigitalConnectivity.template.json templates/SwiftDigitalConnectivity.template.json",
     "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js"
   },
   "devDependencies": {

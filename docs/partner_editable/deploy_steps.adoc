@@ -21,7 +21,7 @@ This Quick Start requires a subscription to the AMI for {partner-product-short-n
 endif::marketplace_subscription[]
 // \Not to be edited
 
-=== Deployment Options
+=== Deployment Setup
 
 The AWS Fintech Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
 
@@ -35,9 +35,19 @@ git clone https://github.com/aws-samples/aws-startup-blueprint
 cd aws-startup-blueprint
 npm install
 cdk bootstrap
+npm run build
+```
+
+=== Deployment
+
+Feel free to review the code and make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). You don't need to make any modifications if you don't want to.
+
+When you are ready, or when you need update the blueprint's architecture in the future based on changes you make, you just need to run:
+
+```bash 
 npm run build && cdk deploy
 ```
 
-The last command will give you a summary about IAM related changes about to be deployed and prompt you to aknowledge them. Simply hit 'y' and enter.
+The `cdk deploy` command will give you a summary about IAM related changes about to be deployed and prompt you to aknowledge them. Simply hit 'y' and enter.
 
-The deployment should take about ~7 minutes to complete.
+The initial deployment should take about ~7 minutes to complete.

@@ -1,30 +1,6 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
-=== Deployment Option 2: AWS CDK Deployment
-
-First you need to make sure you have the AWS CDK installed on your development machine. 
-
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequisites]
-
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK]
-
-* Clone the repo, build the project, and then bootstrap your AWS account for the AWS CDK.
-```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
-npm install
-npm run build 
-cdk bootstrap
-```
-
-* Feel free to review the code and make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). 
-
-When you are ready, or when you need update the blueprint's architecture in the future based on changes you make, you just need to run:
-
-```bash 
-npm run build && cdk deploy
-```
 == Post deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
