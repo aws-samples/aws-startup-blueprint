@@ -1,13 +1,14 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as s3 from '@aws-cdk/aws-s3';
+import * as cfnInc from '@aws-cdk/cloudformation-include';
 import { ConfigRecorderEnabledPromise, ConfigConformancePackBundle } from './aws-config-packs'
 import { ClientVpn } from './aws-vpn'
 import { BlueprintVpcs } from './aws-vpcs'
 import { Dns } from './aws-dns'
 import { BlueprintServiceCatalog } from './aws-service-catalog'
 import { RegionRestriction } from './aws-region-restriction'
-
+import * as path from 'path';
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
 
@@ -79,3 +80,4 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
   }
 
 }
+

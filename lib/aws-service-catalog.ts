@@ -234,16 +234,16 @@ The SWIFT components in scope for the baseline implementation include SWIFT mess
             name: "SWIFT Client Connectivity on AWS",
             provisioningArtifactParameters: [{
                 info: {
-                    LoadTemplateFromURL: "https://s3.amazonaws.com/aws-quickstart/quickstart-chemaxon-registry/templates/chemaxon-registry.template"
+                    LoadTemplateFromURL: "https://raw.githubusercontent.com/aws-samples/aws-startup-blueprint/fintech-dev/templates/SwiftDigitalConnectivity.template.json"
                 }
             }]
 
 
         });
 
-        const chemAxonAssocation = new sc.CfnPortfolioProductAssociation(this, 'ChemAxonAssociation', {
+        const swiftConnectivityAssocation = new sc.CfnPortfolioProductAssociation(this, 'swiftConnectivityAssoc', {
             portfolioId: informaticsCatalog.ref,
-            productId: chemAxon.ref
+            productId: swiftConnectivity.ref
         });
 
         
