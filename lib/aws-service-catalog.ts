@@ -241,7 +241,7 @@ The SWIFT components in scope for the baseline implementation include SWIFT mess
 
         });
 
-        const swiftConnectivityAssoc = new sc.CfnPortfolioProductAssociation(this, 'SWIFT', {
+        const swiftConnectivityAssoc = new sc.CfnPortfolioProductAssociation(this, 'SWIFTAssoc', {
             portfolioId: informaticsCatalog.ref,
             productId: swiftConnectivity.ref
         });

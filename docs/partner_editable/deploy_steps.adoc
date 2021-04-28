@@ -28,12 +28,12 @@ The XXXX Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS
 If you want to get get going as fast as possible (< 90 seconds), crack open https://console.aws.amazon.com/cloudshell[AWS CloudShell] and run the following commands.
 
 ```bash
-npm install aws-cdk typescript --user
+sudo npm install -g aws-cdk typescript
 git clone https://github.com/aws-samples/aws-startup-blueprint
 cd aws-startup-blueprint
-npm install && npm run build
+npm install
 cdk bootstrap
-cdk deploy
+npm run build && cdk deploy
 ```
 
 
