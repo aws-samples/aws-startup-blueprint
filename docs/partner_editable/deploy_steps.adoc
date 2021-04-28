@@ -25,7 +25,9 @@ endif::marketplace_subscription[]
 
 The XXXX Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
 
-If you want to get get going as fast as possible (< 90 seconds), crack open https://console.aws.amazon.com/cloudshell[AWS CloudShell] and run the following commands.
+If you want to get get going as fast as possible (< 90 seconds), crack open https://console.aws.amazon.com/cloudshell[AWS CloudShell] and run the following commands. It may take ~60 seconds for your first CloudShell sesion to start.
+
+If you prefer using your own IDE like Cloud9 or VSCode, the following commands should work as well, as long as you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites for the AWS CDK] already installed. 
 
 ```bash
 sudo npm install -g aws-cdk typescript
@@ -36,51 +38,6 @@ cdk bootstrap
 npm run build && cdk deploy
 ```
 
+The last command will give you a summary about IAM related changes about to be deployed and prompt you to aknowledge them. Simply hit 'y' and enter.
 
-```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
-npm install
-npm run build 
-cdk bootstrap
-```
-
-First you need to make sure you have the AWS CDK installed on your development machine. 
-
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequisites]
-
-* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK]
-
-* Clone the repo, build the project, and then bootstrap your AWS account for the AWS CDK.
-```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
-npm install
-npm run build 
-cdk bootstrap
-```
-
-
-
-
-If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
-
-If you prefer using the awesome https://aws.amazon.com/cdk/[AWS CDK], follow the CDK Deployment option (2).
-
-Both deployment options take about ~7 minutes to complete and create the exact same resources. The primary difference is that the AWS CDK option takes a little more time to initially setup (<5 min), but the CDK code is easier to maintain overtime compared to the CloudFormation template in option 1.
-
-TIP: The option to restrict your account to specific regions (ex US or EU only) is only available for those using the CDK deployment path.
-
-=== Deployment Option 1: AWS CloudFormation Deployment (quick and easy)
-
-. Sign in to your AWS account, and click the deploy link below to launch the AWS CloudFormation template. 
-
-
-[start=2]
-. Check the AWS Region that’s displayed in the upper-right corner of the navigation bar, and change it if necessary. This is where the network infrastructure for {partner-product-short-name} will be built. The template is launched in the {default_deployment_region} Region by default.
-
-// *Note:* This deployment includes Amazon EFS, which isn’t currently supported in all AWS Regions. For a current list of supported Regions, see the https://docs.aws.amazon.com/general/latest/gr/elasticfilesystem.html[endpoints and quotas webpage].
-
-[start=3]
-. On the *Create stack* page, keep the default setting for the template URL, and then choose *Next*.
-. On the *Specify stack details* page, change the stack name if needed. There are no parameters you need to supply.
+The deployment should take about ~7 minutes to complete.
