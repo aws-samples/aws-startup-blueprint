@@ -23,7 +23,45 @@ endif::marketplace_subscription[]
 
 === Deployment Options
 
-The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
+The XXXX Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
+
+If you want to get get going as fast as possible (< 90 seconds), crack open https://console.aws.amazon.com/cloudshell[AWS CloudShell] and run the following commands.
+
+```bash
+npm install aws-cdk typescript --user
+git clone https://github.com/aws-samples/aws-startup-blueprint
+cd aws-startup-blueprint
+npm install && npm run build
+cdk bootstrap
+cdk deploy
+```
+
+
+```bash
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
+npm run build 
+cdk bootstrap
+```
+
+First you need to make sure you have the AWS CDK installed on your development machine. 
+
+* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[CDK Prerequisites]
+
+* https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install[Install the AWS CDK]
+
+* Clone the repo, build the project, and then bootstrap your AWS account for the AWS CDK.
+```bash
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
+npm run build 
+cdk bootstrap
+```
+
+
+
 
 If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
@@ -36,12 +74,6 @@ TIP: The option to restrict your account to specific regions (ex US or EU only) 
 === Deployment Option 1: AWS CloudFormation Deployment (quick and easy)
 
 . Sign in to your AWS account, and click the deploy link below to launch the AWS CloudFormation template. 
-
-[cols=2*]
-|===
-^|http://qs_launch_link[Deploy {partner-product-short-name} into your AWS Account^]
-^|http://qs_template_link[View template^]
-|===
 
 
 [start=2]
