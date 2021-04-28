@@ -1,0 +1,1300 @@
+{
+  "Description": "This template is deployed by the Fintech Blueprint service catalog which creates a code pipeline that deploys the SWIFT digital connectivity quickstart. (ib-153df3v98)",
+  "Resources": {
+    "productccRepo6C0568C8": {
+      "Type": "AWS::CodeCommit::Repository",
+      "Properties": {
+        "RepositoryName": "quickstart-swift-digital-connectivity",
+        "Code": {
+          "BranchName": "main",
+          "S3": {
+            "Bucket": {
+              "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
+            },
+            "Key": "88bf0e58e6275087e1a9a2b28cd29cc64c4cc2b8d1d613716398f9c39cfba8bd.zip"
+          }
+        },
+        "RepositoryDescription": "Repo for SWIFT CSP QuickStart"
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/ccRepo"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4": {
+      "Type": "AWS::KMS::Key",
+      "Properties": {
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": [
+                "kms:Create*",
+                "kms:Describe*",
+                "kms:Enable*",
+                "kms:List*",
+                "kms:Put*",
+                "kms:Update*",
+                "kms:Revoke*",
+                "kms:Disable*",
+                "kms:Get*",
+                "kms:Delete*",
+                "kms:ScheduleKeyDeletion",
+                "kms:CancelKeyDeletion",
+                "kms:GenerateDataKey",
+                "kms:TagResource",
+                "kms:UntagResource"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineRole83541009",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleC036A162",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "productcodeBuildProjectRoleABC1FEDA",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "productcodeBuildProjectRoleABC1FEDA",
+                    "Arn"
+                  ]
+                }
+              },
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/ArtifactsBucketEncryptionKey/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKeyAliasDA37B114": {
+      "Type": "AWS::KMS::Alias",
+      "Properties": {
+        "AliasName": "alias/codepipeline-swiftdigitalconnectivityproductquickstartswiftdigitalconnectivitypipelineef7e33a5",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+            "Arn"
+          ]
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/ArtifactsBucketEncryptionKeyAlias/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "KMSMasterKeyID": {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                    "Arn"
+                  ]
+                },
+                "SSEAlgorithm": "aws:kms"
+              }
+            }
+          ]
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true
+        }
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/ArtifactsBucket/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineRole83541009": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codepipeline.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Role/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineRoleDefaultPolicyFDB3D18A": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleC036A162",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleAF69AE3D",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "productquickstartswiftdigitalconnectivitypipelineRoleDefaultPolicyFDB3D18A",
+        "Roles": [
+          {
+            "Ref": "productquickstartswiftdigitalconnectivitypipelineRole83541009"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Role/DefaultPolicy/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineA75BC375": {
+      "Type": "AWS::CodePipeline::Pipeline",
+      "Properties": {
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "productquickstartswiftdigitalconnectivitypipelineRole83541009",
+            "Arn"
+          ]
+        },
+        "Stages": [
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Source",
+                  "Owner": "AWS",
+                  "Provider": "CodeCommit",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "RepositoryName": "quickstart-swift-digital-connectivity",
+                  "BranchName": "main",
+                  "PollForSourceChanges": false,
+                  "OutputArtifactFormat": "CODEBUILD_CLONE_REF"
+                },
+                "Name": "InitRepo",
+                "OutputArtifacts": [
+                  {
+                    "Name": "Artifact_Source_InitRepo"
+                  }
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleC036A162",
+                    "Arn"
+                  ]
+                },
+                "RunOrder": 1
+              }
+            ],
+            "Name": "Source"
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
+                  "Category": "Build",
+                  "Owner": "AWS",
+                  "Provider": "CodeBuild",
+                  "Version": "1"
+                },
+                "Configuration": {
+                  "ProjectName": {
+                    "Ref": "productPipeline5D693C02"
+                  }
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Artifact_Source_InitRepo"
+                  }
+                ],
+                "Name": "CodeBuild",
+                "OutputArtifacts": [
+                  {
+                    "Name": "Artifact_Build_CodeBuild"
+                  }
+                ],
+                "RoleArn": {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleAF69AE3D",
+                    "Arn"
+                  ]
+                },
+                "RunOrder": 1
+              }
+            ],
+            "Name": "Build"
+          }
+        ],
+        "ArtifactStore": {
+          "EncryptionKey": {
+            "Id": {
+              "Fn::GetAtt": [
+                "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                "Arn"
+              ]
+            },
+            "Type": "KMS"
+          },
+          "Location": {
+            "Ref": "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883"
+          },
+          "Type": "S3"
+        },
+        "Name": "quickstart-swift-digital-connectivity-pipeline"
+      },
+      "DependsOn": [
+        "productquickstartswiftdigitalconnectivitypipelineRoleDefaultPolicyFDB3D18A",
+        "productquickstartswiftdigitalconnectivitypipelineRole83541009"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleC036A162": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Source/InitRepo/CodePipelineActionRole/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleDefaultPolicyFCE1B3E1": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "codecommit:GetBranch",
+                "codecommit:GetCommit",
+                "codecommit:UploadArchive",
+                "codecommit:GetUploadArchiveStatus",
+                "codecommit:CancelUploadArchive",
+                "codecommit:GetRepository"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codecommit:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":quickstart-swift-digital-connectivity"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleDefaultPolicyFCE1B3E1",
+        "Roles": [
+          {
+            "Ref": "productquickstartswiftdigitalconnectivitypipelineSourceInitRepoCodePipelineActionRoleC036A162"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Source/InitRepo/CodePipelineActionRole/DefaultPolicy/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineEventsRoleC2518449": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "events.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/EventsRole/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineEventsRoleDefaultPolicyA147551A": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "codepipeline:StartPipelineExecution",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codepipeline:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "productquickstartswiftdigitalconnectivitypipelineA75BC375"
+                    }
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "productquickstartswiftdigitalconnectivitypipelineEventsRoleDefaultPolicyA147551A",
+        "Roles": [
+          {
+            "Ref": "productquickstartswiftdigitalconnectivitypipelineEventsRoleC2518449"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/EventsRole/DefaultPolicy/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleAF69AE3D": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":iam::",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":root"
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Build/CodeBuild/CodePipelineActionRole/Resource"
+      }
+    },
+    "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleDefaultPolicyF59FFF0A": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "codebuild:BatchGetBuilds",
+                "codebuild:StartBuild",
+                "codebuild:StopBuild"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productPipeline5D693C02",
+                  "Arn"
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleDefaultPolicyF59FFF0A",
+        "Roles": [
+          {
+            "Ref": "productquickstartswiftdigitalconnectivitypipelineBuildCodeBuildCodePipelineActionRoleAF69AE3D"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/quickstart-swift-digital-connectivity-pipeline/Build/CodeBuild/CodePipelineActionRole/DefaultPolicy/Resource"
+      }
+    },
+    "productstagedRepoSwiftDigitalConnectivityproductquickstartswiftdigitalconnectivitypipelineEF7E33A5mainEventRule3D2ED276": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "EventPattern": {
+          "source": [
+            "aws.codecommit"
+          ],
+          "resources": [
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":codecommit:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":quickstart-swift-digital-connectivity"
+                ]
+              ]
+            }
+          ],
+          "detail-type": [
+            "CodeCommit Repository State Change"
+          ],
+          "detail": {
+            "event": [
+              "referenceCreated",
+              "referenceUpdated"
+            ],
+            "referenceName": [
+              "main"
+            ]
+          }
+        },
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:",
+                  {
+                    "Ref": "AWS::Partition"
+                  },
+                  ":codepipeline:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":",
+                  {
+                    "Ref": "productquickstartswiftdigitalconnectivitypipelineA75BC375"
+                  }
+                ]
+              ]
+            },
+            "Id": "Target0",
+            "RoleArn": {
+              "Fn::GetAtt": [
+                "productquickstartswiftdigitalconnectivitypipelineEventsRoleC2518449",
+                "Arn"
+              ]
+            }
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/stagedRepo/SwiftDigitalConnectivityproductquickstartswiftdigitalconnectivitypipelineEF7E33A5-main-EventRule/Resource"
+      }
+    },
+    "productcodeBuildProjectRoleABC1FEDA": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/codeBuildProjectRole/Resource"
+      }
+    },
+    "productcodeBuildProjectRoleDefaultPolicyB96A488F": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "productPipeline5D693C02"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":logs:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":log-group:/aws/codebuild/",
+                      {
+                        "Ref": "productPipeline5D693C02"
+                      },
+                      ":*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "codebuild:CreateReportGroup",
+                "codebuild:CreateReport",
+                "codebuild:UpdateReport",
+                "codebuild:BatchPutTestCases",
+                "codebuild:BatchPutCodeCoverages"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codebuild:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":report-group/",
+                    {
+                      "Ref": "productPipeline5D693C02"
+                    },
+                    "-*"
+                  ]
+                ]
+              }
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject*",
+                "s3:Abort*"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                    "Arn"
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketE310D883",
+                          "Arn"
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:Encrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::GetAtt": [
+                  "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+                  "Arn"
+                ]
+              }
+            },
+            {
+              "Action": "codecommit:GitPull",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":codecommit:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":quickstart-swift-digital-connectivity"
+                  ]
+                ]
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "productcodeBuildProjectRoleDefaultPolicyB96A488F",
+        "Roles": [
+          {
+            "Ref": "productcodeBuildProjectRoleABC1FEDA"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/codeBuildProjectRole/DefaultPolicy/Resource"
+      }
+    },
+    "productcdkMinPolicyA215BFAD": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ec2:DescribeImages",
+                "iam:GetRole",
+                "iam:GetAccountPasswordPolicy",
+                "cloudformation:ListStacks",
+                "cloudformation:DescribeStackEvents",
+                "health:DescribeEventAggregates",
+                "ec2:DescribeAvailabilityZones",
+                "iam:ListAccountAliases",
+                "iam:ListRoles",
+                "ec2:DescribePrefixLists",
+                "cloudformation:DescribeStacks",
+                "iam:GetAccountSummary"
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+              "Sid": "resourceWidePermissions"
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": [
+                "arn:aws:iam::*:role/cdk-readOnlyRole",
+                "arn:aws:iam::*:role/cdk-hnb659fds-deploy-role-*",
+                "arn:aws:iam::*:role/cdk-hnb659fds-file-publishing-*"
+              ],
+              "Sid": "assumeRolePermission"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Description": "",
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "productcodeBuildProjectRoleABC1FEDA"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/cdkMinPolicy/Resource"
+      }
+    },
+    "productPipeline5D693C02": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Artifacts": {
+          "Type": "CODEPIPELINE"
+        },
+        "Environment": {
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/standard:2.0",
+          "ImagePullCredentialsType": "CODEBUILD",
+          "PrivilegedMode": false,
+          "Type": "LINUX_CONTAINER"
+        },
+        "ServiceRole": {
+          "Fn::GetAtt": [
+            "productcodeBuildProjectRoleABC1FEDA",
+            "Arn"
+          ]
+        },
+        "Source": {
+          "BuildSpec": "{\n  \"version\": \"0.2\",\n  \"phases\": {\n    \"install\": {\n      \"commands\": [\n        \"npm -g install typescript\",\n        \"npm install -g aws-cdk\",\n        \"git config --global user.email \\\"quickstart@amazon.com\\\"\",\n        \"git config --global user.name \\\"Blueprint Pipeline\\\"\",\n        \"git pull https://github.com/aws-quickstart/quickstart-swift-digital-connectivity --allow-unrelated-histories\",\n        \"pip install -r requirements.txt\"\n      ]\n    },\n    \"build\": {\n      \"commands\": [\n        \"cdk deploy --require-approval never\"\n      ]\n    }\n  }\n}",
+          "Type": "CODEPIPELINE"
+        },
+        "EncryptionKey": {
+          "Fn::GetAtt": [
+            "productquickstartswiftdigitalconnectivitypipelineArtifactsBucketEncryptionKey0FAE6ED4",
+            "Arn"
+          ]
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/product/Pipeline/Resource"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WQ3W7DIAyFn2X3xE3WPcC6Xk6VouwJKPEi5wciDK0qxLsPSKZuV+fjYB8bGmjqGuqXd3nnSvXTIShjEcKXk2oSZ6PZWa+cODGjS+ZAehAdsvFWoTh/67+cyntyZHQUOS7wsZK5j6G0C2V6VGZZyEHpXA2TM/ZRLlZacSadZrc75chfjmJaGMInPrKb5TST5HwoEAUfIXx4NaU5ydwoCpILhM7M265ZWzOTKik7XaSWA/ZP/58RBd5QpyeEzu8pSWNZ+epp7p/7ttaMqMr4HWOMQqdCGPlwa2p4fUtfPTJRZb12tCB0m/4A1R64iIcBAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "SwiftDigitalConnectivity/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Conditions": {
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Type": "AWS::SSM::Parameter::Value<String>",
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store."
+    }
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  {
+                    "Ref": "BootstrapVersion"
+                  }
+                ]
+              }
+            ]
+          },
+          "AssertDescription": "CDK bootstrap stack version 4 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+        }
+      ]
+    }
+  }
+}
