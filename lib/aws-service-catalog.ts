@@ -215,10 +215,10 @@ export class BlueprintServiceCatalog extends core.Construct {
     constructor(scope: core.Construct, id: string, props: ServiceCatalogProps) {
         super(scope, id);
 
-        const informaticsCatalog = new sc.CfnPortfolio(this, 'InformaticsCatalog', {
-            displayName: "Blueprint Informatics Catalog",
+        const blueprintCatalog = new sc.CfnPortfolio(this, 'FintechBlueprintCatalog', {
+            displayName: "Fintech Blueprint Software Catalog",
             providerName: "AWS",
-            description: "Collection of bio and chem informatics tools easily deployed into the AWS Blueprint.",            
+            description: "Collection of Fintech tools and data easily deployed into the AWS Fintech Blueprint.",            
         });
         
         
@@ -242,7 +242,7 @@ The SWIFT components in scope for the baseline implementation include SWIFT mess
         });
 
         const swiftConnectivityAssocation = new sc.CfnPortfolioProductAssociation(this, 'swiftConnectivityAssoc', {
-            portfolioId: informaticsCatalog.ref,
+            portfolioId: blueprintCatalog.ref,
             productId: swiftConnectivity.ref
         });
 

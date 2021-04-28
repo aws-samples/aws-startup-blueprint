@@ -10,7 +10,7 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js",
+    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js"
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.100.0",

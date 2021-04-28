@@ -1,16 +1,16 @@
-# AWS Biotech Blueprint
+# AWS Fintech Blueprint
 
-This Quick Start is for Biotech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+This Quick Start is for Fintech startups looking for a turnkey cloud enviornment following AWS best practices on day 1. 
 
-The Blueprint's core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+The Blueprint's core landing zone builds out a secure home for your future cloud computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
 
-Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
+Optionally, we have also included a number of the industry's leading informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
 
 ![Blueprint Diagram](http://devspacepaul.s3.us-west-2.amazonaws.com/startupblueprints/BlueprintDiagram.png)
 
 ## Install instructions
 
-The Biotech Blueprint is built with the AWS CDK which allows for two deployment options. 
+The Fintech Blueprint is built with the AWS CDK which allows for two deployment options. 
 
 If you just want to get going ASAP, follow the CloudFormation Deployment option (1).
 
@@ -20,10 +20,9 @@ Both deployment options take about 7 minutes to complete and create the exact sa
 
 ### Option 1) CloudFormation Only Deployment
 
-Download the [pre-synthed CloudFormation Template (right click, Save As)](https://raw.githubusercontent.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk/dev/cdk.out/AwsBiotechBlueprint.template.json?token=AI3FJF5EKHRJFBZA3ER7BNS7UQNE4) and use the [AWS CloudFormation Web Console](https://console.aws.amazon.com/cloudformation/home?#/stacks/create/template) to deploy it. Should take ~ 7 min.
+Click the launch stack button below. Make sure you are in your preferred region before you deploy.
 
-Quick Create Link Coming Soon...
-[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=&stackName=BiotechBlueprint) 
+[![](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?#/stacks/quickcreate?templateUrl=https://aws-quickstart.s3.amazonaws.com/quickstart-aws-fintech-blueprint-cdk/templates/AwsFintechBlueprint.quickstart-template.yml&stackName=FintechBlueprint) 
 
 
 ### Option 2) AWS CDK Deployment
@@ -31,8 +30,8 @@ Quick Create Link Coming Soon...
 If you dont already have the CDK installed on your development machine, make sure you have the [CDK prerequisites](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites) and then [install the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_install).
 
 ```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
+git clone https://github.com/aws-quickstart/quickstart-aws-fintech-blueprint-cdk.git
+cd quickstart-aws-fintech-blueprint-cdk
 npm install
 npm run build 
 cdk bootstrap
@@ -40,7 +39,7 @@ cdk bootstrap
 
 Feel free to make any changes you see fit. For example, you might want to use different VPC CIDR ranges (`aws-vpcs.ts`) or a different internal DNS apex (`aws-dns.ts` defaults to corp). 
 
-When you are ready,  to deploy or update the blueprint's architecture in the future, you just need to run.
+When you are ready, to deploy or update the blueprint's architecture in the future, you just need to run:
 
 ```bash 
 npm run build && cdk deploy

@@ -23,7 +23,7 @@ endif::marketplace_subscription[]
 
 === Deployment Options
 
-The XXXX Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
+The AWS Fintech Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
 
 If you want to get get going as fast as possible (< 90 seconds), crack open https://console.aws.amazon.com/cloudshell[AWS CloudShell] and run the following commands. It may take ~60 seconds for your first CloudShell sesion to start.
 
