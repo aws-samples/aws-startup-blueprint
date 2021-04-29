@@ -163,7 +163,7 @@ In order for the permission boundary to have any effect, it should be attached t
 .AwsBiotechBlueprint-RegionRestriction rule
 image::../images/regionrestriction_config0.png[Config,width=100%,height=100%]
 
-The Config Rule will have evaluated all of your IAM users and roles and listed their compliance status. To remediate a non-compliant resource, select the resource and select *Remediate*. The service control policy is applied and that user or role will no longer be able to perform any action outside of the specified Region. 
+The Config Rule evaluates your IAM users and roles and lists their compliance status. To remediate a non-compliant resource, select the resource and select *Remediate*. The service control policy is applied and that user or role will no longer be able to perform any action outside of the specified Region. 
 
 image::../images/regionrestriction_config1.png[Config,width=100%,height=100%]
 
@@ -253,4 +253,3 @@ image::../images/service-catalog-permission.png[scpermission,width=100%,height=1
 [start=4]
 . Select *Add groups, users, and roles*.
 . Select the IAM identities requiring AWS Service Catalog permissions. Do not forget to include yourself if you need permissions.
-
