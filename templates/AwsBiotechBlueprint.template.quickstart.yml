@@ -90,6 +90,23 @@ Parameters:
     Default: quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/assetc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c/||lambda.zip
     Description: S3 key for asset version "c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c"
     Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups: 
+      - 
+        Label: 
+          default: "AWS Quick Start configuration"
+        Parameters: 
+          - AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43
+          - AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cArtifactHash627DAAA7
+          - AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7
+    ParameterLabels:
+      AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cArtifactHash627DAAA7: 
+        default: "Lambda asset hash"
+      AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43: 
+        default: "Quick Start S3 bucket name"
+      AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7: 
+        default: "Lambda asset S3 object key"   
 Resources:
   CDKMetadata:
     Condition: CDKMetadataAvailable
