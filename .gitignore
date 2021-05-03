@@ -15,3 +15,6 @@ cdk.out
 .cache
 .build
 
+# taskcat
+taskcat_outputs
+lambda_functions/packages/
