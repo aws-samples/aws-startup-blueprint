@@ -16,12 +16,9 @@ git clone https://github.com/aws-samples/aws-startup-blueprint.git
 [start=4]
 . Build the project.
 ```bash
-<<<<<<< HEAD
 git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
 cd quickstart-aws-biotech-blueprint-cdk
 npm install
-=======
->>>>>>> f241a7ab58632dfc84c242cc29a1c9ea06fd2304
 npm run build 
 ```
 
@@ -150,18 +147,9 @@ WARNING: AWS Config conformance packs provide a general-purpose compliance frame
 
 //_Add any security-related information._
 
-<<<<<<< HEAD
-        
-== Region Restriction Capabilities 
-
-A common ask from Startups using AWS is to restrict all IAM actions to specific regions. For example, you may only want users to create EC2 instances or S3 buckets in EU-only regions. This could be for compliance reasons or simply because its a good practice to keep resources out of regions you never intend to use. 
-
-If you have a single AWS account, the best way to enforce region restrictions is with an https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_boundaries.html[IAM permission boundary]. IAM permission boundaries are similar to, but distinct from, identity policies that you may be familiar with. An entity's permissions boundary allows it to perform only the actions that are allowed by both its identity-based policies *and* it's permissions boundaries. This means that even the broadest identity-based permission policies like 'arn:aws:iam::aws:policy/AdministratorAccess', which gives * access to *, will still be denied if the principal's permission boundary does not allow it.
-=======
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
     
 == Restricting IAM actions to specific AWS Regions 
->>>>>>> f241a7ab58632dfc84c242cc29a1c9ea06fd2304
 
 A common requirement of startups using AWS is to be able to restrict IAM actions to specific AWS Regions. For example, they may want to restrict the creation of Amazon Elastic Compute Cloud (Amazon EC2) instances or AWS Simple Storage Service (Amazon S3) buckets to only European Regions. This could be for compliance reasons or simply because its a good practice to keep resources out of Regions you never intend to use. 
 
@@ -173,13 +161,9 @@ If you have a single AWS account, the best way to enforce AWS Region restriction
       });  
 ```
 
-<<<<<<< HEAD
 We have added some helper context variables (`apply_EU_RegionRestriction` and `apply_US_RegionRestriction`) inside the the `cdk.json` file. Setting one of those to `"true"` and running `cdk deploy` again will apply the region restriction.
 
 In order for the permission boundary to have any effect, it needs to be attached to all existing and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary gets attached, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
-=======
-In order for the permission boundary to have any effect, it should be attached to all existing and future IAM users and roles. 
->>>>>>> f241a7ab58632dfc84c242cc29a1c9ea06fd2304
 
 To enforce the permission boundary, the `RegionRestriction` class creates an AWS Config rule to detect and remediate a missing IAM permission boundary. 
 
