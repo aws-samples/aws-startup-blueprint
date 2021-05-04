@@ -31,7 +31,7 @@ If you prefer using the awesome https://aws.amazon.com/cdk/[AWS CDK], follow the
 
 Both deployment options take about ~7 minutes to complete and create the exact same architecture. The primary difference is that the AWS CDK deployment option takes a little more time for initial setup (<5 min), but the CDK code is easier to maintain overtime compared to the CloudFormation template in option 1.
 
-TIP: The option to restrict your account to specific regions (ex US or EU only) is only available for those using the CDK deployment path.
+TIP: The option to restrict your account to specific regions (ex US or EU only) is only available for CDK deployment option.
 
 === Deployment Option 1: AWS CloudFormation Deployment (quick and easy)
 
