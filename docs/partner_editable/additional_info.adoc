@@ -16,6 +16,9 @@ git clone https://github.com/aws-samples/aws-startup-blueprint.git
 [start=4]
 . Build the project.
 ```bash
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
+npm install
 npm run build 
 ```
 
@@ -154,7 +157,15 @@ You can restrict IAM actions to EU or US AWS Regions. For example, you may want 
       });  
 ```
 
+<<<<<<< HEAD
 To apply the Region restriction, set the context variable `apply_EU_RegionRestriction` or `apply_US_RegionRestriction) in the `cdk.json` file to `true`. Then run `cdk deploy` again.
+=======
+We have added some helper context variables (`apply_EU_RegionRestriction` and `apply_US_RegionRestriction`) inside the the `cdk.json` file. Setting one of those to `"true"` and running `cdk deploy` again will apply the region restriction.
+
+In order for the permission boundary to have any effect, it needs to be attached to all existing and future IAM users and roles. As a best practice, you should always attach this permission boundary when creating any future IAM user or role. While a best practice, sometimes good intentions are forgotten. To enforce the permission boundary gets attached, the `RegionRestriction` class also creates an AWS Config Rule and Remediation to detect and automatically fix a missing permission boundary to any existing, updated, or future IAM principals. 
+
+To enforce the permission boundary, the `RegionRestriction` class creates an AWS Config rule to detect and remediate a missing IAM permission boundary. 
+>>>>>>> doc-edits
 
 In order for the permission boundary to have any effect, it should be attached to all existing and future IAM users and roles. To enforce the permission boundary, the `RegionRestriction` class creates an AWS Config rule to detect and remediate a missing IAM permission boundary. For example, in AWS Config Rules console, select the `AwsBiotechBlueprint-RegionRestriction` rule.
 
