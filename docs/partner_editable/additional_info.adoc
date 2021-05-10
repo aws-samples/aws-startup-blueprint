@@ -1,7 +1,7 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
-=== AWS CDK deployment
+=== Deployment Option 2: AWS CDK deployment
 
 To deploy {partner-product-name} using AWS CDK, do the following:
 [start=1]
@@ -11,13 +11,12 @@ To deploy {partner-product-name} using AWS CDK, do the following:
 
 . Clone the {partner-product-name} Quick Start repository.
 ```bash
-git clone https://github.com/aws-samples/aws-startup-blueprint.git
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
 ```
 [start=4]
 . Build the project.
 ```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
 npm install
 npm run build 
 ```
@@ -84,6 +83,26 @@ Contents of private key file (client1.domain.tld.key)
 * https://docs.aws.amazon.com/vpn/latest/clientvpn-user/connect-aws-client-vpn-connect.html[Connect using an AWS provided client^]
 
 With a VPN connection, you can connect to resources you launch into your VPCs using private IP addresses. For more information about deploying resources, see link:#_deploying_resources_into_VPCs[Deploying resources into VPCs], later in this guide. 
+
+=== Deploying resources into VPCs
+
+This Quick Start builds an architecture with three VPCs: production, development, and management. Use the management VPC for operational resources such as DevOps tools, Active Directory, and security appliances. For example, the Biotech Blueprint Quick Start deploys Client VPN endpoints into the public subnets of the management VPC. Production and development VPCs are provided so you can manage live and test environments with different levels of controls.  
+
+Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
+
+The following table provides some examples. 
+
+[cols="1,1,1"]
+|===
+|Resource |VPC |Subnet
+
+|Test server |Development |Private
+|Amazon Relational Database Server (Amazon RDS) snapshot restored from development VPC |Production |Isolated
+|Application Load Balancer to test a custom TLS certificate |Development |Public
+|DevOps tool to automate deployments to production and development VPCs |Management |Private
+|Okta Cloud Connect appliance |Management VPC |Private
+|===
+
 
 === Optional DNS setup
 The Quick Start sets up a private DNS with `.corp` as the apex domain using https://console.aws.amazon.com/route53/v2/home#Dashboard[Amazon Route 53 in your account^]. Using the Amazon Route 53 console, you can create `A` or `CNAME` records to private applications you deploy. 
@@ -213,25 +232,6 @@ For more information about the service control policy, see https://console.aws.a
 [#regionrestriction]
 .RegionRestriction
 image::../images/regionrestriction_config4.png[Config,width=100%,height=100%]
-
-== Deploying resources into VPCs
-
-This Quick Start builds an architecture with three VPCs: production, development, and management. Use the management VPC for operational resources such as DevOps tools, Active Directories, and security appliances. For example, the Biotech Blueprint Quick Start deploys Client VPN endpoints into the public subnets of the management VPC. Production and development VPCs are provided so you can manage live and test environments with different levels of controls.  
-
-Reserve public subnets for internet-facing resources such as load balancers. Use private subnets for resources that should not be internet-facing but require outbound internet access. Deploy sensitive resources such as databases addressable only by internal networks to isolated subnets which do not route traffic to the internet. For more information about public and private subnets, see https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Scenario2.html[VPC with public and private subnets (NAT)^].
-
-The following table provides some examples. 
-
-[cols="1,1,1"]
-|===
-|Resource |VPC |Subnet
-
-|Test server |Development |Private
-|Amazon Relational Database Server (Amazon RDS) snapshot restored from development VPC |Production |Isolated
-|Application Load Balancer to test a custom TLS certificate |Development |Public
-|DevOps tool to automate deployments to production and development VPCs |Management |Private
-|Okta Cloud Connect appliance |Management VPC |Private
-|===
 
 == AWS Service Catalog
 
