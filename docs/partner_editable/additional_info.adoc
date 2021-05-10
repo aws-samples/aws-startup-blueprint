@@ -1,7 +1,7 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
-=== AWS CDK deployment
+=== Deployment Option 2: AWS CDK deployment
 
 To deploy {partner-product-name} using AWS CDK, do the following:
 [start=1]
@@ -11,13 +11,12 @@ To deploy {partner-product-name} using AWS CDK, do the following:
 
 . Clone the {partner-product-name} Quick Start repository.
 ```bash
-git clone https://github.com/aws-samples/aws-startup-blueprint.git
+git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
+cd quickstart-aws-biotech-blueprint-cdk
 ```
 [start=4]
 . Build the project.
 ```bash
-git clone https://github.com/aws-quickstart/quickstart-aws-biotech-blueprint-cdk.git
-cd quickstart-aws-biotech-blueprint-cdk
 npm install
 npm run build 
 ```
