@@ -1,0 +1,70 @@
+{
+
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "EnforceBoundary",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:PutRolePermissionsBoundary",
+                "iam:CreateUser",
+                "iam:DeleteUserPolicy",
+                "iam:AttachUserPolicy",
+                "iam:DetachUserPolicy",
+                "iam:PutUserPolicy",
+                "iam:PutUserPermissionsBoundary"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringLike": {
+                    "iam:PermissionsBoundary": "arn:aws:iam::*:policy/boundary-policy"
+                }
+            }
+        },
+        {
+            "Sid": "DenyBoundaryPolicyEdit",
+            "Effect": "Deny",
+            "Action": [
+                "iam:*PolicyVersion",
+                "iam:DeletePolicy",
+                "iam:SetDefaultPolicyVersion"
+            ],
+            "Resource": "arn:aws:iam::*:policy/boundary-policy"
+        },
+        {
+            "Sid": "NoBoundaryUserDelete",
+            "Effect": "Deny",
+            "Action": "iam:Delete*PermissionsBoundary",
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowNotIAMTasks",
+            "Effect": "Allow",
+            "NotAction": [
+                "iam:CreateRole",
+                "iam:DeleteRolePolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:PutRolePermissionsBoundary",
+                "iam:CreateUser",
+                "iam:DeleteUserPolicy",
+                "iam:AttachUserPolicy",
+                "iam:DetachUserPolicy",
+                "iam:PutUserPolicy",
+                "iam:PutUserPermissionsBoundary"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": [ ]
+                }
+            }
+        }
+    ]
+}

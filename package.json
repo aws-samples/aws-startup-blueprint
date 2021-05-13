@@ -1,0 +1,44 @@
+{
+  "name": "aws-startup-blueprint",
+  "version": "0.1.0",
+  "bin": {
+    "aws-startup-blueprint": "bin/aws-startup-blueprint.js"
+  },
+  "scripts": {
+    "build": "npm run minify && tsc",
+    "synthServiceCatalogShims": "cdk synth --context generateShims=true > templates/ServiceCatalogShims",
+    "watch": "tsc -w",
+    "test": "jest",
+    "cdk": "cdk",
+    "synth": "cdk synth && cp cdk.out/SwiftDigitalConnectivity.template.json templates/SwiftDigitalConnectivity.template.json",
+    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "^1.100.0",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^10.17.5",
+    "aws-cdk": "^1.100.0",
+    "aws-sdk": "^2.867.0",
+    "jest": "^25.5.1",
+    "jsmin": "^1.0.1",
+    "ts-jest": "^25.5.1",
+    "ts-node": "^8.1.0",
+    "typescript": "^4.2.4",
+    "yaml": "^1.10.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-cloudformation": "^1.100.0",
+    "@aws-cdk/aws-codebuild": "^1.100.0",
+    "@aws-cdk/aws-codepipeline": "^1.100.0",
+    "@aws-cdk/aws-codepipeline-actions": "^1.100.0",
+    "@aws-cdk/aws-config": "^1.100.0",
+    "@aws-cdk/aws-ec2": "^1.100.0",
+    "@aws-cdk/aws-route53": "^1.100.0",
+    "@aws-cdk/aws-s3": "^1.100.0",
+    "@aws-cdk/aws-s3-assets": "^1.100.0",
+    "@aws-cdk/aws-servicecatalog": "^1.100.0",
+    "@aws-cdk/cloudformation-include": "^1.100.0",
+    "@aws-cdk/core": "^1.100.0",
+    "source-map-support": "^0.5.16"
+  }
+}
