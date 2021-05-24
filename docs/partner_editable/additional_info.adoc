@@ -64,7 +64,7 @@ The Blueprint creates a number of AWS Config Conformance Packs during the deploy
 * https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-amazon-s3.html[Operational Best Practices For Amazon S3]
 * https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist-csf.html[Operational Best Practices for NIST CSF]
 * https://docs.aws.amazon.com/config/latest/developerguide/aws-control-tower-detective-guardrails.html[AWS Control Tower Detective Guardrails Conformance Pack]
->>>>>>> 5a10c5c2e593b0e3c21bcd7fbe4feaac4c531047
+
 
 These packs create a number of AWS Config rules that regularly evaluate resources in your account against security best practices. When AWS Config finds an offending resource, it will flag it for your review in the AWS Config Console. Any resources you created in your account BEFORE you deployed the Blueprint will also be scanned during the next AWS Config Rule evaluation. This can be handy to help identify resources you are already using, or create in the future, that fall short of the best practices defined in the Config packs above.
 
