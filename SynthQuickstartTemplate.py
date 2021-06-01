@@ -12,10 +12,10 @@ for entry in os.scandir('./lambda_functions/source/'):
             folders.append(entry.path)
 
 templateStream = open('./templates/AwsBiotechBlueprint.template.yml', 'r')
-templateData = yaml.load(templateStream)
+templateData = yaml.safe_load(templateStream)
 
 taskcatConfigStream = open('./.taskcat.yml', 'r')
-taskcatConfig = yaml.load(taskcatConfigStream)
+taskcatConfig = yaml.safe_load(taskcatConfigStream)
 
 
 for assetFolder in folders:
