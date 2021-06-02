@@ -23,9 +23,9 @@ endif::marketplace_subscription[]
 
 === Deployment Setup
 
-The AWS Fintech Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to standup infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your enviornments with code over time.
+The AWS Fintech Blueprint is built with the AWS CDK. If you are unfamiliar with the AWS CDK, thats OK! The CDK makes it easy to stand up infrastructure on AWS with just a few commands. When the time comes for you to to update, extend, or use some of the advanced Blueprint features, the AWS CDK makes it MUCH easier for you control your environments with code over time.
 
-If you want to get get going as fast as possible (< 90 seconds),  https://console.aws.amazon.com/cloudshell[click here to open AWS CloudShell] and run the following commands. It may take ~60 seconds for your first CloudShell sesion to start.
+If you want to get get going as fast as possible (< 90 seconds),  https://console.aws.amazon.com/cloudshell[click here to open AWS CloudShell] and run the following commands. It may take ~60 seconds for your first CloudShell session to start.
 
 If you prefer using your own IDE like Cloud9 or VSCode, the following commands should work as well, as long as you have the https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html#getting_started_prerequisites[prerequisites for the AWS CDK] already installed. 
 
@@ -50,6 +50,6 @@ When you are ready, or when you need update the blueprint's architecture in the 
 npm run build && cdk deploy
 ```
 
-The `cdk deploy` command will give you a summary about IAM related changes about to be deployed and prompt you to aknowledge them. Simply hit 'y' and enter.
+The `cdk deploy` command will give you a summary about IAM related changes about to be deployed and prompt you to acknowledge them. Simply hit 'y' and enter.
 
 The initial deployment should take about ~7 minutes to complete.
