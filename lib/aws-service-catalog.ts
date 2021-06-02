@@ -19,6 +19,7 @@ export interface CdkCloudFormationProductProps extends core.StackProps {
     githubRepo: string;
     productName: string;
     cdkLanguage: CdkCloudFormationProduct.CdkLanguage;
+    TargetCatalog: BlueprintServiceCatalog;
 }
 
 
@@ -29,15 +30,6 @@ export class CdkCloudFormationProduct extends core.Construct {
     constructor(scope: core.Construct, id: string, props: CdkCloudFormationProductProps) {
         super(scope, id);
         
-        
-
-        const directoryAsset = new s3asset.Asset(this, "zippedStartingSourceCode", {
-          path: path.join(__dirname, 'serviceCatalogShimRepo'),
-          followSymlinks: core.SymlinkFollowMode.NEVER,
-          ignoreMode: core.IgnoreMode.GIT
-        });
-
-        
 
         const codeRepo = new codecommit.CfnRepository(this, 'ccRepo', {
            repositoryName:  props.githubRepo,
@@ -45,8 +37,8 @@ export class CdkCloudFormationProduct extends core.Construct {
            code: {
                branchName: 'main',
                s3: {
-                   bucket: directoryAsset.bucket.bucketName,
-                   key: directoryAsset.s3ObjectKey
+                   bucket: props.TargetCatalog.EmptyRepoZipAsset.bucket.bucketName,
+                   key: props.TargetCatalog.EmptyRepoZipAsset.s3ObjectKey
                }
            } 
             
@@ -211,9 +203,16 @@ export interface ServiceCatalogProps extends core.StackProps {
 
 export class BlueprintServiceCatalog extends core.Construct {
     public readonly ClientVpnEndpoint: ec2.CfnClientVpnEndpoint;
+    public readonly EmptyRepoZipAsset: s3asset.Asset;
   
     constructor(scope: core.Construct, id: string, props: ServiceCatalogProps) {
         super(scope, id);
+
+        this.EmptyRepoZipAsset = new s3asset.Asset(this, "zippedStartingSourceCode", {
+          path: path.join(__dirname, 'serviceCatalogShimRepo'),
+          followSymlinks: core.SymlinkFollowMode.NEVER,
+          ignoreMode: core.IgnoreMode.GIT
+        });
 
         const blueprintCatalog = new sc.CfnPortfolio(this, 'FintechBlueprintCatalog', {
             displayName: "Fintech Blueprint Software Catalog",

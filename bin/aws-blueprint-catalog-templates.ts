@@ -2,13 +2,15 @@
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { AwsStartupBlueprintStack } from '../lib/aws-startup-blueprint-stack';
-import { CdkCloudFormationProductProps, CdkCloudFormationProduct } from '../lib/aws-service-catalog';
+import { CdkCloudFormationProductProps, CdkCloudFormationProduct, BlueprintServiceCatalog } from '../lib/aws-service-catalog';
+
 
 export interface ServiceCatalogCdkTemplateStackProps extends cdk.StackProps{
     githubOwner: string,
     githubRepo: string,
     productName: string,
     cdkLanguage: CdkCloudFormationProduct.CdkLanguage.Python
+    TargetServiceCatalog: BlueprintServiceCatalog
 }
 
 export class ServiceCatalogCdkTemplateStack extends cdk.Stack {
@@ -20,7 +22,8 @@ export class ServiceCatalogCdkTemplateStack extends cdk.Stack {
             githubOwner: props.githubOwner,
             githubRepo: props.githubRepo,
             productName: props.productName, 
-            cdkLanguage: CdkCloudFormationProduct.CdkLanguage.Python
+            cdkLanguage: CdkCloudFormationProduct.CdkLanguage.Python,
+            TargetCatalog: props.TargetServiceCatalog
         });
         
     }
