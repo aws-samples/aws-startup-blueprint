@@ -4,8 +4,8 @@
 
 This guide provides instructions for deploying the {partner-product-short-name} Quick Start reference architecture on the AWS Cloud.
 
-This Quick Start is for Fintech startups looking for a turnkey research environment in the cloud following AWS best practices on day 1. 
+This Quick Start is for Fintech startups looking for a turnkey environment in the cloud following AWS and industry best practices on day 1. 
 
-The {partner-product-short-name} core landing zone builds out a secure home for your future informatics and scientfic computing needs in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing.  
+The {partner-product-short-name} core landing zone builds out a secure home to develop or host B2B or B2C Fintech services in under 15 minutes. That includes identity management and  access control, encryption, VPN, network isolation, logging, alarms, DNS, and built-in compliance auditing. 
 
-Optionally, we have also included a number of the industry's leading  informatics and computational tools from commercial and opensource communties. These tools are made available through the AWS Service Catalog after deploying the core landing zone.
+Optionally, we have also included a number of Fintech tools tools from commercial and opensource communities. These tools are made available through the AWS Service Catalog after deploying the core landing zone.

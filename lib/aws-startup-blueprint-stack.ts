@@ -11,7 +11,8 @@ import { RegionRestriction } from './aws-region-restriction'
 import * as path from 'path';
 
 export class AwsStartupBlueprintStack extends cdk.Stack {
-
+  
+  public readonly ServiceCatalog: BlueprintServiceCatalog;
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -75,7 +76,7 @@ export class AwsStartupBlueprintStack extends cdk.Stack {
     
     // Service Catalog
     
-    new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
+    this.ServiceCatalog = new BlueprintServiceCatalog(this, 'ServiceCatalog', {});
     
   }
 
