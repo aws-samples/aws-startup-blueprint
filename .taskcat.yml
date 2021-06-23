@@ -1,16 +1,16 @@
 general:
   s3_regional_buckets: true
 project:
-  name: quickstart-aws-biotech-blueprint-cdk
+  name: quickstart-aws-fintech-blueprint
   owner: quickstart-eng@amazon.com
   regions:
-  - us-east-1
+  - us-east-2
 tests:
   default:
     parameters:
       AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cArtifactHash627DAAA7: c691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c
       AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3BucketEAC9DD43: $[taskcat_autobucket]
-      AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7: quickstart-aws-biotech-blueprint-cdk/lambda_functions/packages/assetc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c/||lambda.zip
+      AssetParametersc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49cS3VersionKeyDD9AE9E7: quickstart-aws-fintech-blueprint/lambda_functions/packages/assetc691172cdeefa2c91b5a2907f9d81118e47597634943344795f1a844192dd49c/||lambda.zip
     regions:
-    - us-east-1
-    template: templates/AwsBiotechBlueprint.template.quickstart.yml
+    - us-east-2
+    template: templates/AwsFintechBlueprint.quickstart-template.yml

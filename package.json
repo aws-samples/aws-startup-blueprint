@@ -6,11 +6,12 @@
   },
   "scripts": {
     "build": "npm run minify && tsc",
+    "synthServiceCatalogShims": "cdk synth --context generateShims=true > templates/ServiceCatalogShims",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js",
-    "synth": "cdk bootstrap --show-template > templates/bootstrap-template.yaml && cdk synth > templates/AwsBiotechBlueprint.template.yml && mkdir -p lambda_functions/source/ && rm -rf lambda_functions/source/asset* && cp -a cdk.out/asset*/ lambda_functions/source/ && python3 SynthQuickstartTemplate.py"
+    "synth": "cdk synth && cp cdk.out/SwiftDigitalConnectivity.template.json templates/SwiftDigitalConnectivity.template.json",
+    "minify": "jsmin -o scripts/config-enforcepermissionboundary.min.js scripts/config-enforcepermissionboundary.js"
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.100.0",

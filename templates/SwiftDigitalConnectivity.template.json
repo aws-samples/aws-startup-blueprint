@@ -1,5 +1,5 @@
 {
-  "Description": "",
+  "Description": "This template is deployed by the Fintech Blueprint service catalog which creates a code pipeline that deploys the SWIFT digital connectivity quickstart. (ib-153df3v98)",
   "Resources": {
     "productccRepo6C0568C8": {
       "Type": "AWS::CodeCommit::Repository",
@@ -1063,7 +1063,7 @@
     "CDKMetadata": {
       "Type": "AWS::CDK::Metadata",
       "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WQ3W7DIAyFn2X3xE3WPcC6Xk6VouwJKPEi5wciDK0qxLsPSKZuV+fjYB8bGmjqGuqXd3nnSvXTIShjEcKXk2oSZ6PZWa+cODGjS+ZAehAdsvFWoTh/67+cyntyZHQUOS7wsZK5j6G0C2V6VGZZyEHpXA2TM/ZRLlZacSadZrc75chfjmJaGMInPrKb5TST5HwoEAUfIXx4NaU5ydwoCpILhM7M265ZWzOTKik7XaSWA/ZP/58RBd5QpyeEzu8pSWNZ+epp7p/7ttaMqMr4HWOMQqdCGPlwa2p4fUtfPTJRZb12tCB0m/4A1R64iIcBAAA="
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WP3W7DIAyFn6X3xE3W7X5dL6tJUfYEjHiR8wMRhk4V4t0HJFO3q/NxsI/tBpr6BerDq/zmSvXTMShjEcKHk2oSF6PZWa+cODOjS+ZAehAdsvFWobh86b+cyntyZHQUOS7wqZK5j6G0C2V6VGZZyEHpXA2TM/ZePlZacSadZrc75chfjmJaGMIV79nNcp5Jcn4UiIJPEN68mtKcZG4UBckFQmfmbdesrZlJlZSd3qWWA/YP/58RBd5QpxNC5/eUpLGs/Olp7h/7ttaMqMr4HWOMQqdCGPl4a2p4eobmMDJRZb12tCB0m/4AMRvq6IcBAAA="
       },
       "Metadata": {
         "aws:cdk:path": "SwiftDigitalConnectivity/CDKMetadata/Default"
