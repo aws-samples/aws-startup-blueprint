@@ -2,6 +2,8 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
+The AWS Fintech Blueprint Quick Start helps you deploy a turnkey landing zone and Fintech tooling on the AWS Cloud following AWS and industry best practices on Day 1.
+
 Biotech Blueprint is an informatics architecture built for biotech companies on the Amazon Web Services (AWS) Cloud. 
 This Quick Start deploys a virtual data center with partitioned virtual private clouds (VPCs) to separate biotech development, production, and management processes. 
 It deploys this infrastructure and configures it for identity management, access control, logging, alarms, and compliance auditing according to AWS best practices. 

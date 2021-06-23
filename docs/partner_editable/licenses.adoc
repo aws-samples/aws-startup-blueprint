@@ -2,6 +2,10 @@
 
 The core of the {partner-product-short-name} is released under the Apache License 2.0. Software available from the {partner-product-short-name} AWS Service Catalog have different licensing terms. 
 
+*License Information* 
+The optional SWIFT Client Connectivity on AWS made available through the Service Catalog requires a SWIFT account and software license. To register for a SWIFT account, see https://www.swift.com/myswift/how-to-become-a-swift_com-user_[How to become a swift.com user?^]
+
+
 Nextflow and Hail 0.2 are open-source and do not require a license. Dotmatics and Titian require licenses. Before deploying Dotmatics and Titian from the AWS Service Catalog, sign up for a license by contacting the support contact provided in the AWS Service Catalog listing.
 
 // Or, if the deployment uses an AMI, update this paragraph. If it doesn’t, remove the paragraph.

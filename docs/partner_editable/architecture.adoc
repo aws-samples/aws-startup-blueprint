@@ -1,5 +1,10 @@
-Deploying this Quick Start for a new virtual private cloud (VPC) with default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
+The Fintech Blueprint Quick Start helps you build a foundation on the AWS Cloud, based on industry best practices, that provides the home for developing or hosting your future B2B or B2C Fintech Products.
 
+Deploying this Quick Start will build a core landing zone in AWS, configured for identity management, access control, encryption, VPN, network isolation, logging, alarms, partitioned environments, and built-in compliance auditing.  
+
+After you deploy the core Quick Start, you can install prepackaged financial tools from leading Fintech software vendors and open source tools using AWS Service Catalog.
+
+// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
@@ -7,11 +12,24 @@ image::../images/biotech-blueprint-architecture-diagram.png[Architecture,width=1
 
 As shown in <<architecture1>>, the Quick Start sets up the following:
 
-* A highly available architecture with three virtual private clouds (VPCs), each with two Availability Zones. VPCs contain public and private subnets according to AWS best practices, to provide you with your own virtual network on AWS.
-** A production VPC into which you can deploy optional research and informatics software from the AWS Service Catalog.
-** A management VPC with AWS Client VPN endpoints in the public subnets. 
-** A development VPC to build and test research workloads.
-* Peering connections to allow Secure Shell (SSH) and remote desktop access from the management VPC to private subnets in the production and development VPCs.
-* AWS Config to assess, audit, and evaluate security compliance of your AWS resources and remediate deviations.
-* Amazon Route 53 for a private Domain Name System (DNS).
-* (Optional) An AWS Service Catalog portfolio with informatics software and computational biology tooling you can deploy into the production and development VPCs. For more information, see link:#_aws_service_catalog[AWS Service Catalog], later in this guide.
+* A highly available architecture that spans two Availability Zones.
+* A Production, Managment, and Research VPC configured with public, private, and isolated subnets, according to AWS
+best practices, to provide you with your own virtual networks on AWS.
+
+* Secure Networking
+** Managed AWS Client VPN that allows for secure connectivity into your VPCs
+** Peering connections from the Managment VPC to allow  secure shell or remote desktop access to servers in private subnets in the Production or Research VPCs.
+
+* AWS Config Packs - Automatic alerting when resources may have been deployed insecurely. 
+** Control Tower Detective Guard Rails
+** IAM Best Practices
+** NIST CSF Best Practices
+** S3 Best Practices
+
+* Internal DNS - Your own private DNS for employees/developers. No need to remember IP addresses!
+
+* *OPTIONAL* Fintech Blueprint Informatics Catalog - Easily deploy any of the following tools into the Blueprint's landing zone. 
+** SWIFT Client Connectivity on AWS - A standardized environment for connecting to the SWIFT network
+** More tools coming soon...
+
+

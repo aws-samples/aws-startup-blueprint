@@ -1,6 +1,6 @@
-# AWS Biotech Blueprint - Quick Start
+# AWS XXXX Blueprint - Quick Start
 
-For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/zyRAg).
+For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/XXXXXXXXXXXXXXX).
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo.
 
