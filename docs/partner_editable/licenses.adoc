@@ -1,8 +1,0 @@
-// Include details about the license and how they can sign up. If no license is required, clarify that. 
-
-The core of the {partner-product-short-name} is released under the Apache License 2.0. The tools listed in the {partner-product-short-name} Service Catalog have different licensing terms. 
-
-*License Information* 
-The optional SWIFT Client Connectivity on AWS made available through the Service Catalog requires a SWIFT account and software license. To register for a SWIFT account, see https://www.swift.com/myswift/how-to-become-a-swift_com-user_[How to become a swift.com user?^]
-
-

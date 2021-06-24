@@ -1,6 +1,0 @@
-// Edit this placeholder text to accurately describe your architecture.
-
-This Quick Start relies on https://aws.amazon.com/cdk/[the AWS CDK^].
-
-* *CDK Deployment*. The AWS Cloud Development Kit {partner-product-short-name} will deploy all of the resources described in this Quick Start. It will make it easy to both initially deploy baseline on AWS (< 10 minutes) as well cleanly manage/adapt/update/grow the architecture to your specific needs over time.
-
