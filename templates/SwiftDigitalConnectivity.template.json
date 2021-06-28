@@ -985,16 +985,13 @@
             {
               "Action": [
                 "ec2:DescribeImages",
-                "iam:GetRole",
                 "iam:GetAccountPasswordPolicy",
                 "cloudformation:ListStacks",
-                "cloudformation:DescribeStackEvents",
                 "health:DescribeEventAggregates",
                 "ec2:DescribeAvailabilityZones",
                 "iam:ListAccountAliases",
                 "iam:ListRoles",
                 "ec2:DescribePrefixLists",
-                "cloudformation:DescribeStacks",
                 "iam:GetAccountSummary"
               ],
               "Effect": "Allow",
@@ -1002,14 +999,26 @@
               "Sid": "resourceWidePermissions"
             },
             {
-              "Action": "sts:AssumeRole",
+              "Action": [
+                "sts:AssumeRole",
+                "iam:GetRole"
+              ],
               "Effect": "Allow",
               "Resource": [
-                "arn:aws:iam::*:role/cdk-readOnlyRole",
-                "arn:aws:iam::*:role/cdk-hnb659fds-deploy-role-*",
-                "arn:aws:iam::*:role/cdk-hnb659fds-file-publishing-*"
+                "arn:${AWS::Partition}:iam::*:role/cdk-readOnlyRole",
+                "arn:${AWS::Partition}:iam::*:role/cdk-hnb659fds-deploy-role-*",
+                "arn:${AWS::Partition}:iam::*:role/cdk-hnb659fds-file-publishing-*"
               ],
               "Sid": "assumeRolePermission"
+            },
+            {
+              "Action": [
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DescribeStacks"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/CDKToolkit/*",
+              "Sid": "cloudFormationPermissions"
             }
           ],
           "Version": "2012-10-17"
@@ -1063,7 +1072,7 @@
     "CDKMetadata": {
       "Type": "AWS::CDK::Metadata",
       "Properties": {
-        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WP3W7DIAyFn6X3xE3W7X5dL6tJUfYEjHiR8wMRhk4V4t0HJFO3q/NxsI/tBpr6BerDq/zmSvXTMShjEcKHk2oSF6PZWa+cODOjS+ZAehAdsvFWobh86b+cyntyZHQUOS7wqZK5j6G0C2V6VGZZyEHpXA2TM/ZePlZacSadZrc75chfjmJaGMIV79nNcp5Jcn4UiIJPEN68mtKcZG4UBckFQmfmbdesrZlJlZSd3qWWA/YP/58RBd5QpxNC5/eUpLGs/Olp7h/7ttaMqMr4HWOMQqdCGPl4a2p4eobmMDJRZb12tCB0m/4AMRvq6IcBAAA="
+        "Analytics": "v2:deflate64:H4sIAAAAAAAAA1WOzU7EMAyEn2XvXm/Lzx3YI0KqyhOExCC3TVLlZ9EqyruTpEULp/kydsbTY989Ynd4Et/+KNV8StI6wvQehJzhbI0PLsoAI3kbnSQ4f5q/XDYUB7YmQ00ovxVJqzUHbJur9Rysu0IdrLzSwqbEDzvViF/OMGuP6ZWu1a3yvLDw9dEgg7/H9BLlTKGaG2VgoTGNdtm6VR3swrKl7PQmjPgidfP/GRnoQiaU22PcU4rmVvkj8qJufQdnJ5Lt/I45ZzBlESd/uvQd3j1gf5g889FFE1gTjpv+AFMQqHpqAQAA"
       },
       "Metadata": {
         "aws:cdk:path": "SwiftDigitalConnectivity/CDKMetadata/Default"

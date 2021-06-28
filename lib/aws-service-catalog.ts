@@ -106,16 +106,13 @@ export class CdkCloudFormationProduct extends core.Construct {
                     "Effect": "Allow",
                     "Action": [
                         "ec2:DescribeImages",
-                        "iam:GetRole",
                         "iam:GetAccountPasswordPolicy",
                         "cloudformation:ListStacks",
-                        "cloudformation:DescribeStackEvents",
                         "health:DescribeEventAggregates",
                         "ec2:DescribeAvailabilityZones",
                         "iam:ListAccountAliases",
                         "iam:ListRoles",
                         "ec2:DescribePrefixLists",
-                        "cloudformation:DescribeStacks",
                         "iam:GetAccountSummary"
                     ],
                     "Resource": "*"
@@ -125,14 +122,26 @@ export class CdkCloudFormationProduct extends core.Construct {
                     "Effect": "Allow",
                     "Action": [
                         "sts:AssumeRole",
+                        "iam:GetRole",
                     ],
                     "Resource": [
-                        'arn:aws:iam::*:role/cdk-readOnlyRole',
-                        'arn:aws:iam::*:role/cdk-hnb659fds-deploy-role-*',
-                        'arn:aws:iam::*:role/cdk-hnb659fds-file-publishing-*'
+                        'arn:${AWS::Partition}:iam::*:role/cdk-readOnlyRole',
+                        'arn:${AWS::Partition}:iam::*:role/cdk-hnb659fds-deploy-role-*',
+                        'arn:${AWS::Partition}:iam::*:role/cdk-hnb659fds-file-publishing-*'
+                    ]
+                },               
+                {
+                    "Sid": "cloudFormationPermissions",
+                    "Effect": "Allow",
+                    "Action": [
+                        "cloudformation:DescribeStackEvents",
+                        "cloudformation:DescribeStacks",
+                    ],
+                    "Resource": [
+                        'arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/CDKToolkit/*',
                     ]
                 }
-                
+
             ]
         };
         
